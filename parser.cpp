@@ -13,6 +13,7 @@ using namespace std;
 #include "QTextStream"
 #include <stdlib.h>
 #include <stdio.h>
+#include <typeinfo>
 
 using std::string;
 
@@ -266,51 +267,45 @@ string Parser::getValor(string codigo){
 
 bool Parser::verificarTipo(string tipo ,string valor){
     if(tipo == "int"){
-        try{
-            int numero = atoi( valor.c_str() );
-            return  true;
+        if(typeid (atoi( valor.c_str() )).name() == typeid(9).name()){
+            return true;
         }
-        catch(int e){
+        else{
             return false;
         }
     }
 
     if(tipo == "long"){
-        try{
-            long i = atol(valor.c_str());
-
-            return  true;
+        std::cout<<typeid(atol(valor.c_str())).name() <<std::endl;
+        if(typeid (atol(valor.c_str())).name() == typeid (4294967296).name()){
+            return true;
         }
-        catch(int e){
+        else{
             return false;
         }
     }
     if(tipo == "float"){
-        try{
-            float f = strtof((valor).c_str(),0);
-            if(valor.size()<8){
-                return  true;
-            }
-
+        float f = strtof((valor).c_str(),0);
+        std::cout<<typeid(3.5F).name() <<std::endl;
+        if(typeid (f).name() == typeid(3.5F).name()){
+            return true;
         }
-        catch(int e){
+        else{
             return false;
         }
     }
     if(tipo == "double"){
-        try{
-            double d = atof(valor.c_str());
-            if(valor.size()<= 17){
-                return  true;
-            }
+        double d = atof(valor.c_str());
 
+        if(typeid (d).name() == typeid(8.99999999999996).name()){
+            return true;
         }
-        catch(int e){
+        else{
             return false;
         }
     }
     if(tipo == "char"){
-        std::cout<<"ACA BABOSOOOOOOOOOOOOO : "<< valor[0]<< valor[valor.size()-1]<<std::endl;
+
         if(valor[0] == '"' && valor[valor.size()-1] == '"'){
             return true;
         }
