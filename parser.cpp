@@ -26,28 +26,14 @@ void Parser::parse(string codigo){
  }
 
 void Parser::writeFile(string codigo){
-//    ofstream myfile;
-//    myfile.open ("/Users/IsaacPorras/Parser-Interface/CodeFile.cpp");
-//    myfile << codigo;
-//    myfile.close();
-//    std::cout<<"Escribio en el archivo"<<std::endl;
-    getBlocks(codigo);
+
+//    getBlocks(codigo);
+    getType(codigo);
 
     }
 
 void Parser::readFile(){
-//    string line;
-//      ifstream myfile ("/Users/IsaacPorras/Parser-Interface/CodeFile.cpp");
-//      if (myfile.is_open())
-//      {
-//        while ( getline (myfile,line) )
-//        {
-//          std::cout << line << std::endl;
-//        }
-//        myfile.close();
-//      }
 
-//      else cout << "Unable to open file";
 }
 void Parser::getBlocks(string codigo){
     std::cout << "El tamano de mi codigo es: "<<codigo.size() << std::endl;
@@ -115,4 +101,127 @@ int Parser::getBlocksAnidados(string codigo){
     std::cout<< "EL SUBLOKE ES :"<<std::endl;
     std::cout<<codigo.substr(0,i + 1 )<<std::endl;
     return *b1.final;
+}
+
+
+
+void Parser::getType(string codigo){
+    int i = 0;
+
+    while(i!= codigo.size()){
+        if(codigo[i] == 'i'){
+            if(codigo.substr(i,4) == "int "){
+
+                string variable1  = getVariable(codigo.substr(i + 4,codigo.size()));
+                bool tieneIgual = checkEqualSing(codigo.substr(i + 4 + variable1.size(),codigo.size()));
+                string valor = getValor(codigo.substr(i+6+variable1.size(),codigo.size()));
+                std::cout<<"Es de tipo int y tiene de variable: "<< variable1<<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+            }
+            i = i +1;
+        }
+        else if(codigo[i]=='f'){
+            if(codigo.substr(i,6) == "float "){
+
+                string variable2  = getVariable(codigo.substr(i + 5,codigo.size()));
+                bool tieneIgual = checkEqualSing(codigo.substr(i + 6 + variable2.size(),codigo.size()));
+                string valor = getValor(codigo.substr(i+8+variable2.size(),codigo.size()));
+                std::cout<<"Es de tipo float y tiene de variable: "<< variable2<<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+            }
+             i = i +1;
+        }
+        else if(codigo[i]=='l'){
+            if(codigo.substr(i,5) == "long "){
+
+                string variable3  = getVariable(codigo.substr(i + 5,codigo.size()));
+                bool tieneIgual = checkEqualSing(codigo.substr(i + 5 + variable3.size(),codigo.size()));
+                string valor = getValor(codigo.substr(i+7+variable3.size(),codigo.size()));
+                std::cout<<"Es de tipo long y tiene de variable: "<< variable3 <<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+            }
+             i = i +1;
+        }
+        else if(codigo[i]=='d'){
+            if(codigo.substr(i,7) == "double "){
+
+                string variable  = getVariable(codigo.substr(i + 7,codigo.size()));
+                bool tieneIgual = checkEqualSing(codigo.substr(i + 7 + variable.size(),codigo.size()));
+                string valor = getValor(codigo.substr(i+9+variable.size(),codigo.size()));
+                std::cout<<"Es de tipo double y tiene de variable: "<< variable <<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+            }
+             i = i +1;
+        }
+        else if(codigo[i]=='c' ){
+            if(codigo.substr(i,5) == "char "){
+
+                string variable4  = getVariable(codigo.substr(i + 4,codigo.size()));
+                bool tieneIgual = checkEqualSing(codigo.substr(i + 5 + variable4.size(),codigo.size()));
+                string valor = getValor(codigo.substr(i+7+variable4.size(),codigo.size()));
+                std::cout<<"Es de tipo char y tiene de variable: "<< variable4 <<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+            }
+             i = i +1;
+        }
+        else if(codigo[i]=='s' ){
+            if(codigo.substr(i,7) == "struct "){
+                string variable5  = getVariable(codigo.substr(i + 6,codigo.size()));
+                bool tieneIgual = checkEqualSing(codigo.substr(i + getVariableSize(codigo.substr(i + 7,codigo.size())),codigo.size()));
+                string valor = getValor(codigo.substr(i+6+variable5.size(),codigo.size()));
+                std::cout<<"Es de tipo struct y tiene de variable: "<< variable5  <<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+            }
+             i = i +1;
+        }
+        else{
+             i = i +1;
+        }
+    }
+}
+string Parser::getVariable(string codigo){
+    string variable = "";
+    int i = 0;
+    while(codigo[i] == ' '){
+        i = i + 1;
+    }
+    while(codigo[i]!= ' '){
+        variable = variable + codigo[i];
+        i = i + 1;
+    }
+    return variable;
+}
+
+bool Parser::checkEqualSing(string codigo){
+
+    int i = 0;
+    while(codigo[i] == ' '){
+        i = i + 1;
+    }
+    if(codigo[i] == '='){
+
+        return true;
+    }
+    if(codigo[i]!= '='){
+
+        return false;
+    }
+}
+int Parser::getVariableSize(string codigo){
+    string variable = "";
+    int i = 0;
+    while(codigo[i] == ' '){
+        i = i + 1;
+    }
+    while(codigo[i]!= ' '){
+        variable = variable + codigo[i];
+        i = i + 1;
+    }
+    return i;
+}
+string Parser::getValor(string codigo){
+    string valor = "";
+    int i = 0;
+    while(codigo[i] == ' '){
+        i = i + 1;
+    }
+    while(codigo[i]!= ' ' && codigo[i]!= ';'){
+        valor = valor + codigo[i];
+        i = i + 1;
+    }
+    return valor;
 }
