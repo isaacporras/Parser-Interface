@@ -25,6 +25,7 @@ public:
     bool checkEqualSing(string codigo);
     int getVariableSize(string codigo);
     string getValor(string codigo);
+    bool verificarTipo(string tipo,string valor);
 
 
 };

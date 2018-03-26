@@ -11,6 +11,8 @@ using namespace std;
 #include "QString"
 #include "QFile"
 #include "QTextStream"
+#include <stdlib.h>
+#include <stdio.h>
 
 using std::string;
 
@@ -115,7 +117,14 @@ void Parser::getType(string codigo){
                 string variable1  = getVariable(codigo.substr(i + 4,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 4 + variable1.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+6+variable1.size(),codigo.size()));
-                std::cout<<"Es de tipo int y tiene de variable: "<< variable1<<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+                bool verificacion  = verificarTipo("int",valor);
+                if(verificacion == true && tieneIgual == true){
+                    std::cout<<"Es de tipo int y tiene de variable: "<< variable1<<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+                }
+                else{
+                    std::cout<<"HAY UN ERROR DE SINTAXIS EN LA DECLARACION DE LA VARIABLE :" <<variable1<<std::endl;
+                }
+
             }
             i = i +1;
         }
@@ -125,7 +134,14 @@ void Parser::getType(string codigo){
                 string variable2  = getVariable(codigo.substr(i + 5,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 6 + variable2.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+8+variable2.size(),codigo.size()));
-                std::cout<<"Es de tipo float y tiene de variable: "<< variable2<<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+                bool verificacion = verificarTipo("float",valor);
+                if(verificacion == true && tieneIgual == true){
+                    std::cout<<"Es de tipo float y tiene de variable: "<< variable2<<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+                }
+                else{
+                    std::cout<<"HAY UN ERROR DE SINTAXIS EN LA DECLARACION DE LA VARIABLE :" <<variable2<<std::endl;
+                }
+
             }
              i = i +1;
         }
@@ -135,7 +151,14 @@ void Parser::getType(string codigo){
                 string variable3  = getVariable(codigo.substr(i + 5,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 5 + variable3.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+7+variable3.size(),codigo.size()));
-                std::cout<<"Es de tipo long y tiene de variable: "<< variable3 <<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+                bool verificacion = verificarTipo("long",valor);
+                if(verificacion == true && tieneIgual == true){
+                    std::cout<<"Es de tipo long y tiene de variable: "<< variable3 <<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+                }else{
+                    std::cout<<"HAY UN ERROR DE SINTAXIS EN LA DECLARACION DE LA VARIABLE :" <<variable3<<std::endl;
+                }
+
+
             }
              i = i +1;
         }
@@ -145,7 +168,15 @@ void Parser::getType(string codigo){
                 string variable  = getVariable(codigo.substr(i + 7,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 7 + variable.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+9+variable.size(),codigo.size()));
-                std::cout<<"Es de tipo double y tiene de variable: "<< variable <<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+                bool verificacion = verificarTipo("double",valor);
+                if(verificacion == true && tieneIgual == true){
+                     std::cout<<"Es de tipo y tiene de variable: "<< variable <<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+                }
+                else{
+                    std::cout<<"HAY UN ERROR DE SINTAXIS EN LA DECLARACION DE LA VARIABLE :" <<variable<<std::endl;
+                }
+
+
             }
              i = i +1;
         }
@@ -155,7 +186,14 @@ void Parser::getType(string codigo){
                 string variable4  = getVariable(codigo.substr(i + 4,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 5 + variable4.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+7+variable4.size(),codigo.size()));
-                std::cout<<"Es de tipo char y tiene de variable: "<< variable4 <<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+                bool verificacion = verificarTipo("char",valor);
+                if(verificacion == true && tieneIgual == true){
+                    std::cout<<"Es de tipo char y tiene de variable: "<< variable4 <<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+                }
+                else{
+                    std::cout<<"HAY UN ERROR DE SINTAXIS EN LA DECLARACION DE LA VARIABLE :" <<variable4<<std::endl;
+                }
+
             }
              i = i +1;
         }
@@ -224,4 +262,60 @@ string Parser::getValor(string codigo){
         i = i + 1;
     }
     return valor;
+}
+
+bool Parser::verificarTipo(string tipo ,string valor){
+    if(tipo == "int"){
+        try{
+            int numero = atoi( valor.c_str() );
+            return  true;
+        }
+        catch(int e){
+            return false;
+        }
+    }
+
+    if(tipo == "long"){
+        try{
+            long i = atol(valor.c_str());
+
+            return  true;
+        }
+        catch(int e){
+            return false;
+        }
+    }
+    if(tipo == "float"){
+        try{
+            float f = strtof((valor).c_str(),0);
+            if(valor.size()<8){
+                return  true;
+            }
+
+        }
+        catch(int e){
+            return false;
+        }
+    }
+    if(tipo == "double"){
+        try{
+            double d = atof(valor.c_str());
+            if(valor.size()<= 17){
+                return  true;
+            }
+
+        }
+        catch(int e){
+            return false;
+        }
+    }
+    if(tipo == "char"){
+        std::cout<<"ACA BABOSOOOOOOOOOOOOO : "<< valor[0]<< valor[valor.size()-1]<<std::endl;
+        if(valor[0] == '"' && valor[valor.size()-1] == '"'){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }
