@@ -419,6 +419,7 @@ string Parser::analizarValor(string valor){
         }
     }
     else if (valor.find('/')!= std::string::npos){
+        std::cout<<"VA A DIVIDIR"<<std::endl;
         string num1 = valor.substr(0,valor.find('/'));
         std::cout<<"NUM1: |" << num1 <<"|"<<std::endl;
 

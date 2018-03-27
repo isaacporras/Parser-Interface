@@ -9,6 +9,7 @@ IDE_Window::IDE_Window(QWidget *parent) :
 {
     ui->setupUi(this);
 
+
 }
 
 IDE_Window::~IDE_Window()

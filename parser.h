@@ -24,8 +24,10 @@ public:
     string getVariable(string codigo);
     bool checkEqualSing(string codigo);
     int getVariableSize(string codigo);
-    string getValor(string codigo);
+    string getValor(string codigo, string tipo);
     bool verificarTipo(string tipo,string valor);
+    string analizarValor(string valor);
+    int buscarNum(string nombre_de_variable);
 
 
 };
