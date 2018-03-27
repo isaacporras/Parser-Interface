@@ -26,13 +26,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         ide_window.cpp \
-    parser.cpp
+    parser.cpp \
+    varlist.cpp \
+    nodovar.cpp
 
 HEADERS += \
         ide_window.h \
     parser.h \
+    blocklist.h \
+    blocknode.h \
     varlist.h \
-    varnode.h
+    nodovar.h
 
 FORMS += \
         ide_window.ui
