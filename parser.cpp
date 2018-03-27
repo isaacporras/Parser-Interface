@@ -317,12 +317,6 @@ string Parser::getValor(string codigo, string tipo){
         }
    }
 
-
-
-
-
-
-
     if (estado == "es numero"){
         return valor;
     }
@@ -499,7 +493,7 @@ string Parser::analizarValor(string valor){
         string num1 = valor.substr(0,valor.find('/'));
         std::cout<<"NUM1: |" << num1 <<"|"<<std::endl;
 
-        string num2 = valor.substr(valor.find('/') + 1,valor[valor.size()-1]);
+        string num2 = valor.substr(valor.find('/') ,valor[valor.size()-1]);
         std::cout<<"NUM2: |" << num2 <<"|"<<std::endl;
         int p = 0;
         string estado_num1 ="es numero";
