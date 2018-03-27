@@ -58,7 +58,7 @@ void VarList::eliminarTodos(){
 
     }
 NodoVar *VarList::buscarNodo(string var){
-    NodoVar *corredor = primero;
+    std::cout<<"SE METIO A BUSCAR EL NODO"<<std::endl;
     if (this->primero == 0){
         std::cout << "No hay elementos en la lista" << std::endl;
     }
@@ -66,18 +66,24 @@ NodoVar *VarList::buscarNodo(string var){
 
         NodoVar *corredor = primero->siguiente;
         int contador = 2;
-
         primero->setPos(1);
         if(primero->variable == var){
             return primero;
         }
         while(corredor != primero){
+            std::cout<<"LA VARIABLE DE MI NODO ES: " << corredor->variable << " = " << corredor->valor<<std::endl;
             if(corredor->variable == var){
+                std::cout<<"EL DATO ENCONTRADO ES: " << corredor->variable << " = " << corredor->valor<<std::endl;
                 return corredor;
             }
             contador = contador + 1;
             corredor = corredor -> siguiente;
         }
+        BlockList def_list;
+        NodoVar *nodo = new NodoVar("NO SE ENCONTRO","NO SE ENCONTRO","NO SE ENCONTRO",0,0,"","",def_list);
+        nodo->setVariable("NO SE ENCONTRO");
+        return nodo;
+
     }
 }
 void VarList::imprimirListaAlDerecho(){

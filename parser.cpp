@@ -150,6 +150,9 @@ VarList Parser::getType(string codigo, VarList &lista){
                 string variable  = getVariable(codigo.substr(i + 4,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 4 + variable.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+6+variable.size(),codigo.size()), "int");
+                if (valor == "NO SE ENCONTRO"){
+                    std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
+                }
                 bool verificacion  = verificarTipo("int",valor);
                 BlockList lista2;
                 lista.ingresarDatoFinalVar(variable,valor, "int",-10,-10,"variable","Tipo Variable",lista2);
@@ -164,6 +167,10 @@ VarList Parser::getType(string codigo, VarList &lista){
                 string variable  = getVariable(codigo.substr(i + 5,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 6 + variable.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+8+variable.size(),codigo.size()),"float");
+                if (valor == "NO SE ENCONTRO"){
+                    std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
+                    break;
+                }
                 bool verificacion = verificarTipo("float",valor);
                 BlockList lista2;
                 lista.ingresarDatoFinalVar(variable,valor,"float",-10,-10,"variable","Tipo Variable",lista2);
@@ -179,6 +186,10 @@ VarList Parser::getType(string codigo, VarList &lista){
                 string variable  = getVariable(codigo.substr(i + 5,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 5 + variable.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+7+variable.size(),codigo.size()),"long");
+                if (valor == "NO SE ENCONTRO"){
+                    std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
+                    break;
+                }
                 bool verificacion = verificarTipo("long",valor);
                 BlockList lista2;
                 lista.ingresarDatoFinalVar(variable,valor,"long",-10,-10,"variable","Tipo Variable", lista2);
@@ -196,6 +207,10 @@ VarList Parser::getType(string codigo, VarList &lista){
                 string variable  = getVariable(codigo.substr(i + 7,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 7 + variable.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+9+variable.size(),codigo.size()),"double");
+                if (valor == "NO SE ENCONTRO"){
+                    std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
+                    break;
+                }
                 bool verificacion = verificarTipo("double",valor);
                 BlockList lista2;
                 lista.ingresarDatoFinalVar(variable,valor,"double",-10,-10,"variable","Tipo Variable", lista2);
@@ -210,6 +225,10 @@ VarList Parser::getType(string codigo, VarList &lista){
                 string variable  = getVariable(codigo.substr(i + 4,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 5 + variable.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+7+variable.size(),codigo.size()),"char");
+                if (valor == "NO SE ENCONTRO"){
+                    std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
+                    break;
+                }
                 bool verificacion = verificarTipo("char",valor);
                 BlockList lista2;
                 lista.ingresarDatoFinalVar(variable,valor, "char",-10,-10,"variable","Tipo Variable", lista2);
@@ -363,6 +382,7 @@ string Parser::getValor(string codigo, string tipo){
             return valor;
         }
         else{
+
             return analizarValor(valor);
         }
 
@@ -432,6 +452,7 @@ bool Parser::verificarTipo(string tipo ,string valor){
 string Parser::analizarValor(string valor){
     std::cout<<"se metio a analizar con :" <<valor<<std::endl;
     valor= valor + ";";
+
     if (valor.find('+')!= std::string::npos){
         std::cout<<"SE METIO A SUMAR :" <<valor<<std::endl;
         string num1 = getNumbers(valor.substr(0,valor.find('+') + 1));
@@ -464,19 +485,34 @@ string Parser::analizarValor(string valor){
         }
         std::cout<<"LOS ESTADOS DE MI NUMERO SON: "<<estado_num1 <<", " << estado_num2<<std::endl;
         if(estado_num1 == "es numero" && estado_num2 == "es numero"){
+            int numeroBuscado = buscarNum(num1);
+            std::cout<<numeroBuscado << std::endl;
             int suma = (atoi( num1.c_str()) + atoi( num2.c_str() ));
             return to_string(suma);
         }
         else if(estado_num1 == "es numero" && estado_num2 == "no es numero"){
-            int suma  = (atoi( num1.c_str()) + buscarNum(num2));
+            int numeroBuscado = buscarNum(num2);
+            if(numeroBuscado == -123456){
+                return "NO SE ENCONTRO";
+            }
+            int suma  = (atoi( num1.c_str()) + numeroBuscado);
             return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "es numero"){
-            int suma = (atoi( num2.c_str()) + buscarNum(num1));
+            int numeroBuscado = buscarNum(num1);
+            if(numeroBuscado == -123456){
+                return "NO SE ENCONTRO";
+            }
+            int suma = (atoi( num2.c_str()) + numeroBuscado);
             return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "no es numero"){
-            int suma = (buscarNum(num2) + buscarNum(num1));
+            int numeroBuscado1 = buscarNum(num1);
+            int numeroBuscado2 = buscarNum(num2);
+            if(numeroBuscado1 == -123456 || numeroBuscado2 == -123456){
+                return "NO SE ENCONTRO";
+            }
+            int suma = (numeroBuscado1 + numeroBuscado2);
             return to_string(suma);
 
         }
@@ -485,8 +521,6 @@ string Parser::analizarValor(string valor){
     else if (valor.find('-')!= std::string::npos){
         std::cout<<"VA A RESTAR"<<std::endl;
         string num1 = getNumbers(valor.substr(0,valor.find('-') + 1));
-
-
 
         string num2 = getNumbers(valor.substr(valor.find('-') + 1, valor.size()));
 
@@ -515,19 +549,34 @@ string Parser::analizarValor(string valor){
             j = j + 1;
         }
         if(estado_num1 == "es numero" && estado_num2 == "es numero"){
+            int numeroBuscado = buscarNum(num1);
+            std::cout<<numeroBuscado << std::endl;
             int suma = (atoi( num1.c_str()) - atoi( num2.c_str() ));
             return to_string(suma);
         }
         else if(estado_num1 == "es numero" && estado_num2 == "no es numero"){
-            int suma = (atoi( num1.c_str()) - buscarNum(num2));
+            int numeroBuscado = buscarNum(num2);
+            if(numeroBuscado == -123456){
+                return "NO SE ENCONTRO";
+            }
+            int suma  = (atoi( num1.c_str()) - numeroBuscado);
             return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "es numero"){
-            int suma = (atoi( num2.c_str()) - buscarNum(num1));
+            int numeroBuscado = buscarNum(num1);
+            if(numeroBuscado == -123456){
+                return "NO SE ENCONTRO";
+            }
+            int suma = (atoi( num2.c_str()) - numeroBuscado);
             return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "no es numero"){
-            int suma = (buscarNum(num2) - buscarNum(num1));
+            int numeroBuscado1 = buscarNum(num1);
+            int numeroBuscado2 = buscarNum(num2);
+            if(numeroBuscado1 == -123456 || numeroBuscado2 == -123456){
+                return "NO SE ENCONTRO";
+            }
+            int suma = (numeroBuscado1 - numeroBuscado2);
             return to_string(suma);
 
         }
@@ -565,19 +614,34 @@ string Parser::analizarValor(string valor){
         }
 
         if(estado_num1 == "es numero" && estado_num2 == "es numero"){
+            int numeroBuscado = buscarNum(num1);
+            std::cout<<numeroBuscado << std::endl;
             int suma = (atoi( num1.c_str()) / atoi( num2.c_str() ));
             return to_string(suma);
         }
         else if(estado_num1 == "es numero" && estado_num2 == "no es numero"){
-            int suma = (atoi( num1.c_str()) / buscarNum(num2));
+            int numeroBuscado = buscarNum(num2);
+            if(numeroBuscado == -123456){
+                return "NO SE ENCONTRO";
+            }
+            int suma  = (atoi( num1.c_str()) / numeroBuscado);
             return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "es numero"){
-            int suma = (atoi( num2.c_str()) / buscarNum(num1));
+            int numeroBuscado = buscarNum(num1);
+            if(numeroBuscado == -123456){
+                return "NO SE ENCONTRO";
+            }
+            int suma = (atoi( num2.c_str())  / numeroBuscado);
             return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "no es numero"){
-            int suma = (buscarNum(num2) / buscarNum(num1));
+            int numeroBuscado1 = buscarNum(num1);
+            int numeroBuscado2 = buscarNum(num2);
+            if(numeroBuscado1 == -123456 || numeroBuscado2 == -123456){
+                return "NO SE ENCONTRO";
+            }
+            int suma = (numeroBuscado1 / numeroBuscado2);
             return to_string(suma);
 
         }
@@ -607,20 +671,36 @@ string Parser::analizarValor(string valor){
             }
             p = p + 1;
         }
+
         if(estado_num1 == "es numero" && estado_num2 == "es numero"){
+            int numeroBuscado = buscarNum(num1);
+            std::cout<<numeroBuscado << std::endl;
             int suma = (atoi( num1.c_str()) % atoi( num2.c_str() ));
             return to_string(suma);
         }
         else if(estado_num1 == "es numero" && estado_num2 == "no es numero"){
-            int suma = (atoi( num1.c_str()) % buscarNum(num2));
+            int numeroBuscado = buscarNum(num2);
+            if(numeroBuscado == -123456){
+                return "NO SE ENCONTRO";
+            }
+            int suma  = (atoi( num1.c_str()) % numeroBuscado);
             return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "es numero"){
-            int suma = (atoi( num2.c_str()) % buscarNum(num1));
+            int numeroBuscado = buscarNum(num1);
+            if(numeroBuscado == -123456){
+                return "NO SE ENCONTRO";
+            }
+            int suma = (atoi( num2.c_str()) % numeroBuscado);
             return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "no es numero"){
-            int suma = (buscarNum(num2) % buscarNum(num1));
+            int numeroBuscado1 = buscarNum(num1);
+            int numeroBuscado2 = buscarNum(num2);
+            if(numeroBuscado1 == -123456 || numeroBuscado2 == -123456){
+                return "NO SE ENCONTRO";
+            }
+            int suma = (numeroBuscado1 % numeroBuscado2);
             return to_string(suma);
 
         }
@@ -632,10 +712,12 @@ string Parser::analizarValor(string valor){
 
 
 int Parser::buscarNum(string nombre_de_variable){
+  std::cout<<"SE METIO A BUSCAR LA VARIABLE:" << nombre_de_variable << std::endl;
   NodoVar *nodo = lista_valores.buscarNodo(nombre_de_variable);
+  std::cout<<"NODO:" << nodo->variable<< std::endl;
   if(nodo->variable == "NO SE ENCONTRO"){
       std::cout<<"NO SE ENCONTRO EL DATO BUSCADO" << std::endl;
-      return -1;
+      return -123456;
   }
   else{
       if(nodo->tipo == "int"){
@@ -661,7 +743,7 @@ string Parser::getNumbers(string number){
         i = i + 1;
     }
 
-    while(number[i]!= '+' && number[i]!= ' ' && number[i]!= ';'){
+    while(number[i]!= '+' && number[i]!= ' ' && number[i]!= ';' && number[i]!= '-' && number[i]!= '/'&& number[i]!= '%'){
 
         valor = valor + number[i];
         i = i + 1;
