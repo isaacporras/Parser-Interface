@@ -99,6 +99,30 @@ public:
             }
         }
     }
+public:
+    NodoVar *buscarNodo(string var){
+        NodoVar *corredor = primero;
+        if (primero == 0){
+            std::cout << "No hay elementos en la lista" << std::endl;
+        }
+        else{
+
+            NodoVar *corredor = primero->siguiente;
+            int contador = 2;
+
+            primero->setPos(1);
+            if(primero->variable == var){
+                return primero;
+            }
+            while(corredor != primero){
+                if(corredor->variable == var){
+                    return corredor;
+                }
+                contador = contador + 1;
+                corredor = corredor -> siguiente;
+            }
+        }
+    }
 
 };
 

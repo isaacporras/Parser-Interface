@@ -16,7 +16,7 @@ using namespace std;
 #include <typeinfo>
 #include <ctype.h>
 #include <stdio.h>
-#define ISNUM(X) X >='0' && X <='9'
+#include "varnode.h"
 
 using std::string;
 
@@ -124,7 +124,8 @@ void Parser::getType(string codigo){
                 string valor = getValor(codigo.substr(i+6+variable.size(),codigo.size()), "int");
                 bool verificacion  = verificarTipo("int",valor);
                 lista_valores.ingresarDatoFinal(variable,valor, "int");
-                std::cout<<"Es de tipo int y tiene de variable: "<< variable<<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+
+
             }
             i = i +1;
         }
@@ -136,7 +137,7 @@ void Parser::getType(string codigo){
                 string valor = getValor(codigo.substr(i+8+variable.size(),codigo.size()),"float");
                 bool verificacion = verificarTipo("float",valor);
                 lista_valores.ingresarDatoFinal(variable,valor,"float");
-                std::cout<<"Es de tipo float y tiene de variable: "<< variable<<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+
 
 
             }
@@ -150,7 +151,7 @@ void Parser::getType(string codigo){
                 string valor = getValor(codigo.substr(i+7+variable.size(),codigo.size()),"long");
                 bool verificacion = verificarTipo("long",valor);
                 lista_valores.ingresarDatoFinal(variable,valor,"long");
-                std::cout<<"Es de tipo long y tiene de variable: "<< variable <<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+
 
 
 
@@ -167,7 +168,7 @@ void Parser::getType(string codigo){
                 bool verificacion = verificarTipo("double",valor);
                 lista_valores.ingresarDatoFinal(variable,valor,"double");
 
-                std::cout<<"Es de tipo double y tiene de variable: "<< variable <<" tiene igual : " << tieneIgual<<", y un valor de: "<<valor<<std::endl;
+
             }
              i = i +1;
         }
@@ -179,7 +180,7 @@ void Parser::getType(string codigo){
                 string valor = getValor(codigo.substr(i+7+variable.size(),codigo.size()),"char");
                 bool verificacion = verificarTipo("char",valor);
                 lista_valores.ingresarDatoFinal(variable,valor, "char");
-                std::cout<<"Es de tipo char y tiene de variable: "<< variable <<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+
 
 
             }
@@ -190,7 +191,7 @@ void Parser::getType(string codigo){
                 string variable5  = getVariable(codigo.substr(i + 6,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(i + getVariableSize(codigo.substr(i + 7,codigo.size())),codigo.size()));
                 string valor = getValor(codigo.substr(i+6+variable5.size(),codigo.size()),"struct");
-                std::cout<<"Es de tipo struct y tiene de variable: "<< variable5  <<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+
             }
              i = i +1;
         }
@@ -293,7 +294,7 @@ string Parser::getValor(string codigo, string tipo){
    string estado = "es numero";
 
    if(tipo == "float" || tipo == "long" || tipo == "double"){
-       std::cout<<"EL VALOR 2 ES: "<<valor2 <<std::endl;
+
        int p = 0;
        while(p != valor2.size()){
            char x  = valor2[p];
@@ -320,7 +321,7 @@ string Parser::getValor(string codigo, string tipo){
         return valor;
     }
     else if (estado == "no es numero"){
-        if(tipo =="char"){
+        if(tipo == "char"){
 
             return valor;
         }
@@ -368,7 +369,7 @@ bool Parser::verificarTipo(string tipo ,string valor){
         }
     }
     if(tipo == "double"){
-        std:cout<<typeid (atof(valor.c_str())).name()<<std::endl;
+
         if(typeid (atof(valor.c_str())).name() == typeid(8.99999999999996).name()){
             return true;
         }
@@ -387,24 +388,28 @@ bool Parser::verificarTipo(string tipo ,string valor){
     }
 }
 
+
+
+
+
 string Parser::analizarValor(string valor){
-
-    std::cout<<"SE METIO A ANALIZAR EL VARLOR"<<std::endl;
+    std::cout<<"se metio a analizar con :" <<valor<<std::endl;
+    valor= valor + ";";
     if (valor.find('+')!= std::string::npos){
-        std::cout<<"ENCONTRO QUE HAY QUE SUMAR"<<std::endl;
-        string num1 = valor.substr(0,valor.find('+'));
-        std::cout<<"NUM1: |" << num1 <<"|"<<std::endl;
+        std::cout<<"SE METIO A SUMAR :" <<valor<<std::endl;
+        string num1 = getNumbers(valor.substr(0,valor.find('+') + 1));
 
-        string num2 = valor.substr(valor.find('+') + 1,valor[valor.size()-1]);
-        std::cout<<"NUM2: |" << num2 <<"|"<<std::endl;
+        string num2 = getNumbers(valor.substr(valor.find('+') + 1, valor.size()));
+        std::cout<<"num1 = "<<num1<<", num2 = "<<num2 <<std::endl;
         int p = 0;
         string estado_num1 ="es numero";
         string estado_num2 ="es numero";
-        while(p!= num1.size()-1){
+
+        while(p!= num1.size()){
             char x  = num1[p];
-            std::cout<<"Mi numero esta compuesto por" << x <<std::endl;
+            std::cout<<"EL CARACTER A EVALUAR ES: "<<x<<std::endl;
             if (!isdigit(x) ){
-                std::cout<<"la parte del elemento que no cumplio es:" << x <<std::endl;
+
                 estado_num1 = "no es numero";
                 break;
             }
@@ -414,22 +419,24 @@ string Parser::analizarValor(string valor){
         while(j != num2.size()){
             char y  = num2[j];
             if (!isdigit(y)){
-                std::cout<<"la parte del elemento que no cumplio es:" << y <<std::endl;
+
                 estado_num2= "no es numero";
                 break;
             }
             j = j + 1;
         }
-        std::cout<<"LOS ESTADOS DE LOS NUMERO SON :"<< estado_num1<<", "<<estado_num2<<std::endl;
+        std::cout<<"LOS ESTADOS DE MI NUMERO SON: "<<estado_num1 <<", " << estado_num2<<std::endl;
         if(estado_num1 == "es numero" && estado_num2 == "es numero"){
             int suma = (atoi( num1.c_str()) + atoi( num2.c_str() ));
             return to_string(suma);
         }
         else if(estado_num1 == "es numero" && estado_num2 == "no es numero"){
             int suma  = (atoi( num1.c_str()) + buscarNum(num2));
+            return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "es numero"){
-            int suma = (atoi( num2.c_str()) + buscarNum(estado_num1));
+            int suma = (atoi( num2.c_str()) + buscarNum(num1));
+            return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "no es numero"){
             int suma = (buscarNum(num2) + buscarNum(num1));
@@ -440,10 +447,12 @@ string Parser::analizarValor(string valor){
     }
     else if (valor.find('-')!= std::string::npos){
         std::cout<<"VA A RESTAR"<<std::endl;
-        string num1 = valor.substr(0,valor.find('-'));
-        std::cout<<"NUM1: |" << num1 <<"|"<<std::endl;
+        string num1 = getNumbers(valor.substr(0,valor.find('-') + 1));
 
-        string num2 = valor.substr(valor.find('-') + 1,valor[valor.size()-1]);
+
+
+        string num2 = getNumbers(valor.substr(valor.find('-') + 1, valor.size()));
+
         std::cout<<"NUM2: |" << num2 <<"|"<<std::endl;
         int p = 0;
         string estado_num1 ="es numero";
@@ -468,8 +477,6 @@ string Parser::analizarValor(string valor){
             }
             j = j + 1;
         }
-
-        std::cout<<"LOS ESTADOS DE LOS NUMERO SON :"<< estado_num1<<", "<<estado_num2<<std::endl;
         if(estado_num1 == "es numero" && estado_num2 == "es numero"){
             int suma = (atoi( num1.c_str()) - atoi( num2.c_str() ));
             return to_string(suma);
@@ -490,10 +497,11 @@ string Parser::analizarValor(string valor){
     }
     else if (valor.find('/')!= std::string::npos){
         std::cout<<"VA A DIVIDIR"<<std::endl;
-        string num1 = valor.substr(0,valor.find('/'));
-        std::cout<<"NUM1: |" << num1 <<"|"<<std::endl;
+        string num1 = getNumbers(valor.substr(0,valor.find('/') + 1));
 
-        string num2 = valor.substr(valor.find('/') ,valor[valor.size()-1]);
+
+
+        string num2 = getNumbers(valor.substr(valor.find('/') + 1, valor.size()));
         std::cout<<"NUM2: |" << num2 <<"|"<<std::endl;
         int p = 0;
         string estado_num1 ="es numero";
@@ -541,8 +549,11 @@ string Parser::analizarValor(string valor){
     }
     else if (valor.find('%')!= std::string::npos){
 
-        string num1 = valor.substr(0,valor.find('+') - 1);
-        string num2 = valor.substr(valor.find('+') + 1,valor[valor.size()-1]);
+        string num1 = getNumbers(valor.substr(0,valor.find('%') + 1));
+
+
+
+        string num2 = getNumbers(valor.substr(valor.find('%') + 1, valor.size()));
         int p = 0;
         string estado_num1 ="es numero";
         string estado_num2 ="es numero";
@@ -584,7 +595,42 @@ string Parser::analizarValor(string valor){
 
 
 int Parser::buscarNum(string nombre_de_variable){
+  NodoVar *nodo = lista_valores.buscarNodo(nombre_de_variable);
+  if(nodo->variable == "NO SE ENCONTRO"){
+      std::cout<<"NO SE ENCONTRO EL DATO BUSCADO" << std::endl;
+      return -1;
+  }
+  else{
+      if(nodo->tipo == "int"){
+          return atoi( nodo->valor.c_str());
+      }
+      if(nodo->tipo == "float"){
+          return strtof((nodo->valor).c_str(),0);
+      }
+      if(nodo->tipo == "long"){
+          return atol(nodo->valor.c_str());
+      }
+      if(nodo->tipo == "double"){
+          return atof(nodo->valor.c_str());
+      }
+  }
+}
 
+string Parser::getNumbers(string number){
+
+    string valor = "";
+    int i = 0;
+    while(number[i] == ' '){
+        i = i + 1;
+    }
+
+    while(number[i]!= '+' && number[i]!= ' ' && number[i]!= ';'){
+
+        valor = valor + number[i];
+        i = i + 1;
+    }
+
+    return valor;
 }
 
 
