@@ -41,50 +41,50 @@ void Parser::readFile(){
 
 }
 int Parser::getBlocks(string codigo, VarList *list){
+    std::cout<<"ENCONTRO EL SIGUIENTE BLOQUE"<<std::endl;
+    std::cout<<codigo<<std::endl;
 
-    std::cout << "El tamano de mi codigo es: "<<codigo.size() << std::endl;
     struct block b1;
     string status = "block cerrado";
     int i = 0;
     while (i != codigo.size()){
 
         if (codigo[i] == '{' && status == "block cerrado"){
-            std::cout << "Encontro un block abierto en la posicion :"  << i << std::endl;
+
             *b1.inicio = i;
             status = "block abierto";
              i = i + 1;
              continue ;
         }
-//        else if (codigo[i] == '{' && status == "block abierto"){
-//            std::cout << "Encontro un block anidado en :" << i << std::endl;
-//            i =  i + getBlocksAnidados(codigo.substr( i, codigo.size()));
-//            std::cout<< "Se reubico mi contador en: " << i << ", el cual contiene: " <<codigo[i]<<std::endl;
-//            i = i + 1;
-//            continue ;
+        else if (codigo[i] == '{' && status == "block abierto"){
 
-//        }
+            i =  i + getBlocksAnidados(codigo.substr( i, codigo.size()));
+            std::cout<< "Se reubico mi contador en: " << i << ", el cual contiene: " <<codigo[i]<<std::endl;
+            i = i + 1;
+            continue ;
+
+        }
         else if(codigo[i]=='}' && status == "block abierto"){
             std::cout << "Cerro un block en la posicion :" << i << std::endl;
             *b1.final = i;
             status = "block cerrado";
             i = i + 1;
-            continue ;
+            break;
         }
         else{
             i =  i + 1;
             continue ;
         }
     }
+
     VarList provicional;
     VarList listaBlock1 = getType(codigo.substr(*b1.inicio + 1,*b1.final + 1 ), provicional);
 
-    listaBlock1.imprimirListaAlDerecho();
     BlockList listaBlock2 = copyList(&listaBlock1);
-    std::cout<<"AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"<<std::endl;
-    listaBlock2.imprimirListaAlDerecho();
-    std::cout<<"FINAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALLLLLLLL"<<std::endl;
-    list->ingresarDatoFinalVar("Tipo block", "Tipo block","Tipo Block",*b1.inicio,*b1.final,"block",codigo.substr(*b1.inicio, *b1.final + 1));
-    std::cout <<codigo.substr(*b1.inicio, *b1.final + 1)<<std::endl;
+
+
+    list->ingresarDatoFinalVar("Tipo block", "Tipo block","Tipo Block",*b1.inicio,*b1.final,"block",codigo.substr(*b1.inicio, *b1.final + 1),listaBlock2);
+
     return *b1.final;
 
 }
@@ -122,11 +122,11 @@ int Parser::getBlocksAnidados(string codigo){
 BlockList Parser::copyList(VarList *listaVar){
     BlockList lista;
     NodoVar *corredor  = listaVar->primero;
-    lista.ingresarDatoFinalVar(corredor->variable,corredor->valor, corredor->tipo,-10,-10,"variable","Tipo Variable");
+    lista.ingresarDatoFinalBlock(corredor->variable,corredor->valor, corredor->tipo,-10,-10,"variable","Tipo Variable");
     corredor = corredor->siguiente;
     while (corredor != listaVar->primero) {
 
-        lista.ingresarDatoFinalVar(corredor->variable,corredor->valor, corredor->tipo,-10,-10,"variable","Tipo Variable");
+        lista.ingresarDatoFinalBlock(corredor->variable,corredor->valor, corredor->tipo,-10,-10,"variable","Tipo Variable");
         corredor = corredor->siguiente;
     }
     return lista;
@@ -143,7 +143,8 @@ VarList Parser::getType(string codigo, VarList &lista){
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 4 + variable.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+6+variable.size(),codigo.size()), "int");
                 bool verificacion  = verificarTipo("int",valor);
-                lista.ingresarDatoFinalVar(variable,valor, "int",-10,-10,"variable","Tipo Variable");
+                BlockList lista2;
+                lista.ingresarDatoFinalVar(variable,valor, "int",-10,-10,"variable","Tipo Variable",lista2);
 
 
             }
@@ -156,7 +157,8 @@ VarList Parser::getType(string codigo, VarList &lista){
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 6 + variable.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+8+variable.size(),codigo.size()),"float");
                 bool verificacion = verificarTipo("float",valor);
-                lista.ingresarDatoFinalVar(variable,valor,"float",-10,-10,"variable","Tipo Variable");
+                BlockList lista2;
+                lista.ingresarDatoFinalVar(variable,valor,"float",-10,-10,"variable","Tipo Variable",lista2);
 
 
 
@@ -170,7 +172,8 @@ VarList Parser::getType(string codigo, VarList &lista){
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 5 + variable.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+7+variable.size(),codigo.size()),"long");
                 bool verificacion = verificarTipo("long",valor);
-                lista.ingresarDatoFinalVar(variable,valor,"long",-10,-10,"variable","Tipo Variable");
+                BlockList lista2;
+                lista.ingresarDatoFinalVar(variable,valor,"long",-10,-10,"variable","Tipo Variable", lista2);
 
 
 
@@ -186,7 +189,8 @@ VarList Parser::getType(string codigo, VarList &lista){
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 7 + variable.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+9+variable.size(),codigo.size()),"double");
                 bool verificacion = verificarTipo("double",valor);
-                lista.ingresarDatoFinalVar(variable,valor,"double",-10,-10,"variable","Tipo Variable");
+                BlockList lista2;
+                lista.ingresarDatoFinalVar(variable,valor,"double",-10,-10,"variable","Tipo Variable", lista2);
 
 
             }
@@ -199,7 +203,8 @@ VarList Parser::getType(string codigo, VarList &lista){
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 5 + variable.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+7+variable.size(),codigo.size()),"char");
                 bool verificacion = verificarTipo("char",valor);
-                lista.ingresarDatoFinalVar(variable,valor, "char",-10,-10,"variable","Tipo Variable");
+                BlockList lista2;
+                lista.ingresarDatoFinalVar(variable,valor, "char",-10,-10,"variable","Tipo Variable", lista2);
 
 
 
@@ -217,7 +222,7 @@ VarList Parser::getType(string codigo, VarList &lista){
         }
         else if(codigo[i]=='{' ){
             i  =  i + getBlocks(codigo.substr(i, codigo.size()),&lista);
-
+             i = i + 1;
         }
         else{
              i = i +1;

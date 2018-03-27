@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iostream>
 #include <string>
+#include "blocklist.h"
 using std::string;
 
 
@@ -14,9 +15,9 @@ VarList::VarList()
     ultimo = primero = nullptr;
 }
 
-void VarList::ingresarDatoFinalVar(string variable, string valor, string tipo, int inicio,int final,string Var_block,string block){
+void VarList::ingresarDatoFinalVar(string variable, string valor, string tipo, int inicio,int final,string Var_block,string block, BlockList listaBlock){
 
-        NodoVar *temporal = new NodoVar(variable,valor,tipo,inicio,final,Var_block,block);
+        NodoVar *temporal = new NodoVar(variable,valor,tipo,inicio,final,Var_block,block, listaBlock);
 
         if( primero == 0 ){
 
@@ -88,13 +89,14 @@ void VarList::imprimirListaAlDerecho(){
        else{
 
            NodoVar *corredor = primero->siguiente;
-           int contador = 2;
 
            primero->setPos(1);
            std::cout << "El elemento es: " << primero->getVariable() <<", y tiene el siguiente valor:"<< primero->valor<< ", y es de tipo:"<< primero->tipo<<std::endl;
            while(corredor != primero){
                std::cout << "El elemento es:"<< corredor->getVariable() << ", y tiene el siguiente valor:"<< corredor->valor << ", y es de tipo:"<< corredor->tipo<< std::endl;
-               contador = contador + 1;
+               if(corredor->getVariable() =="Es Block"){
+                   corredor->lista.imprimirListaAlDerecho();
+               }
                corredor = corredor -> siguiente;
            }
        }

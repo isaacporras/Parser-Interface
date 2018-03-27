@@ -1,11 +1,12 @@
 #include "nodovar.h"
 #include <iostream>
 #include <string>
+#include "blocklist.h"
 using std::string;
 
 
 
-NodoVar::NodoVar(string var, string valor, string tip, int ini, int fin, string Var_block, string blk)
+NodoVar::NodoVar(string var, string valor, string tip, int ini, int fin, string Var_block, string blk, BlockList listaBlock)
 {
     if(Var_block =="variable"){
         this->tipo = tip;
@@ -15,6 +16,7 @@ NodoVar::NodoVar(string var, string valor, string tip, int ini, int fin, string 
         anterior = nullptr;
      }
     else if(Var_block == "block"){
+        this->lista = listaBlock;
         this->inicio = ini;
         this->final = fin;
         this->block = blk;
@@ -38,4 +40,4 @@ void NodoVar::setVariable(string dat){
 }
 void NodoVar::setValor(string dat){
         this->valor = dat;
-    }
+}

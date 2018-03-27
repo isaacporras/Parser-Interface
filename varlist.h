@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include "nodovar.h"
+#include "blocklist.h"
 using std::string;
 
 class VarList
@@ -15,7 +16,7 @@ public:
     NodoVar *primero;
     NodoVar *ultimo;
     int largo = 0;
-    void ingresarDatoFinalVar(string variable, string valor, string tipo, int inicio,int final,string Var_block,string block);
+    void ingresarDatoFinalVar(string variable, string valor, string tipo, int inicio,int final,string Var_block,string block, BlockList listaBlock);
     void eliminarTodos();
     void imprimirListaAlDerecho();
     NodoVar *buscarNodo(string var);

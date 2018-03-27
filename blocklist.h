@@ -26,7 +26,7 @@ public:
     //INGRESAR AL FINAL
 
 public:
-    void ingresarDatoFinalVar(string variable, string valor, string tipo, int inicio,int final,string Var_block,string block){
+    void ingresarDatoFinalBlock(string variable, string valor, string tipo, int inicio,int final,string Var_block,string block){
 
         BlockNode *temporal = new BlockNode(variable,valor,tipo,inicio,final,Var_block,block);
 
@@ -78,7 +78,7 @@ public:
 
 public:
     void imprimirListaAlDerecho(){
-        std::cout<<"-------------------------------MI LISTA CONTIENE LOS SIGUIENTES ELEMENTOS----------------------"<<std::endl;
+        std::cout<<"-------------------------------MI BLOCK CONTIENE LOS SIGUIENTES ELEMENTOS----------------------"<<std::endl;
         BlockNode *corredor = primero;
         if (primero == 0){
             std::cout << "No hay elementos en la lista" << std::endl;
