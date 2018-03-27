@@ -30,7 +30,9 @@ SOURCES += \
 
 HEADERS += \
         ide_window.h \
-    parser.h
+    parser.h \
+    varlist.h \
+    varnode.h
 
 FORMS += \
         ide_window.ui

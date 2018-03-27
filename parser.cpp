@@ -23,7 +23,6 @@ using std::string;
 Parser::Parser()
 {
 
-
 }
 void Parser::parse(string codigo){
     codigoCompleto = codigo;
@@ -120,25 +119,24 @@ void Parser::getType(string codigo){
         if(codigo[i] == 'i'){
             if(codigo.substr(i,4) == "int "){
 
-                string variable1  = getVariable(codigo.substr(i + 4,codigo.size()));
-                bool tieneIgual = checkEqualSing(codigo.substr(i + 4 + variable1.size(),codigo.size()));
-                string valor = getValor(codigo.substr(i+6+variable1.size(),codigo.size()), "int");
+                string variable  = getVariable(codigo.substr(i + 4,codigo.size()));
+                bool tieneIgual = checkEqualSing(codigo.substr(i + 4 + variable.size(),codigo.size()));
+                string valor = getValor(codigo.substr(i+6+variable.size(),codigo.size()), "int");
                 bool verificacion  = verificarTipo("int",valor);
-                std::cout<<"Es de tipo int y tiene de variable: "<< variable1<<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
-
-
-
+                lista_valores.ingresarDatoFinal(variable,valor, "int");
+                std::cout<<"Es de tipo int y tiene de variable: "<< variable<<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
             }
             i = i +1;
         }
         else if(codigo[i]=='f'){
             if(codigo.substr(i,6) == "float "){
 
-                string variable2  = getVariable(codigo.substr(i + 5,codigo.size()));
-                bool tieneIgual = checkEqualSing(codigo.substr(i + 6 + variable2.size(),codigo.size()));
-                string valor = getValor(codigo.substr(i+8+variable2.size(),codigo.size()),"float");
+                string variable  = getVariable(codigo.substr(i + 5,codigo.size()));
+                bool tieneIgual = checkEqualSing(codigo.substr(i + 6 + variable.size(),codigo.size()));
+                string valor = getValor(codigo.substr(i+8+variable.size(),codigo.size()),"float");
                 bool verificacion = verificarTipo("float",valor);
-                std::cout<<"Es de tipo float y tiene de variable: "<< variable2<<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+                lista_valores.ingresarDatoFinal(variable,valor,"float");
+                std::cout<<"Es de tipo float y tiene de variable: "<< variable<<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
 
 
             }
@@ -147,11 +145,12 @@ void Parser::getType(string codigo){
         else if(codigo[i]=='l'){
             if(codigo.substr(i,5) == "long "){
 
-                string variable3  = getVariable(codigo.substr(i + 5,codigo.size()));
-                bool tieneIgual = checkEqualSing(codigo.substr(i + 5 + variable3.size(),codigo.size()));
-                string valor = getValor(codigo.substr(i+7+variable3.size(),codigo.size()),"long");
+                string variable  = getVariable(codigo.substr(i + 5,codigo.size()));
+                bool tieneIgual = checkEqualSing(codigo.substr(i + 5 + variable.size(),codigo.size()));
+                string valor = getValor(codigo.substr(i+7+variable.size(),codigo.size()),"long");
                 bool verificacion = verificarTipo("long",valor);
-                std::cout<<"Es de tipo long y tiene de variable: "<< variable3 <<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+                lista_valores.ingresarDatoFinal(variable,valor,"long");
+                std::cout<<"Es de tipo long y tiene de variable: "<< variable <<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
 
 
 
@@ -166,6 +165,8 @@ void Parser::getType(string codigo){
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 7 + variable.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+9+variable.size(),codigo.size()),"double");
                 bool verificacion = verificarTipo("double",valor);
+                lista_valores.ingresarDatoFinal(variable,valor,"double");
+
                 std::cout<<"Es de tipo double y tiene de variable: "<< variable <<" tiene igual : " << tieneIgual<<", y un valor de: "<<valor<<std::endl;
             }
              i = i +1;
@@ -173,11 +174,12 @@ void Parser::getType(string codigo){
         else if(codigo[i]=='c' ){
             if(codigo.substr(i,5) == "char "){
 
-                string variable4  = getVariable(codigo.substr(i + 4,codigo.size()));
-                bool tieneIgual = checkEqualSing(codigo.substr(i + 5 + variable4.size(),codigo.size()));
-                string valor = getValor(codigo.substr(i+7+variable4.size(),codigo.size()),"char");
+                string variable  = getVariable(codigo.substr(i + 4,codigo.size()));
+                bool tieneIgual = checkEqualSing(codigo.substr(i + 5 + variable.size(),codigo.size()));
+                string valor = getValor(codigo.substr(i+7+variable.size(),codigo.size()),"char");
                 bool verificacion = verificarTipo("char",valor);
-                std::cout<<"Es de tipo char y tiene de variable: "<< variable4 <<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
+                lista_valores.ingresarDatoFinal(variable,valor, "char");
+                std::cout<<"Es de tipo char y tiene de variable: "<< variable <<" tiene igual : " <<tieneIgual<<", y un valor de: "<<valor<<std::endl;
 
 
             }
@@ -196,6 +198,7 @@ void Parser::getType(string codigo){
              i = i +1;
         }
     }
+    lista_valores.imprimirListaAlDerecho();
 }
 
 
@@ -277,10 +280,6 @@ string Parser::getValor(string codigo, string tipo){
         i = i + 1;
     }
 
-
-
-
-
     string valor2 = valor;
    if (valor2.find('.')!= std::string::npos){
        valor2.erase(std::remove(valor2.begin(), valor2.end(), '.'), valor2.end());
@@ -291,7 +290,7 @@ string Parser::getValor(string codigo, string tipo){
 
 
 
-   string estado ="es numero";
+   string estado = "es numero";
 
    if(tipo == "float" || tipo == "long" || tipo == "double"){
        std::cout<<"EL VALOR 2 ES: "<<valor2 <<std::endl;
@@ -322,6 +321,7 @@ string Parser::getValor(string codigo, string tipo){
     }
     else if (estado == "no es numero"){
         if(tipo =="char"){
+
             return valor;
         }
         else{

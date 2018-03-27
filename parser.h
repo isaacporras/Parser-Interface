@@ -1,6 +1,7 @@
 #ifndef PARSER_H
 #define PARSER_H
 #include <string>
+#include "varlist.h"
 using std::string;
 
 
@@ -12,6 +13,8 @@ struct block{
 class Parser
 {
 public:
+   VarList lista_variables;
+   VarList lista_valores;
     string tiposDeVariables[6] = {"int","long","char","float", "double", "struct"};
     string codigoCompleto;
     Parser();
