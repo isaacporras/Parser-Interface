@@ -197,6 +197,13 @@ void Parser::getType(string codigo){
         }
     }
 }
+
+
+
+
+
+
+
 string Parser::getVariable(string codigo){
 
     string variable = "";
@@ -210,6 +217,12 @@ string Parser::getVariable(string codigo){
     }
     return variable;
 }
+
+
+
+
+
+
 
 bool Parser::checkEqualSing(string codigo){
 
@@ -227,6 +240,12 @@ bool Parser::checkEqualSing(string codigo){
         return false;
     }
 }
+
+
+
+
+
+
 int Parser::getVariableSize(string codigo){
 
     string variable = "";
@@ -240,6 +259,13 @@ int Parser::getVariableSize(string codigo){
     }
     return i;
 }
+
+
+
+
+
+
+
 string Parser::getValor(string codigo, string tipo){
     string valor = "";
     int i = 0;
@@ -250,24 +276,74 @@ string Parser::getValor(string codigo, string tipo){
         valor = valor + codigo[i];
         i = i + 1;
     }
-    int p = 0;
-    string estado ="es numero";
-    while(p!= valor.size()){
-        char x  = valor[p];
-        if (!isdigit(x)){
-            estado = "no es numero";
-            break;
+
+
+
+
+
+    string valor2 = valor;
+   if (valor2.find('.')!= std::string::npos){
+       valor2.erase(std::remove(valor2.begin(), valor2.end(), '.'), valor2.end());
+   }
+   if (valor2.find(',')!= std::string::npos){
+       valor.erase(std::remove(valor2.begin(), valor2.end(), ','), valor2.end());
+   }
+
+
+
+   string estado ="es numero";
+
+   if(tipo == "float" || tipo == "long" || tipo == "double"){
+       std::cout<<"EL VALOR 2 ES: "<<valor2 <<std::endl;
+       int p = 0;
+       while(p != valor2.size()){
+           char x  = valor2[p];
+           if (!isdigit(x)){
+               estado = "no es numero";
+               break;
+           }
+           p = p + 1;
+       }
+   }
+   else{
+       int p = 0;
+        while(p!= valor.size()){
+            char x  = valor[p];
+            if (!isdigit(x)){
+                estado = "no es numero";
+                break;
+            }
+            p = p + 1;
         }
-        p = p + 1;
-    }
+   }
+
+
+
+
+
+
+
     if (estado == "es numero"){
         return valor;
     }
     else if (estado == "no es numero"){
-        return analizarValor(valor);
+        if(tipo =="char"){
+            return valor;
+        }
+        else{
+            return analizarValor(valor);
+        }
+
 
     }
 }
+
+
+
+
+
+
+
 
 bool Parser::verificarTipo(string tipo ,string valor){
     if(tipo == "int"){
@@ -419,6 +495,7 @@ string Parser::analizarValor(string valor){
         }
     }
     else if (valor.find('/')!= std::string::npos){
+        std::cout<<"VA A DIVIDIR"<<std::endl;
         string num1 = valor.substr(0,valor.find('/'));
         std::cout<<"NUM1: |" << num1 <<"|"<<std::endl;
 
