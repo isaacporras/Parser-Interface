@@ -77,8 +77,8 @@ public:
     // IMPRIMIR LISTA AL DERECHO
 
 public:
-    void imprimirListaAlDerecho(){
-        std::cout<<"-------------------------------MI BLOCK CONTIENE LOS SIGUIENTES ELEMENTOS----------------------"<<std::endl;
+    void imprimirListaAlDerechoBlock(){
+        std::cout<<"-------------------------------MI BLOCK CONTIENE LOS SIGUIENTES ELEMENTOS  ----------------------"<<std::endl;
         BlockNode *corredor = primero;
         if (primero == 0){
             std::cout << "No hay elementos en la lista" << std::endl;
@@ -95,7 +95,9 @@ public:
                 contador = contador + 1;
                 corredor = corredor -> siguiente;
             }
+            std::cout<<"-------------------------------Termino mi Block----------------------"<<std::endl;
         }
+
     }
 public:
     BlockNode *buscarNodo(string var){

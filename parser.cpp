@@ -28,7 +28,7 @@ void Parser::parse(string codigo){
     codigoCompleto = codigo;
     std::cout<<"----------------------------SE EMPIEZA A PARSERA -----------------------------"<<std::endl;
     writeFile(codigo);
-    readFile();
+    imprimirVariables();
  }
 
 void Parser::writeFile(string codigo){
@@ -39,6 +39,11 @@ void Parser::writeFile(string codigo){
 
 void Parser::readFile(){
 
+}
+
+void Parser::imprimirVariables(){
+    std::cout<<"********************************************************************************"<<std::endl;
+    lista_valores.imprimirListaAlDerecho();
 }
 int Parser::getBlocks(string codigo, VarList *list){
     std::cout<<"ENCONTRO EL SIGUIENTE BLOQUE"<<std::endl;
@@ -66,6 +71,8 @@ int Parser::getBlocks(string codigo, VarList *list){
         }
         else if(codigo[i]=='}' && status == "block abierto"){
             std::cout << "Cerro un block en la posicion :" << i << std::endl;
+            std::cout << "Mi bloque final es:"<< std::endl;
+            std::cout << codigo.substr(1,i) << std::endl;
             *b1.final = i;
             status = "block cerrado";
             i = i + 1;
@@ -79,10 +86,11 @@ int Parser::getBlocks(string codigo, VarList *list){
 
     VarList provicional;
     VarList listaBlock1 = getType(codigo.substr(*b1.inicio + 1,*b1.final + 1 ), provicional);
+    listaBlock1.imprimirListaAlDerecho();
 
     BlockList listaBlock2 = copyList(&listaBlock1);
 
-
+    listaBlock2.imprimirListaAlDerechoBlock();
     list->ingresarDatoFinalVar("Tipo block", "Tipo block","Tipo Block",*b1.inicio,*b1.final,"block",codigo.substr(*b1.inicio, *b1.final + 1),listaBlock2);
 
     return *b1.final;
@@ -222,13 +230,12 @@ VarList Parser::getType(string codigo, VarList &lista){
         }
         else if(codigo[i]=='{' ){
             i  =  i + getBlocks(codigo.substr(i, codigo.size()),&lista);
-             i = i + 1;
+
         }
         else{
              i = i +1;
         }
    }
-    lista.imprimirListaAlDerecho();
     return lista;
 }
 

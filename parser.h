@@ -34,6 +34,7 @@ public:
     int buscarNum(string nombre_de_variable);
     string getNumbers(string numbers);
     BlockList copyList(VarList *listaVar);
+    void imprimirVariables();
 
 
 
