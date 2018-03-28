@@ -28,10 +28,10 @@ public:
     string getVariable(string codigo);
     bool checkEqualSing(string codigo);
     int getVariableSize(string codigo);
-    string getValor(string codigo, string tipo);
+    string getValor(string codigo, string tipo, VarList lista);
     bool verificarTipo(string tipo,string valor);
-    string analizarValor(string valor);
-    int buscarNum(string nombre_de_variable);
+    string analizarValor(string valor, VarList listaVar);
+    int buscarNum(string nombre_de_variable, VarList lista);
     string getNumbers(string numbers);
     BlockList copyList(VarList *listaVar);
     void imprimirVariables();

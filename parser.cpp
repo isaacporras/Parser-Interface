@@ -46,6 +46,7 @@ void Parser::imprimirVariables(){
     lista_valores.imprimirListaAlDerecho();
 }
 int Parser::getBlocks(string codigo, VarList *list){
+
     std::cout<<"ENCONTRO EL SIGUIENTE BLOQUE"<<std::endl;
     std::cout<<codigo<<std::endl;
 
@@ -140,7 +141,7 @@ BlockList Parser::copyList(VarList *listaVar){
     return lista;
 }
 
-VarList Parser::getType(string codigo, VarList &lista){
+VarList Parser::getType(string codigo, VarList &lista_var){
     int i = 0;
 
     while(i!= codigo.size()){
@@ -149,13 +150,13 @@ VarList Parser::getType(string codigo, VarList &lista){
 
                 string variable  = getVariable(codigo.substr(i + 4,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 4 + variable.size(),codigo.size()));
-                string valor = getValor(codigo.substr(i+6+variable.size(),codigo.size()), "int");
+                string valor = getValor(codigo.substr(i+6+variable.size(),codigo.size()), "int", lista_var);
                 if (valor == "NO SE ENCONTRO"){
                     std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
                 }
                 bool verificacion  = verificarTipo("int",valor);
                 BlockList lista2;
-                lista.ingresarDatoFinalVar(variable,valor, "int",-10,-10,"variable","Tipo Variable",lista2);
+                lista_var.ingresarDatoFinalVar(variable,valor, "int",-10,-10,"variable","Tipo Variable",lista2);
 
 
             }
@@ -166,14 +167,14 @@ VarList Parser::getType(string codigo, VarList &lista){
 
                 string variable  = getVariable(codigo.substr(i + 5,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 6 + variable.size(),codigo.size()));
-                string valor = getValor(codigo.substr(i+8+variable.size(),codigo.size()),"float");
+                string valor = getValor(codigo.substr(i+8+variable.size(),codigo.size()),"float", lista_var);
                 if (valor == "NO SE ENCONTRO"){
                     std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
                     break;
                 }
                 bool verificacion = verificarTipo("float",valor);
                 BlockList lista2;
-                lista.ingresarDatoFinalVar(variable,valor,"float",-10,-10,"variable","Tipo Variable",lista2);
+                lista_var.ingresarDatoFinalVar(variable,valor,"float",-10,-10,"variable","Tipo Variable",lista2);
 
 
 
@@ -185,14 +186,14 @@ VarList Parser::getType(string codigo, VarList &lista){
 
                 string variable  = getVariable(codigo.substr(i + 5,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 5 + variable.size(),codigo.size()));
-                string valor = getValor(codigo.substr(i+7+variable.size(),codigo.size()),"long");
+                string valor = getValor(codigo.substr(i+7+variable.size(),codigo.size()),"long", lista_var);
                 if (valor == "NO SE ENCONTRO"){
                     std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
                     break;
                 }
                 bool verificacion = verificarTipo("long",valor);
                 BlockList lista2;
-                lista.ingresarDatoFinalVar(variable,valor,"long",-10,-10,"variable","Tipo Variable", lista2);
+                lista_var.ingresarDatoFinalVar(variable,valor,"long",-10,-10,"variable","Tipo Variable", lista2);
 
 
 
@@ -206,14 +207,14 @@ VarList Parser::getType(string codigo, VarList &lista){
 
                 string variable  = getVariable(codigo.substr(i + 7,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 7 + variable.size(),codigo.size()));
-                string valor = getValor(codigo.substr(i+9+variable.size(),codigo.size()),"double");
+                string valor = getValor(codigo.substr(i+9+variable.size(),codigo.size()),"double",lista_var);
                 if (valor == "NO SE ENCONTRO"){
                     std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
                     break;
                 }
                 bool verificacion = verificarTipo("double",valor);
                 BlockList lista2;
-                lista.ingresarDatoFinalVar(variable,valor,"double",-10,-10,"variable","Tipo Variable", lista2);
+                lista_var.ingresarDatoFinalVar(variable,valor,"double",-10,-10,"variable","Tipo Variable", lista2);
 
 
             }
@@ -224,14 +225,14 @@ VarList Parser::getType(string codigo, VarList &lista){
 
                 string variable  = getVariable(codigo.substr(i + 4,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 5 + variable.size(),codigo.size()));
-                string valor = getValor(codigo.substr(i+7+variable.size(),codigo.size()),"char");
+                string valor = getValor(codigo.substr(i+7+variable.size(),codigo.size()),"char", lista_var);
                 if (valor == "NO SE ENCONTRO"){
                     std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
                     break;
                 }
                 bool verificacion = verificarTipo("char",valor);
                 BlockList lista2;
-                lista.ingresarDatoFinalVar(variable,valor, "char",-10,-10,"variable","Tipo Variable", lista2);
+                lista_var.ingresarDatoFinalVar(variable,valor, "char",-10,-10,"variable","Tipo Variable", lista2);
 
 
 
@@ -242,20 +243,20 @@ VarList Parser::getType(string codigo, VarList &lista){
             if(codigo.substr(i,7) == "struct "){
                 string variable5  = getVariable(codigo.substr(i + 6,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(i + getVariableSize(codigo.substr(i + 7,codigo.size())),codigo.size()));
-                string valor = getValor(codigo.substr(i+6+variable5.size(),codigo.size()),"struct");
+                string valor = getValor(codigo.substr(i+6+variable5.size(),codigo.size()),"struct", lista_var);
 
             }
              i = i +1;
         }
         else if(codigo[i]=='{' ){
-            i  =  i + getBlocks(codigo.substr(i, codigo.size()),&lista);
+            i  =  i + getBlocks(codigo.substr(i, codigo.size()),&lista_var);
 
         }
         else{
              i = i +1;
         }
    }
-    return lista;
+    return lista_var;
 }
 
 
@@ -326,7 +327,8 @@ int Parser::getVariableSize(string codigo){
 
 
 
-string Parser::getValor(string codigo, string tipo){
+string Parser::getValor(string codigo, string tipo, VarList lista_Var){
+
     string valor = "";
     int i = 0;
     while(codigo[i] == ' '){
@@ -383,7 +385,7 @@ string Parser::getValor(string codigo, string tipo){
         }
         else{
 
-            return analizarValor(valor);
+            return analizarValor(valor, lista_Var);
         }
 
 
@@ -398,6 +400,7 @@ string Parser::getValor(string codigo, string tipo){
 
 
 bool Parser::verificarTipo(string tipo ,string valor){
+
     if(tipo == "int"){
         if(typeid (atoi( valor.c_str() )).name() == typeid(9).name()){
             return true;
@@ -449,11 +452,14 @@ bool Parser::verificarTipo(string tipo ,string valor){
 
 
 
-string Parser::analizarValor(string valor){
-    std::cout<<"se metio a analizar con :" <<valor<<std::endl;
+string Parser::analizarValor(string valor, VarList listaVar){
+
+    std::cout<<"++++++++++++++++++++++++++++++++++   se metio a analizar con :" <<valor<<" ++++++++++++++++++++++++++++++++++++"<<std::endl;
+    listaVar.imprimirListaAlDerecho();
     valor= valor + ";";
 
     if (valor.find('+')!= std::string::npos){
+
         std::cout<<"SE METIO A SUMAR :" <<valor<<std::endl;
         string num1 = getNumbers(valor.substr(0,valor.find('+') + 1));
 
@@ -484,14 +490,16 @@ string Parser::analizarValor(string valor){
             j = j + 1;
         }
         std::cout<<"LOS ESTADOS DE MI NUMERO SON: "<<estado_num1 <<", " << estado_num2<<std::endl;
+
+
         if(estado_num1 == "es numero" && estado_num2 == "es numero"){
-            int numeroBuscado = buscarNum(num1);
+            int numeroBuscado = buscarNum(num1,  listaVar);
             std::cout<<numeroBuscado << std::endl;
             int suma = (atoi( num1.c_str()) + atoi( num2.c_str() ));
             return to_string(suma);
         }
         else if(estado_num1 == "es numero" && estado_num2 == "no es numero"){
-            int numeroBuscado = buscarNum(num2);
+            int numeroBuscado = buscarNum(num2,  listaVar);
             if(numeroBuscado == -123456){
                 return "NO SE ENCONTRO";
             }
@@ -499,7 +507,7 @@ string Parser::analizarValor(string valor){
             return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "es numero"){
-            int numeroBuscado = buscarNum(num1);
+            int numeroBuscado = buscarNum(num1,  listaVar);
             if(numeroBuscado == -123456){
                 return "NO SE ENCONTRO";
             }
@@ -507,8 +515,8 @@ string Parser::analizarValor(string valor){
             return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "no es numero"){
-            int numeroBuscado1 = buscarNum(num1);
-            int numeroBuscado2 = buscarNum(num2);
+            int numeroBuscado1 = buscarNum(num1,  listaVar);
+            int numeroBuscado2 = buscarNum(num2,  listaVar);
             if(numeroBuscado1 == -123456 || numeroBuscado2 == -123456){
                 return "NO SE ENCONTRO";
             }
@@ -549,13 +557,13 @@ string Parser::analizarValor(string valor){
             j = j + 1;
         }
         if(estado_num1 == "es numero" && estado_num2 == "es numero"){
-            int numeroBuscado = buscarNum(num1);
+            int numeroBuscado = buscarNum(num1,  listaVar);
             std::cout<<numeroBuscado << std::endl;
             int suma = (atoi( num1.c_str()) - atoi( num2.c_str() ));
             return to_string(suma);
         }
         else if(estado_num1 == "es numero" && estado_num2 == "no es numero"){
-            int numeroBuscado = buscarNum(num2);
+            int numeroBuscado = buscarNum(num2,  listaVar);
             if(numeroBuscado == -123456){
                 return "NO SE ENCONTRO";
             }
@@ -563,7 +571,7 @@ string Parser::analizarValor(string valor){
             return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "es numero"){
-            int numeroBuscado = buscarNum(num1);
+            int numeroBuscado = buscarNum(num1,  listaVar);
             if(numeroBuscado == -123456){
                 return "NO SE ENCONTRO";
             }
@@ -571,8 +579,8 @@ string Parser::analizarValor(string valor){
             return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "no es numero"){
-            int numeroBuscado1 = buscarNum(num1);
-            int numeroBuscado2 = buscarNum(num2);
+            int numeroBuscado1 = buscarNum(num1,  listaVar);
+            int numeroBuscado2 = buscarNum(num2,  listaVar);
             if(numeroBuscado1 == -123456 || numeroBuscado2 == -123456){
                 return "NO SE ENCONTRO";
             }
@@ -614,13 +622,13 @@ string Parser::analizarValor(string valor){
         }
 
         if(estado_num1 == "es numero" && estado_num2 == "es numero"){
-            int numeroBuscado = buscarNum(num1);
+            int numeroBuscado = buscarNum(num1,  listaVar);
             std::cout<<numeroBuscado << std::endl;
             int suma = (atoi( num1.c_str()) / atoi( num2.c_str() ));
             return to_string(suma);
         }
         else if(estado_num1 == "es numero" && estado_num2 == "no es numero"){
-            int numeroBuscado = buscarNum(num2);
+            int numeroBuscado = buscarNum(num2,  listaVar);
             if(numeroBuscado == -123456){
                 return "NO SE ENCONTRO";
             }
@@ -628,7 +636,7 @@ string Parser::analizarValor(string valor){
             return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "es numero"){
-            int numeroBuscado = buscarNum(num1);
+            int numeroBuscado = buscarNum(num1,  listaVar);
             if(numeroBuscado == -123456){
                 return "NO SE ENCONTRO";
             }
@@ -636,8 +644,8 @@ string Parser::analizarValor(string valor){
             return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "no es numero"){
-            int numeroBuscado1 = buscarNum(num1);
-            int numeroBuscado2 = buscarNum(num2);
+            int numeroBuscado1 = buscarNum(num1,  listaVar);
+            int numeroBuscado2 = buscarNum(num2,  listaVar);
             if(numeroBuscado1 == -123456 || numeroBuscado2 == -123456){
                 return "NO SE ENCONTRO";
             }
@@ -673,13 +681,13 @@ string Parser::analizarValor(string valor){
         }
 
         if(estado_num1 == "es numero" && estado_num2 == "es numero"){
-            int numeroBuscado = buscarNum(num1);
+            int numeroBuscado = buscarNum(num1,  listaVar);
             std::cout<<numeroBuscado << std::endl;
             int suma = (atoi( num1.c_str()) % atoi( num2.c_str() ));
             return to_string(suma);
         }
         else if(estado_num1 == "es numero" && estado_num2 == "no es numero"){
-            int numeroBuscado = buscarNum(num2);
+            int numeroBuscado = buscarNum(num2,  listaVar);
             if(numeroBuscado == -123456){
                 return "NO SE ENCONTRO";
             }
@@ -687,7 +695,7 @@ string Parser::analizarValor(string valor){
             return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "es numero"){
-            int numeroBuscado = buscarNum(num1);
+            int numeroBuscado = buscarNum(num1,  listaVar);
             if(numeroBuscado == -123456){
                 return "NO SE ENCONTRO";
             }
@@ -695,8 +703,8 @@ string Parser::analizarValor(string valor){
             return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "no es numero"){
-            int numeroBuscado1 = buscarNum(num1);
-            int numeroBuscado2 = buscarNum(num2);
+            int numeroBuscado1 = buscarNum(num1,  listaVar);
+            int numeroBuscado2 = buscarNum(num2,  listaVar);
             if(numeroBuscado1 == -123456 || numeroBuscado2 == -123456){
                 return "NO SE ENCONTRO";
             }
@@ -711,13 +719,21 @@ string Parser::analizarValor(string valor){
 }
 
 
-int Parser::buscarNum(string nombre_de_variable){
+int Parser::buscarNum(string nombre_de_variable, VarList listaVar){
+
   std::cout<<"SE METIO A BUSCAR LA VARIABLE:" << nombre_de_variable << std::endl;
+
+  listaVar.imprimirListaAlDerecho();
   NodoVar *nodo = lista_valores.buscarNodo(nombre_de_variable);
+  string valor_en_scope = listaVar.buscarNodo(nombre_de_variable)->variable;
+  std::cout<<"EN SCOPE:" << valor_en_scope << std::endl;
   std::cout<<"NODO:" << nodo->variable<< std::endl;
-  if(nodo->variable == "NO SE ENCONTRO"){
+  if(nodo->variable == "NO SE ENCONTRO" && valor_en_scope == "NO SE ENCONTRO"){
       std::cout<<"NO SE ENCONTRO EL DATO BUSCADO" << std::endl;
       return -123456;
+  }
+  else if(nodo->variable == "NO SE ENCONTRO" && valor_en_scope != "NO SE ENCONTRO"){
+      nodo = listaVar.buscarNodo(nombre_de_variable);
   }
   else{
       if(nodo->tipo == "int"){
@@ -736,7 +752,6 @@ int Parser::buscarNum(string nombre_de_variable){
 }
 
 string Parser::getNumbers(string number){
-
     string valor = "";
     int i = 0;
     while(number[i] == ' '){

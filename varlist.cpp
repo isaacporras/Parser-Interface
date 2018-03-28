@@ -61,6 +61,10 @@ NodoVar *VarList::buscarNodo(string var){
     std::cout<<"SE METIO A BUSCAR EL NODO"<<std::endl;
     if (this->primero == 0){
         std::cout << "No hay elementos en la lista" << std::endl;
+        BlockList def_list;
+        NodoVar *nodo = new NodoVar("NO SE ENCONTRO","NO SE ENCONTRO","NO SE ENCONTRO",0,0,"","",def_list);
+        nodo->setVariable("NO SE ENCONTRO");
+        return nodo;
     }
     else{
 
