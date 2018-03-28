@@ -102,13 +102,13 @@ void VarList::imprimirListaAlDerecho(){
 
            primero->setPos(1);
            std::cout << "El elemento es: " << primero->getVariable() <<", y tiene el siguiente valor:"<< primero->valor<< ", y es de tipo:"<< primero->tipo<<std::endl;
-           if(primero->getVariable()=="Es Block"){
+           if(primero->getVariable()=="Es Block" || primero->tipo == "Es struct"){
                primero->lista.imprimirListaAlDerechoBlock();
                std::cout<<"-------------------------------YA NO HAY ELEMENTOS EN MI BLOCK----------------------"<<std::endl;
            }
            while(corredor != primero){
                std::cout << "El elemento es:"<< corredor->getVariable() << ", y tiene el siguiente valor:"<< corredor->valor << ", y es de tipo:"<< corredor->tipo<< std::endl;
-               if(corredor->getVariable() =="Es Block"){
+               if(corredor->getVariable() =="Es Block"|| primero->tipo == "Es struct"){
                    std::cout<<"MI BLOCK TIENE LOS SIGUIENTES ELEMENTOS"<<std::endl;
                    corredor->lista.imprimirListaAlDerechoBlock();
                }

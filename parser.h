@@ -27,14 +27,18 @@ public:
     VarList getType(string codigo, VarList &lista);
     string getVariable(string codigo);
     bool checkEqualSing(string codigo);
-    int getVariableSize(string codigo);
+    bool checkDotSing(string codigo);
+    int *getVariableSize(string codigo);
     string getValor(string codigo, string tipo, VarList lista);
     bool verificarTipo(string tipo,string valor);
+    int obtenerNumero(NodoVar *nodo);
     string analizarValor(string valor, VarList listaVar);
-    int buscarNum(string nombre_de_variable, VarList lista);
+    NodoVar *buscarNum(string nombre_de_variable, VarList lista);
     string getNumbers(string numbers);
     BlockList copyList(VarList *listaVar);
     void imprimirVariables();
+    int analizarStruct(string codigo, VarList *list, string variable);
+
 
 
 

@@ -15,6 +15,16 @@ NodoVar::NodoVar(string var, string valor, string tip, int ini, int fin, string 
         siguiente = nullptr;
         anterior = nullptr;
      }
+    else if(tip == "Tipo struct"){
+        this->lista = listaBlock;
+        this->inicio = ini;
+        this->final = fin;
+        this->block = blk;
+        this->variable = var;
+        this->tipo = "Es struct";
+        siguiente = nullptr;
+        anterior = nullptr;
+    }
     else if(Var_block == "block"){
         this->lista = listaBlock;
         this->inicio = ini;
