@@ -58,7 +58,7 @@ void VarList::eliminarTodos(){
 
     }
 NodoVar *VarList::buscarNodo(string var){
-    std::cout<<"SE METIO A BUSCAR EL NODO"<<std::endl;
+//    std::cout<<"SE METIO A BUSCAR EL NODO"<<std::endl;
     if (this->primero == 0){
         std::cout << "No hay elementos en la lista" << std::endl;
         BlockList def_list;
@@ -75,7 +75,7 @@ NodoVar *VarList::buscarNodo(string var){
             return primero;
         }
         while(corredor != primero){
-            std::cout<<"LA VARIABLE DE MI NODO ES: " << corredor->variable << " = " << corredor->valor<<std::endl;
+//            std::cout<<"LA VARIABLE DE MI NODO ES: " << corredor->variable << " = " << corredor->valor<<std::endl;
             if(corredor->variable == var){
                 std::cout<<"EL DATO ENCONTRADO ES: " << corredor->variable << " = " << corredor->valor<<std::endl;
                 return corredor;

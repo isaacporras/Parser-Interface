@@ -168,9 +168,15 @@ VarList Parser::getType(string codigo, VarList &lista_var){
                     string valor = getValor(codigo.substr(i+6+variable.size(),codigo.size()), "int", lista_var);
                     bool verificacion  = verificarTipo("int",valor);
                     if (valor == "NO SE ENCONTRO"){
-                        std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
+                        std::cout<<"NO SE ENCONTRO LA VARIABLE 2.0"<<std::endl;
+                        lista_var.ingresarDatoFinalVar(variable,valor, "int",-10,-10,"variable","Tipo Variable",lista2);
+                        i = i + 1;
+
                     }
+                    else{
                     lista_var.ingresarDatoFinalVar(variable,valor, "int",-10,-10,"variable","Tipo Variable",lista2);
+                    i = i +  3 + valor.size() + variable.size() + 2;
+                    }
                 }
                 else if(tieneDot == true){
                     std::cout<<"VARIABLE NO INICIALIZADA"<<std::endl;
@@ -188,14 +194,17 @@ VarList Parser::getType(string codigo, VarList &lista_var){
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 6 + variable.size(),codigo.size()));
                 bool tieneDot = checkDotSing(codigo.substr(i + 6 + variable.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+8+variable.size(),codigo.size()),"float", lista_var);
+                BlockList lista2;
                 if (valor == "NO SE ENCONTRO"){
                     std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
-                    break;
+                    lista_var.ingresarDatoFinalVar(variable,valor,"float",-10,-10,"variable","Tipo Variable",lista2);
+                    i = i + 1;
                 }
                 bool verificacion = verificarTipo("float",valor);
-                BlockList lista2;
+
                 if(tieneIgual == true){
                     lista_var.ingresarDatoFinalVar(variable,valor,"float",-10,-10,"variable","Tipo Variable",lista2);
+                    i = i +  5 + valor.size() + variable.size() + 2;
                 }
                 else if(tieneDot == true){
                     lista_var.ingresarDatoFinalVar(variable,"No se ha inicializado","float",-10,-10,"variable","Tipo Variable",lista2);
@@ -219,11 +228,14 @@ VarList Parser::getType(string codigo, VarList &lista_var){
                 if(tieneIgual == true){
                     string valor = getValor(codigo.substr(i+7+variable.size(),codigo.size()),"long", lista_var);
                     bool verificacion = verificarTipo("long",valor);
+
                     if (valor == "NO SE ENCONTRO"){
                         std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
-                        break;
+                        lista_var.ingresarDatoFinalVar(variable,valor,"long",-10,-10,"variable","Tipo Variable", lista2);
+                        i = i + 1;
                     }
                     lista_var.ingresarDatoFinalVar(variable,valor,"long",-10,-10,"variable","Tipo Variable", lista2);
+                    i = i +  4 + valor.size() + variable.size() + 2;
                 }
                 else if(tieneDot == true){
                     lista_var.ingresarDatoFinalVar(variable,"No se ha inicializado","long",-10,-10,"variable","Tipo Variable", lista2);
@@ -240,14 +252,17 @@ VarList Parser::getType(string codigo, VarList &lista_var){
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 7 + variable.size(),codigo.size()));
                 bool tieneDot = checkDotSing(codigo.substr(i + 6 + variable.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+9+variable.size(),codigo.size()),"double",lista_var);
+                BlockList lista2;
                 if (valor == "NO SE ENCONTRO"){
                     std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
-                    break;
+                    lista_var.ingresarDatoFinalVar(variable,valor,"double",-10,-10,"variable","Tipo Variable", lista2);
+                    i = i + 1;
                 }
                 bool verificacion = verificarTipo("double",valor);
-                BlockList lista2;
+
                 if(tieneIgual == true){
                     lista_var.ingresarDatoFinalVar(variable,valor,"double",-10,-10,"variable","Tipo Variable", lista2);
+                    i = i +  6 + valor.size() + variable.size() + 2;
                 }
                 else if(tieneDot == true){
                     lista_var.ingresarDatoFinalVar(variable,valor,"No se ha inicializado",-10,-10,"variable","Tipo Variable", lista2);
@@ -262,14 +277,17 @@ VarList Parser::getType(string codigo, VarList &lista_var){
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 5 + variable.size(),codigo.size()));
                 bool tieneDot = checkDotSing(codigo.substr(i + 6 + variable.size(),codigo.size()));
                 string valor = getValor(codigo.substr(i+7+variable.size(),codigo.size()),"char", lista_var);
+                BlockList lista2;
                 if (valor == "NO SE ENCONTRO"){
                     std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
-                    break;
+                    lista_var.ingresarDatoFinalVar(variable,valor, "char",-10,-10,"variable","Tipo Variable", lista2);
+                    i = i + 1;
                 }
                 bool verificacion = verificarTipo("char",valor);
-                BlockList lista2;
+
                 if(tieneIgual == true){
                     lista_var.ingresarDatoFinalVar(variable,valor, "char",-10,-10,"variable","Tipo Variable", lista2);
+                    i = i +  4 + valor.size() + variable.size() + 2;
                 }
                 else if(tieneDot == true){
                     lista_var.ingresarDatoFinalVar(variable,"No se ha inicializado", "char",-10,-10,"variable","Tipo Variable", lista2);
@@ -873,7 +891,7 @@ NodoVar *Parser::buscarNum(string nombre_de_variable, VarList listaVar){
 
   std::cout<<"SE METIO A BUSCAR LA VARIABLE:" << nombre_de_variable << std::endl;
 
-  listaVar.imprimirListaAlDerecho();
+//  listaVar.imprimirListaAlDerecho();
   NodoVar *nodo = lista_valores.buscarNodo(nombre_de_variable);
   string valor_en_scope = listaVar.buscarNodo(nombre_de_variable)->variable;
   std::cout<<"EN SCOPE:" << valor_en_scope << std::endl;
