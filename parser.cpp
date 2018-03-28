@@ -155,18 +155,30 @@ VarList Parser::getType(string codigo, VarList &lista_var){
             if(codigo.substr(i,4) == "int "){
 
                 string variable  = getVariable(codigo.substr(i + 4,codigo.size()));
+                std::cout<<"LA VARIABLE"<<variable<<std::endl;
+                std::cout<<"MI CODIGO ES: "<<codigo.substr(i + 3 + variable.size(),codigo.size())<<std::endl;
+                bool tieneDot = checkDotSing(codigo.substr(i + 4 + variable.size(),codigo.size()));
+
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 4 + variable.size(),codigo.size()));
-                string valor = getValor(codigo.substr(i+6+variable.size(),codigo.size()), "int", lista_var);
-                if (valor == "NO SE ENCONTRO"){
-                    std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
-                }
-                bool verificacion  = verificarTipo("int",valor);
+
+
+
                 BlockList lista2;
                 if(tieneIgual == true){
+                    string valor = getValor(codigo.substr(i+6+variable.size(),codigo.size()), "int", lista_var);
+                    bool verificacion  = verificarTipo("int",valor);
+                    if (valor == "NO SE ENCONTRO"){
+                        std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
+                    }
                     lista_var.ingresarDatoFinalVar(variable,valor, "int",-10,-10,"variable","Tipo Variable",lista2);
                 }
+                else if(tieneDot == true){
+                    std::cout<<"VARIABLE NO INICIALIZADA"<<std::endl;
+                    lista_var.ingresarDatoFinalVar(variable,"No se ha inicializado", "int",-10,-10,"variable","Tipo Variable",lista2);
+                }
 
-            }
+
+           }
             i = i +1;
         }
         else if(codigo[i]=='f'){
@@ -202,14 +214,15 @@ VarList Parser::getType(string codigo, VarList &lista_var){
                 string variable  = getVariable(codigo.substr(i + 5,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(i + 5 + variable.size(),codigo.size()));
                 bool tieneDot = checkDotSing(codigo.substr(i + 6 + variable.size(),codigo.size()));
-                string valor = getValor(codigo.substr(i+7+variable.size(),codigo.size()),"long", lista_var);
-                if (valor == "NO SE ENCONTRO"){
-                    std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
-                    break;
-                }
-                bool verificacion = verificarTipo("long",valor);
+
                 BlockList lista2;
                 if(tieneIgual == true){
+                    string valor = getValor(codigo.substr(i+7+variable.size(),codigo.size()),"long", lista_var);
+                    bool verificacion = verificarTipo("long",valor);
+                    if (valor == "NO SE ENCONTRO"){
+                        std::cout<<"NO SE ENCONTRO LA VARIABLE"<<std::endl;
+                        break;
+                    }
                     lista_var.ingresarDatoFinalVar(variable,valor,"long",-10,-10,"variable","Tipo Variable", lista2);
                 }
                 else if(tieneDot == true){
@@ -336,6 +349,7 @@ int Parser::analizarStruct(string codigo, VarList *list, string variable){
     }
 
     VarList provicional;
+
     VarList listaBlock1 = getType(codigo.substr(*b1.inicio + 1,*b1.final + 1 ), provicional);
     listaBlock1.imprimirListaAlDerecho();
 
@@ -385,7 +399,6 @@ bool Parser::checkEqualSing(string codigo){
     }
 }
 bool Parser::checkDotSing(string codigo){
-
     int i = 0;
 
     while(codigo[i] == ' '){
@@ -399,6 +412,7 @@ bool Parser::checkDotSing(string codigo){
 
         return false;
     }
+
 }
 
 
