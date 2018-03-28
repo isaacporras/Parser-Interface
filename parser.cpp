@@ -165,6 +165,7 @@ VarList Parser::getType(string codigo, VarList &lista_var){
 
                 BlockList lista2;
                 if(tieneIgual == true){
+
                     string valor = getValor(codigo.substr(i+6+variable.size(),codigo.size()), "int", lista_var);
                     bool verificacion  = verificarTipo("int",valor);
                     if (valor == "NO SE ENCONTRO"){
@@ -174,8 +175,16 @@ VarList Parser::getType(string codigo, VarList &lista_var){
 
                     }
                     else{
+
                     lista_var.ingresarDatoFinalVar(variable,valor, "int",-10,-10,"variable","Tipo Variable",lista2);
-                    i = i +  3 + valor.size() + variable.size() + 2;
+                    try{
+                        int x = *getReubicador(codigo.substr(i,codigo.size()));
+                        std::cout<< "Se reubico mi contador en: "<<codigo[i + x ]<<std::endl;
+                        i = i + x;
+                    }
+                        catch(int e){
+                            std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
+                        }
                     }
                 }
                 else if(tieneDot == true){
@@ -204,7 +213,15 @@ VarList Parser::getType(string codigo, VarList &lista_var){
 
                 if(tieneIgual == true){
                     lista_var.ingresarDatoFinalVar(variable,valor,"float",-10,-10,"variable","Tipo Variable",lista2);
-                    i = i +  5 + valor.size() + variable.size() + 2;
+
+                    try{
+                        int x = *getReubicador(codigo.substr(i,codigo.size()));
+                        std::cout<< "Se reubico mi contador en: "<<codigo[i + x ]<<std::endl;
+                        i = i + x;
+                    }
+                        catch(int e){
+                            std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
+                        }
                 }
                 else if(tieneDot == true){
                     lista_var.ingresarDatoFinalVar(variable,"No se ha inicializado","float",-10,-10,"variable","Tipo Variable",lista2);
@@ -235,7 +252,15 @@ VarList Parser::getType(string codigo, VarList &lista_var){
                         i = i + 1;
                     }
                     lista_var.ingresarDatoFinalVar(variable,valor,"long",-10,-10,"variable","Tipo Variable", lista2);
-                    i = i +  4 + valor.size() + variable.size() + 2;
+
+                    try{
+                        int x = *getReubicador(codigo.substr(i,codigo.size()));
+                        std::cout<< "Se reubico mi contador en: "<<codigo[i + x ]<<std::endl;
+                        i = i + x;
+                    }
+                        catch(int e){
+                            std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
+                        }
                 }
                 else if(tieneDot == true){
                     lista_var.ingresarDatoFinalVar(variable,"No se ha inicializado","long",-10,-10,"variable","Tipo Variable", lista2);
@@ -262,7 +287,15 @@ VarList Parser::getType(string codigo, VarList &lista_var){
 
                 if(tieneIgual == true){
                     lista_var.ingresarDatoFinalVar(variable,valor,"double",-10,-10,"variable","Tipo Variable", lista2);
-                    i = i +  6 + valor.size() + variable.size() + 2;
+
+                    try{
+                        int x = *getReubicador(codigo.substr(i,codigo.size()));
+                        std::cout<< "Se reubico mi contador en: "<<codigo[i + x ]<<std::endl;
+                        i = i + x;
+                    }
+                        catch(int e){
+                            std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
+                        }
                 }
                 else if(tieneDot == true){
                     lista_var.ingresarDatoFinalVar(variable,valor,"No se ha inicializado",-10,-10,"variable","Tipo Variable", lista2);
@@ -287,7 +320,15 @@ VarList Parser::getType(string codigo, VarList &lista_var){
 
                 if(tieneIgual == true){
                     lista_var.ingresarDatoFinalVar(variable,valor, "char",-10,-10,"variable","Tipo Variable", lista2);
-                    i = i +  4 + valor.size() + variable.size() + 2;
+
+                    try{
+                        int x = *getReubicador(codigo.substr(i,codigo.size()));
+                        std::cout<< "Se reubico mi contador en: "<<codigo[i + x ]<<std::endl;
+                        i = i + x;
+                    }
+                        catch(int e){
+                            std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
+                        }
                 }
                 else if(tieneDot == true){
                     lista_var.ingresarDatoFinalVar(variable,"No se ha inicializado", "char",-10,-10,"variable","Tipo Variable", lista2);
@@ -311,15 +352,21 @@ VarList Parser::getType(string codigo, VarList &lista_var){
             i  =  i + getBlocks(codigo.substr(i, codigo.size()),&lista_var);
 
         }
+        else if (buscarNum(getVariable(codigo.substr(i ,codigo.size())),lista_var)->variable != "NO SE ENCONTRO"){
+            NodoVar *nodox = buscarNum(getVariable(codigo.substr(i ,codigo.size())),lista_var);
+            string valor = getValor(codigo.substr(i + nodox->variable.size() + 2,codigo.size()),nodox->tipo, lista_var);
+            nodox->valor = valor;
+            try{
+                int x = *getReubicador(codigo.substr(i,codigo.size()));
+                std::cout<< "Se reubico mi contador en: "<<codigo[i + x ]<<std::endl;
+                i = i + x;
+            }
+                catch(int e){
+                    std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
+                }
+        }
         else{
-//            string posib_Var = getVariable(codigo.substr(i + 6,codigo.size()));
-//            NodoVar *nodox = buscarNum(posib_Var,lista_var);
-//            if(nodox->variable !="NO SE ENCONTRO"){
-//                bool tieneIgual = checkEqualSing(codigo.substr(i + nodox->variable.size(),codigo.size()));
-//                string valor = getValor(codigo.substr(i+nodox->variable.size(),codigo.size()),"double",lista_var);
-//                nodox->setValor(valor);
-//            }
-             i = i +1;
+            i = i +1;
         }
    }
     return lista_var;
@@ -525,7 +572,14 @@ string Parser::getValor(string codigo, string tipo, VarList lista_Var){
     }
 }
 
-
+int *Parser::getReubicador(string codigo){
+    int *i = (int *)malloc(sizeof(int));
+    *i = 0;
+    while(codigo[*i] != ';'){
+        *i = *i +1;
+    }
+    return i;
+}
 
 
 

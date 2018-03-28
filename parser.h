@@ -38,6 +38,7 @@ public:
     BlockList copyList(VarList *listaVar);
     void imprimirVariables();
     int analizarStruct(string codigo, VarList *list, string variable);
+    int *getReubicador(string codigo);
 
 
 
