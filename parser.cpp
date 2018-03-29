@@ -353,6 +353,7 @@ VarList Parser::getType(string codigo, VarList &lista_var){
 
         }
         else if (buscarNum(getVariable(codigo.substr(i ,codigo.size())),lista_var)->variable != "NO SE ENCONTRO"){
+
             NodoVar *nodox = buscarNum(getVariable(codigo.substr(i ,codigo.size())),lista_var);
             string valor = getValor(codigo.substr(i + nodox->variable.size() + 2,codigo.size()),nodox->tipo, lista_var);
             nodox->valor = valor;
@@ -690,7 +691,7 @@ string Parser::analizarValor(string valor, VarList listaVar){
         else if(estado_num1 == "es numero" && estado_num2 == "no es numero"){
             NodoVar *nodo = buscarNum(num2,  listaVar);
             int numeroBuscado = obtenerNumero(nodo);
-            if(nodo->variable == "NO SE ENCONTRO"){
+            if(nodo->valor == "NO SE ENCONTRO"){
                 return "NO SE ENCONTRO";
             }
             int suma  = (atoi( num1.c_str()) + numeroBuscado);
@@ -699,18 +700,20 @@ string Parser::analizarValor(string valor, VarList listaVar){
         else if(estado_num1 == "no es numero" && estado_num2 == "es numero"){
             NodoVar *nodo = buscarNum(num1,  listaVar);
             int numeroBuscado = obtenerNumero(nodo);
-            if(nodo->variable == "NO SE ENCONTRO"){
+            if(nodo->valor == "NO SE ENCONTRO"){
                 return "NO SE ENCONTRO";
             }
             int suma = (atoi( num2.c_str()) + numeroBuscado);
             return to_string(suma);
         }
         else if(estado_num1 == "no es numero" && estado_num2 == "no es numero"){
+
             NodoVar *nodo1 = buscarNum(num1,  listaVar);
             int numeroBuscado1 = obtenerNumero(nodo1);
             NodoVar *nodo2 = buscarNum(num2,  listaVar);
             int numeroBuscado2 = obtenerNumero(nodo2);
-            if(nodo1->variable == "NO SE ENCONTRO" || nodo2->variable == "NO SE ENCONTRO"){
+            std::cout <<"NINGUNO DE LOS DOS SON NUMEROS, Y TIENEN: " <<nodo1->valor<<" , "<<nodo2->valor<<std::endl;
+            if(nodo1->valor == "NO SE ENCONTRO" || nodo2->valor == "NO SE ENCONTRO"){
                 return "NO SE ENCONTRO";
             }
             int suma = (numeroBuscado1 + numeroBuscado2);
@@ -730,11 +733,11 @@ string Parser::analizarValor(string valor, VarList listaVar){
         string estado_num1 ="es numero";
         string estado_num2 ="es numero";
 
-        while(p!= num1.size()-1){
+        while(p!= num1.size()){
             char x  = num1[p];
-
+            std::cout<<"EL CARACTER A EVALUAR ES: "<<x<<std::endl;
             if (!isdigit(x) ){
-                std::cout<<"la parte del elemento que no cumplio es:" << x <<std::endl;
+
                 estado_num1 = "no es numero";
                 break;
             }
@@ -744,7 +747,7 @@ string Parser::analizarValor(string valor, VarList listaVar){
         while(j != num2.size()){
             char y  = num2[j];
             if (!isdigit(y)){
-                std::cout<<"la parte del elemento que no cumplio es:" << y <<std::endl;
+
                 estado_num2= "no es numero";
                 break;
             }
@@ -761,7 +764,7 @@ string Parser::analizarValor(string valor, VarList listaVar){
         else if(estado_num1 == "es numero" && estado_num2 == "no es numero"){
             NodoVar *nodo = buscarNum(num2,  listaVar);
             int numeroBuscado = obtenerNumero(nodo);
-            if(nodo->variable == "NO SE ENCONTRO"){
+            if(nodo->valor == "NO SE ENCONTRO"){
                 return "NO SE ENCONTRO";
             }
             int suma  = (atoi( num1.c_str()) - numeroBuscado);
@@ -771,7 +774,7 @@ string Parser::analizarValor(string valor, VarList listaVar){
             NodoVar *nodo = buscarNum(num1,  listaVar);
             std::cout <<"AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH: "<<nodo->variable <<std::endl;
             int numeroBuscado = obtenerNumero(nodo);
-            if(nodo->variable == "NO SE ENCONTRO"){
+            if(nodo->valor == "NO SE ENCONTRO"){
                 return "NO SE ENCONTRO";
             }
             int suma = (atoi( num2.c_str()) - numeroBuscado);
@@ -782,7 +785,7 @@ string Parser::analizarValor(string valor, VarList listaVar){
             int numeroBuscado1 = obtenerNumero(nodo1);
             NodoVar *nodo2 = buscarNum(num2,  listaVar);
             int numeroBuscado2 = obtenerNumero(nodo2);
-            if(nodo1->variable == "NO SE ENCONTRO" || nodo2->variable == "NO SE ENCONTRO"){
+            if(nodo1->valor == "NO SE ENCONTRO" || nodo2->valor == "NO SE ENCONTRO"){
                 return "NO SE ENCONTRO";
             }
             int suma = (numeroBuscado1 - numeroBuscado2);
@@ -800,11 +803,12 @@ string Parser::analizarValor(string valor, VarList listaVar){
         int p = 0;
         string estado_num1 ="es numero";
         string estado_num2 ="es numero";
-        while(p!= num1.size()-1){
+
+        while(p!= num1.size()){
             char x  = num1[p];
-            std::cout<<"Mi numero esta compuesto por" << x <<std::endl;
+            std::cout<<"EL CARACTER A EVALUAR ES: "<<x<<std::endl;
             if (!isdigit(x) ){
-                std::cout<<"la parte del elemento que no cumplio es:" << x <<std::endl;
+
                 estado_num1 = "no es numero";
                 break;
             }
@@ -814,7 +818,7 @@ string Parser::analizarValor(string valor, VarList listaVar){
         while(j != num2.size()){
             char y  = num2[j];
             if (!isdigit(y)){
-                std::cout<<"la parte del elemento que no cumplio es:" << y <<std::endl;
+
                 estado_num2= "no es numero";
                 break;
             }
@@ -829,7 +833,7 @@ string Parser::analizarValor(string valor, VarList listaVar){
         else if(estado_num1 == "es numero" && estado_num2 == "no es numero"){
             NodoVar *nodo = buscarNum(num2,  listaVar);
             int numeroBuscado = obtenerNumero(nodo);
-            if(nodo->variable == "NO SE ENCONTRO"){
+            if(nodo->valor == "NO SE ENCONTRO"){
                 return "NO SE ENCONTRO";
             }
             int suma  = (atoi( num1.c_str()) / numeroBuscado);
@@ -838,7 +842,7 @@ string Parser::analizarValor(string valor, VarList listaVar){
         else if(estado_num1 == "no es numero" && estado_num2 == "es numero"){
             NodoVar *nodo = buscarNum(num1,  listaVar);
             int numeroBuscado = obtenerNumero(nodo);
-            if(nodo->variable == "NO SE ENCONTRO"){
+            if(nodo->valor == "NO SE ENCONTRO"){
                 return "NO SE ENCONTRO";
             }
             int suma = (atoi( num2.c_str())  / numeroBuscado);
@@ -849,7 +853,7 @@ string Parser::analizarValor(string valor, VarList listaVar){
             int numeroBuscado1 = obtenerNumero(nodo1);
             NodoVar *nodo2 = buscarNum(num2,  listaVar);
             int numeroBuscado2 = obtenerNumero(nodo2);
-            if(nodo1->variable == "NO SE ENCONTRO" || nodo2->variable == "NO SE ENCONTRO"){
+            if(nodo1->valor == "NO SE ENCONTRO" || nodo2->valor == "NO SE ENCONTRO"){
                 return "NO SE ENCONTRO";
             }
             int suma = (numeroBuscado1 / numeroBuscado2);
@@ -869,18 +873,25 @@ string Parser::analizarValor(string valor, VarList listaVar){
         int p = 0;
         string estado_num1 ="es numero";
         string estado_num2 ="es numero";
-        while(p!= valor.size()){
+        while(p!= num1.size()){
             char x  = num1[p];
-            char y  = num2[p];
+            std::cout<<"EL CARACTER A EVALUAR ES: "<<x<<std::endl;
             if (!isdigit(x) ){
+
                 estado_num1 = "no es numero";
                 break;
             }
-            if (!isdigit(x) ){
+            p = p +1;
+        }
+        int j = 0;
+        while(j != num2.size()){
+            char y  = num2[j];
+            if (!isdigit(y)){
+
                 estado_num2= "no es numero";
                 break;
             }
-            p = p + 1;
+            j = j + 1;
         }
         std::cout<<"LOS ESTADOS DE MI NUMERO SON: "<<estado_num1 <<", " << estado_num2<<std::endl;
         if(estado_num1 == "es numero" && estado_num2 == "es numero"){
@@ -911,7 +922,7 @@ string Parser::analizarValor(string valor, VarList listaVar){
             int numeroBuscado1 = obtenerNumero(nodo1);
             NodoVar *nodo2 = buscarNum(num2,  listaVar);
             int numeroBuscado2 = obtenerNumero(nodo2);
-            if(nodo1->variable == "NO SE ENCONTRO" || nodo2->variable == "NO SE ENCONTRO"){
+            if(nodo1->valor == "NO SE ENCONTRO" || nodo2->valor == "NO SE ENCONTRO"){
                 return "NO SE ENCONTRO";
             }
             int suma = (numeroBuscado1 % numeroBuscado2);
@@ -945,7 +956,7 @@ NodoVar *Parser::buscarNum(string nombre_de_variable, VarList listaVar){
 
   std::cout<<"SE METIO A BUSCAR LA VARIABLE:" << nombre_de_variable << std::endl;
 
-//  listaVar.imprimirListaAlDerecho();
+
   NodoVar *nodo = lista_valores.buscarNodo(nombre_de_variable);
   string valor_en_scope = listaVar.buscarNodo(nombre_de_variable)->variable;
   std::cout<<"EN SCOPE:" << valor_en_scope << std::endl;
@@ -955,11 +966,13 @@ NodoVar *Parser::buscarNum(string nombre_de_variable, VarList listaVar){
       std::cout<<"NO SE ENCONTRO EL DATO BUSCADO" << std::endl;
       BlockList listaprov;
       NodoVar* nodox = new NodoVar(" "," "," ",-10,-10," "," ",listaprov);
+      nodox->valor = "NO SE ENCONTRO";
       nodox->variable = "NO SE ENCONTRO";
       return nodox;
   }
   else if(nodo->variable == "NO SE ENCONTRO" && valor_en_scope != "NO SE ENCONTRO"){
       nodo = listaVar.buscarNodo(nombre_de_variable);
+      return nodo;
   }
   else{
       return nodo;
