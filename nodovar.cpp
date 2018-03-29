@@ -25,6 +25,15 @@ NodoVar::NodoVar(string var, string valor, string tip, int ini, int fin, string 
         siguiente = nullptr;
         anterior = nullptr;
     }
+    else if(tip == "Variable Struct"){
+        this->valor = valor;
+        this->lista = listaBlock;
+        this->variable = var;
+        this->tipo = "Es struct";
+        siguiente = nullptr;
+        anterior = nullptr;
+        std::cout<<"SE INSERTO EN LA LISTA EXITOSAMENT!!!"<<std::endl;
+    }
     else if(Var_block == "block"){
         this->lista = listaBlock;
         this->inicio = ini;

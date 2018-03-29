@@ -131,6 +131,22 @@ int Parser::getBlocksAnidados(string codigo){
     return *b1.final;
 }
 
+string Parser::isStructDef(string codigo){
+    int i = 0;
+
+    while(codigo[i] == ' '){
+        i = i + 1;
+    }
+    if(codigo[i] == '{'){
+        std::cout<<"^^^^^^ SE VA A CREAR UNA ESTRUCTURA ^^^^"  <<std::endl;
+        return "Se crea tipo struct";
+    }
+    if(codigo[i]!= ';'){
+        std::cout<<"^^^^^^ SE VA A INSTANCIAR UNA ESTRUCTURA ^^^^"  <<std::endl;
+        return "Se inicializa struct";
+    }
+}
+
 BlockList Parser::copyList(VarList *listaVar){
 
     BlockList lista;
@@ -336,13 +352,29 @@ VarList Parser::getType(string codigo, VarList &lista_var){
             }
              i = i +1;
         }
-        else if(codigo[i]=='s' ){
+        else if(codigo[i] == 's' ){
             if(codigo.substr(i,7) == "struct "){
                 string variable  = getVariable(codigo.substr(i + 6,codigo.size()));
                 std::cout<<"LA VARIABLE DE DE MI STRUCT  ES :" << variable <<std::endl;
+                if(isStructDef(codigo.substr(i + 7 + variable.size(), codigo.size())) == "Se crea tipo struct"){
+                    std::cout<< codigo.substr(i+ 7, codigo.size()) <<std::endl;
+                    i = i + analizarStruct(codigo.substr(i + 7 + variable.size(), codigo.size()),&lista_var, variable);
+                }
+                if(isStructDef(codigo.substr(i + 7 + variable.size(), codigo.size())) == "Se inicializa struct"){
+                    string variable  = getVariable(codigo.substr(i + 7,codigo.size()));
 
-                std::cout<< codigo.substr(i+ 7, codigo.size()) <<std::endl;
-                i = i + analizarStruct(codigo.substr(i + 7 + variable.size(), codigo.size()),&lista_var, variable);
+                    if(lista_var.buscarNodo(variable)->variable != "NO SE ENCONTRO"){
+                        BlockList listaBlock2;
+                        string variable2 = getValor(codigo.substr(i + 7 + variable.size(),codigo.size()),"Struct", lista_var);
+                        std::cout<<"SE ENCONTRO QUE SE QUIERE INICIALIZAR LA SIGUIENTE ESTRUCTURA :"<<variable2<<std::endl;
+                        lista_var.ingresarDatoFinalVar(variable,variable2,"Variable Struct",-10,-10,"Variable Struct","Variable Struct",listaBlock2);
+                        i = i + 8 + variable.size();
+                    }
+
+                }
+
+
+
 
             }
              i = i +1;
@@ -435,7 +467,7 @@ string Parser::getVariable(string codigo){
     while(codigo[i] == ' '){
         i = i + 1;
     }
-    while(codigo[i]!= ' '){
+    while(codigo[i]!= ' ' && codigo[i]!= ';'){
         variable = variable + codigo[i];
         i = i + 1;
     }
@@ -464,6 +496,7 @@ bool Parser::checkEqualSing(string codigo){
         return false;
     }
 }
+
 bool Parser::checkDotSing(string codigo){
     int i = 0;
 
@@ -502,12 +535,6 @@ int *Parser::getVariableSize(string codigo){
     return i;
 }
 
-
-
-
-
-
-
 string Parser::getValor(string codigo, string tipo, VarList lista_Var){
 
     string valor = "";
@@ -518,6 +545,10 @@ string Parser::getValor(string codigo, string tipo, VarList lista_Var){
     while(codigo[i]!= ';'){
         valor = valor + codigo[i];
         i = i + 1;
+    }
+
+    if(tipo == "Struct"){
+        return valor;
     }
 
     string valor2 = valor;
@@ -544,6 +575,7 @@ string Parser::getValor(string codigo, string tipo, VarList lista_Var){
            p = p + 1;
        }
    }
+
    else{
        int p = 0;
         while(p!= valor.size()){
