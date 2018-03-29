@@ -44,6 +44,7 @@ void Parser::readFile(){
 void Parser::imprimirVariables(){
     std::cout<<"********************************************************************************"<<std::endl;
     lista_valores.imprimirListaAlDerecho();
+    std::cout<<"********************************************************************************"<<std::endl;
 }
 
 
@@ -353,6 +354,7 @@ VarList Parser::getType(string codigo, VarList &lista_var){
              i = i +1;
         }
         else if(codigo[i] == 's' ){
+
             if(codigo.substr(i,7) == "struct "){
                 string variable  = getVariable(codigo.substr(i + 6,codigo.size()));
                 std::cout<<"LA VARIABLE DE DE MI STRUCT  ES :" << variable <<std::endl;
@@ -452,7 +454,7 @@ int Parser::analizarStruct(string codigo, VarList *list, string variable){
     listaBlock1.imprimirListaAlDerecho();
 
     BlockList listaBlock2 = copyList(&listaBlock1);
-    list->ingresarDatoFinalVar(variable, "Tipo struct","Tipo struct",*b1.inicio,*b1.final,"block",codigo.substr(*b1.inicio, *b1.final + 1),listaBlock2);
+    list->ingresarDatoFinalVar(variable, "Tipo Struct Definition","Tipo Struct Definition",*b1.inicio,*b1.final,"Tipo Struct Definition",codigo.substr(*b1.inicio, *b1.final + 1),listaBlock2);
 
     return *b1.final;
 }
