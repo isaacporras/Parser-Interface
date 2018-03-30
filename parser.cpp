@@ -445,16 +445,30 @@ VarList Parser::getType(string codigo, VarList &lista_var){
                 BlockNode *nodo_dentro_lista = nodox->lista.buscarNodo(variable_dentro_lista);
                 std::cout<<"NODO_DENTRO_LISTA: "<<nodo_dentro_lista->valor<<std::endl;
                 nodo_dentro_lista->valor = valor;
+                try{
+                    int x = *getReubicador(codigo.substr(i,codigo.size()));
+                    std::cout<< "Se reubico mi contador en: "<<codigo[i + x ]<<std::endl;
+                    i = i + x;
+                }
+                    catch(int e){
+                        std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
+                    }
             }
-            nodox->valor = valor;
-            try{
-                int x = *getReubicador(codigo.substr(i,codigo.size()));
-                std::cout<< "Se reubico mi contador en: "<<codigo[i + x ]<<std::endl;
-                i = i + x;
-            }
+            else if (nodox->tipo != "Variable Struct"){
+                NodoVar *nodox = buscarNum(getVariable(codigo.substr(i ,codigo.size())),lista_var);
+                valor = getValor(codigo.substr(i + nodox->variable.size() + 2,codigo.size()),nodox->tipo, lista_var);
+                nodox->valor = valor;
+                try{
+                    int x = *getReubicador(codigo.substr(i,codigo.size()));
+                    std::cout<< "Se reubico mi contador en: "<<codigo[i + x ]<<std::endl;
+                    i = i + x;
+                }
                 catch(int e){
                     std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
                 }
+            }
+
+
         }
         else{
             i = i +1;
