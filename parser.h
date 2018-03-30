@@ -40,6 +40,7 @@ public:
     int analizarStruct(string codigo, VarList *list, string variable);
     int *getReubicador(string codigo);
     string isStructDef(string codigo);
+    BlockList copyStructList(BlockList lista1, BlockList lista2);
 
 
 

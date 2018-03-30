@@ -23,7 +23,8 @@ public:
 
 
     BlockNode (string var, string valor, string tip, int ini, int fin, string Var_block, string blk){
-        if(Var_block =="variable"){
+
+        if(Var_block == "variable"){
             this->tipo = tip;
             this->valor = valor;
             this->variable = var;

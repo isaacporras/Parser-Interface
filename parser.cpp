@@ -207,6 +207,14 @@ VarList Parser::getType(string codigo, VarList &lista_var){
                 else if(tieneDot == true){
                     std::cout<<"VARIABLE NO INICIALIZADA"<<std::endl;
                     lista_var.ingresarDatoFinalVar(variable,"No se ha inicializado", "int",-10,-10,"variable","Tipo Variable",lista2);
+                    try{
+                        int x = *getReubicador(codigo.substr(i,codigo.size()));
+                        std::cout<< "Se reubico mi contador en: "<<codigo[i + x ]<<std::endl;
+                        i = i + x;
+                    }
+                        catch(int e){
+                            std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
+                        }
                 }
 
 
@@ -242,11 +250,15 @@ VarList Parser::getType(string codigo, VarList &lista_var){
                 }
                 else if(tieneDot == true){
                     lista_var.ingresarDatoFinalVar(variable,"No se ha inicializado","float",-10,-10,"variable","Tipo Variable",lista2);
+                    try{
+                        int x = *getReubicador(codigo.substr(i,codigo.size()));
+                        std::cout<< "Se reubico mi contador en: "<<codigo[i + x ]<<std::endl;
+                        i = i + x;
+                    }
+                        catch(int e){
+                            std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
+                        }
                 }
-
-
-
-
 
             }
              i = i +1;
@@ -281,6 +293,14 @@ VarList Parser::getType(string codigo, VarList &lista_var){
                 }
                 else if(tieneDot == true){
                     lista_var.ingresarDatoFinalVar(variable,"No se ha inicializado","long",-10,-10,"variable","Tipo Variable", lista2);
+                    try{
+                        int x = *getReubicador(codigo.substr(i,codigo.size()));
+                        std::cout<< "Se reubico mi contador en: "<<codigo[i + x ]<<std::endl;
+                        i = i + x;
+                    }
+                        catch(int e){
+                            std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
+                        }
                 }
 
 
@@ -316,6 +336,14 @@ VarList Parser::getType(string codigo, VarList &lista_var){
                 }
                 else if(tieneDot == true){
                     lista_var.ingresarDatoFinalVar(variable,valor,"No se ha inicializado",-10,-10,"variable","Tipo Variable", lista2);
+                    try{
+                        int x = *getReubicador(codigo.substr(i,codigo.size()));
+                        std::cout<< "Se reubico mi contador en: "<<codigo[i + x ]<<std::endl;
+                        i = i + x;
+                    }
+                        catch(int e){
+                            std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
+                        }
                 }
             }
              i = i +1;
@@ -349,47 +377,75 @@ VarList Parser::getType(string codigo, VarList &lista_var){
                 }
                 else if(tieneDot == true){
                     lista_var.ingresarDatoFinalVar(variable,"No se ha inicializado", "char",-10,-10,"variable","Tipo Variable", lista2);
+                    try{
+                        int x = *getReubicador(codigo.substr(i,codigo.size()));
+                        std::cout<< "Se reubico mi contador en: "<<codigo[i + x ]<<std::endl;
+                        i = i + x;
+                    }
+                        catch(int e){
+                            std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
+                        }
                 }
             }
-             i = i +1;
+             i = i + 1;
         }
         else if(codigo[i] == 's' ){
 
             if(codigo.substr(i,7) == "struct "){
+
                 string variable  = getVariable(codigo.substr(i + 6,codigo.size()));
-                std::cout<<"LA VARIABLE DE DE MI STRUCT  ES :" << variable <<std::endl;
+                string *variable3  = (string *)malloc(sizeof(string));
+                *variable3 = variable;
+                std::cout<<"LA VARIABLE DE DE MI STRUCT  ES :" << variable <<"555555555555555555555555555555555555555555555555555555555555555555555555555555555"<<std::endl;
                 if(isStructDef(codigo.substr(i + 7 + variable.size(), codigo.size())) == "Se crea tipo struct"){
                     std::cout<< codigo.substr(i+ 7, codigo.size()) <<std::endl;
                     i = i + analizarStruct(codigo.substr(i + 7 + variable.size(), codigo.size()),&lista_var, variable);
                 }
+
                 if(isStructDef(codigo.substr(i + 7 + variable.size(), codigo.size())) == "Se inicializa struct"){
                     string variable  = getVariable(codigo.substr(i + 7,codigo.size()));
 
                     if(lista_var.buscarNodo(variable)->variable != "NO SE ENCONTRO"){
-                        BlockList listaBlock2;
+                        BlockList listaBlock;
+                        BlockList listaBlock2  = lista_var.buscarNodo(variable)->lista;
+                        BlockList listaBlockFinal = copyStructList(listaBlock2,listaBlock);
+
                         string variable2 = getValor(codigo.substr(i + 7 + variable.size(),codigo.size()),"Struct", lista_var);
                         std::cout<<"SE ENCONTRO QUE SE QUIERE INICIALIZAR LA SIGUIENTE ESTRUCTURA :"<<variable2<<std::endl;
-                        lista_var.ingresarDatoFinalVar(variable,variable2,"Variable Struct",-10,-10,"Variable Struct","Variable Struct",listaBlock2);
-                        i = i + 8 + variable.size();
+                        lista_var.ingresarDatoFinalVar(variable2, *variable3,"Variable Struct",-10,-10,"Variable Struct","Variable Struct",listaBlockFinal);
+                        i = i + 8 + variable2.size();
                     }
 
                 }
-
-
-
-
             }
              i = i +1;
         }
+
         else if(codigo[i]=='{' ){
 
             i  =  i + getBlocks(codigo.substr(i, codigo.size()),&lista_var);
 
         }
         else if (buscarNum(getVariable(codigo.substr(i ,codigo.size())),lista_var)->variable != "NO SE ENCONTRO"){
+            std::cout<< "ENCONTRO UNA ASIGNACION DE VARIABLE"<<std::endl;
 
+            string variable = getVariable(codigo.substr(i ,codigo.size())); //Da el nombre de la variable
             NodoVar *nodox = buscarNum(getVariable(codigo.substr(i ,codigo.size())),lista_var);
-            string valor = getValor(codigo.substr(i + nodox->variable.size() + 2,codigo.size()),nodox->tipo, lista_var);
+            string variable_dentro_lista = getVariable(codigo.substr(i + nodox->variable.size() + 1   ,codigo.size()));
+
+
+
+
+            string valor = getValor(codigo.substr(i  + variable.size() + variable_dentro_lista.size() + 3,codigo.size()),nodox->tipo, lista_var);
+
+
+            if(nodox->tipo == "Variable Struct" && codigo[i + variable.size()] == '.'){
+                std::cout<<"FUNCIONOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"<<std::endl;
+                nodox->lista.imprimirListaAlDerechoBlock();
+                BlockNode *nodo_dentro_lista = nodox->lista.buscarNodo(variable_dentro_lista);
+                std::cout<<"NODO_DENTRO_LISTA: "<<nodo_dentro_lista->valor<<std::endl;
+                nodo_dentro_lista->valor = valor;
+            }
             nodox->valor = valor;
             try{
                 int x = *getReubicador(codigo.substr(i,codigo.size()));
@@ -405,6 +461,23 @@ VarList Parser::getType(string codigo, VarList &lista_var){
         }
    }
     return lista_var;
+}
+
+BlockList Parser::copyStructList(BlockList lista1, BlockList lista2){
+        if(lista1.largo == 0){
+            return lista2;
+        }
+
+    BlockNode *corredor  = lista1.primero;
+    lista2.ingresarDatoFinalBlock(corredor->variable,corredor->valor, corredor->tipo,-10,-10,"variable","Tipo Variable");
+    corredor = corredor->siguiente;
+    while (corredor != lista1.primero) {
+
+        lista2.ingresarDatoFinalBlock(corredor->variable,corredor->valor, corredor->tipo,-10,-10,"variable","Tipo Variable");
+        corredor = corredor->siguiente;
+    }
+    return lista2;
+
 }
 
 
@@ -469,7 +542,7 @@ string Parser::getVariable(string codigo){
     while(codigo[i] == ' '){
         i = i + 1;
     }
-    while(codigo[i]!= ' ' && codigo[i]!= ';'){
+    while(codigo[i]!= ' ' && codigo[i]!= ';' && codigo[i]!= '.'){
         variable = variable + codigo[i];
         i = i + 1;
     }
@@ -549,7 +622,7 @@ string Parser::getValor(string codigo, string tipo, VarList lista_Var){
         i = i + 1;
     }
 
-    if(tipo == "Struct"){
+    if(tipo == "Struct" || tipo == "Variable Struct"){
         return valor;
     }
 

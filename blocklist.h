@@ -9,7 +9,7 @@
 
 
 class BlockList {
-private:
+  public:
     BlockNode *primero;
     BlockNode *ultimo;
     int largo = 0;
@@ -69,6 +69,7 @@ public:
 
         this->primero = nullptr;
         this->ultimo = nullptr;
+        this->largo = 0;
 
 
     }
