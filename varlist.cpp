@@ -107,8 +107,9 @@ void VarList::imprimirListaAlDerecho(){
            if(primero->getVariable() =="Es Block" || primero->tipo == "Tipo Struct Definition"){
                primero->lista.imprimirListaAlDerechoBlock();
                std::cout<<"-------------------------------YA NO HAY ELEMENTOS EN MI BLOCK----------------------"<<std::endl;
+
            }
-//           corredor = corredor -> siguiente;
+
            while(corredor != primero){
                std::cout << "El elemento es:"<< corredor->getVariable() << ", y tiene el siguiente valor:"<< corredor->valor << ", y es de tipo:"<< corredor->tipo<< std::endl;
                if(corredor->getVariable() == "Es Block"|| corredor->tipo == "Tipo Struct Definition" || corredor->tipo == "Variable Struct"){
