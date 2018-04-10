@@ -6,25 +6,25 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>802</width>
-    <height>627</height>
+    <width>1053</width>
+    <height>862</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>IDE_Window</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="ParseButton">
+   <widget class="QPushButton" name="RunButton">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>70</y>
+      <x>50</x>
+      <y>20</y>
       <width>113</width>
       <height>32</height>
      </rect>
     </property>
     <property name="text">
-     <string>Parse</string>
+     <string>RUN</string>
     </property>
    </widget>
    <widget class="QPlainTextEdit" name="CodeTextArea">
@@ -32,8 +32,41 @@
      <rect>
       <x>50</x>
       <y>60</y>
-      <width>401</width>
-      <height>481</height>
+      <width>511</width>
+      <height>441</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="RAM_view">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>60</y>
+      <width>431</width>
+      <height>441</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>20</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>RAM Live View</string>
+    </property>
+   </widget>
+   <widget class="QPlainTextEdit" name="OutputArea">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>510</y>
+      <width>511</width>
+      <height>181</height>
      </rect>
     </property>
    </widget>
@@ -43,7 +76,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>802</width>
+     <width>1053</width>
      <height>22</height>
     </rect>
    </property>

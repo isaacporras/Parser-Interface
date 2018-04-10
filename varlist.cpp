@@ -5,6 +5,11 @@
 #include <iostream>
 #include <string>
 #include "blocklist.h"
+#include "QJsonArray"
+#include "QJsonObject"
+#include "QJsonDocument"
+#include "qdebug.h"
+
 using std::string;
 
 
@@ -58,7 +63,8 @@ void VarList::eliminarTodos(){
 
     }
 NodoVar *VarList::buscarNodo(string var){
-//    std::cout<<"SE METIO A BUSCAR EL NODO"<<std::endl;
+
+    std::cout<<"SE METIO A BUSCAR EL NODO"<<std::endl;
     if (this->primero == 0){
         std::cout << "No hay elementos en la lista" << std::endl;
         BlockList def_list;
@@ -92,11 +98,28 @@ NodoVar *VarList::buscarNodo(string var){
 }
 
 void VarList::imprimirListaAlDerecho(){
+    QJsonObject object
+    {
+        {"Type","NI"},
+        {"Value","NI"},
+        {"Variable","NI"}
+    };
+
+    object.insert("Type","funciono jeje");
+    QJsonDocument doc(object);
+    QByteArray bytes = doc.toJson();
+    const char* charString= bytes.data();
+     std::string someString(charString);
+
+    std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<bytes.data()<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
+    std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<object.find("Type").value().toString().toStdString()<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
+    object.find("Type").value().toString();
        std::cout<<"-------------------------------MI LISTA CONTIENE LOS SIGUIENTES ELEMENTOS----------------------"<<std::endl;
 
        if (this->primero == 0){
            std::cout << "No hay elementos en la lista" << std::endl;
        }
+
        else{
 
            NodoVar *corredor = primero->siguiente;
@@ -105,12 +128,14 @@ void VarList::imprimirListaAlDerecho(){
            std::cout << "El elemento es: " << primero->getVariable() <<", y tiene el siguiente valor:"<< primero->valor<< ", y es de tipo:"<< primero->tipo<<std::endl;
 
            if(primero->getVariable() =="Es Block" || primero->tipo == "Tipo Struct Definition"){
+
                primero->lista.imprimirListaAlDerechoBlock();
                std::cout<<"-------------------------------YA NO HAY ELEMENTOS EN MI BLOCK----------------------"<<std::endl;
 
            }
 
            while(corredor != primero){
+
                std::cout << "El elemento es:"<< corredor->getVariable() << ", y tiene el siguiente valor:"<< corredor->valor << ", y es de tipo:"<< corredor->tipo<< std::endl;
                if(corredor->getVariable() == "Es Block"|| corredor->tipo == "Tipo Struct Definition" || corredor->tipo == "Variable Struct"){
                    std::cout<<"MI BLOCK TIENE LOS SIGUIENTES ELEMENTOS"<<std::endl;

@@ -17,6 +17,7 @@ using namespace std;
 #include <ctype.h>
 #include <stdio.h>
 #include "nodovar.h"
+#include "ide_window.h"
 
 using std::string;
 

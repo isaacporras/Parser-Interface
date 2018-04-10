@@ -18,7 +18,8 @@ public:
     Parser parser;
 
 private slots:
-    void on_ParseButton_clicked();
+    void on_RunButton_clicked();
+    void addOutputArea();
 
 private:
     Ui::IDE_Window *ui;
