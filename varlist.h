@@ -6,6 +6,7 @@
 #include <string>
 #include "nodovar.h"
 #include "blocklist.h"
+
 using std::string;
 
 class VarList

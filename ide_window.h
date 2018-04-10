@@ -18,11 +18,18 @@ public:
     Parser parser;
 
 private slots:
-    void on_RunButton_clicked();
-    void addOutputArea();
+     void on_RunButton_clicked();
+     void addOutputArea();
+     void addMemoryDirection(int fila);
+     void addValor(int fila);
+     void addEtiqueta(int fila);
+     void addReferencia(int fila);
 
 private:
     Ui::IDE_Window *ui;
+    enum Columna{
+        DIRECCION,VALOR,ETIQUETA, REFERENCIAS
+    };
 };
 
 #endif // IDE_WINDOW_H

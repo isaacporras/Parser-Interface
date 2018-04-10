@@ -7,7 +7,6 @@ using namespace std;
 #include <iostream>
 #include <sys/stat.h>
 #include <iostream>
-#include "QDebug"
 #include "QString"
 #include "QFile"
 #include "QTextStream"

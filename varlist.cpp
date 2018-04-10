@@ -1,14 +1,12 @@
 #include "varlist.h"
 #include <iostream>
 #include <string>
-#include <iostream>
-#include <iostream>
-#include <string>
 #include "blocklist.h"
 #include "QJsonArray"
 #include "QJsonObject"
 #include "QJsonDocument"
 #include "qdebug.h"
+#include "ide_window.h"
 
 using std::string;
 
@@ -98,22 +96,7 @@ NodoVar *VarList::buscarNodo(string var){
 }
 
 void VarList::imprimirListaAlDerecho(){
-    QJsonObject object
-    {
-        {"Type","NI"},
-        {"Value","NI"},
-        {"Variable","NI"}
-    };
 
-    object.insert("Type","funciono jeje");
-    QJsonDocument doc(object);
-    QByteArray bytes = doc.toJson();
-    const char* charString= bytes.data();
-     std::string someString(charString);
-
-    std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<bytes.data()<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-    std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<object.find("Type").value().toString().toStdString()<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-    object.find("Type").value().toString();
        std::cout<<"-------------------------------MI LISTA CONTIENE LOS SIGUIENTES ELEMENTOS----------------------"<<std::endl;
 
        if (this->primero == 0){
