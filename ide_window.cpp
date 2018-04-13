@@ -29,7 +29,6 @@ IDE_Window::IDE_Window(QWidget *parent) :
     createClient();
 
 
-
 }
 
 IDE_Window::~IDE_Window()
@@ -39,8 +38,14 @@ IDE_Window::~IDE_Window()
 
 void IDE_Window::on_RunButton_clicked()
 {
-    Client* client = new Client(0,"127.0.0.1",6666);
-    parser.parse(ui->CodeTextArea->toPlainText().toStdString());
+    QJsonObject objeto = parser.parse(ui->CodeTextArea->toPlainText().toStdString());
+                QJsonDocument doc(objeto);
+                QByteArray bytes = doc.toJson();
+                const char* charString = bytes.data();
+                 std::string someString(charString);
+
+              std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<bytes.data()<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
+
     ui->RAM_view->insertRow(ui->RAM_view->rowCount());
     int fila = ui->RAM_view->rowCount() -1;
     addMemoryDirection(fila);
@@ -71,77 +76,46 @@ void IDE_Window::addEtiqueta(int fila){
 void IDE_Window::addReferencia(int fila){
     ui->RAM_view->setItem(fila,REFERENCIAS,new QTableWidgetItem("2"));
 }
+
 void IDE_Window::createClient(){
-//    QJsonObject object
-//        {
-//            {"Type","NI"},
-//            {"Value","NI"},
-//            {"Variable","NI"}
-//        };
+//        QJsonObject object
+//            {
+//                {"Type","NI"},
+//                {"Value","NI"},
+//                {"Variable","NI"}
+//            };
 
-//        object.insert("Type","funciono jeje");
-//        QJsonDocument doc(object);
-//        QByteArray bytes = doc.toJson();
-//        const char* charString = bytes.data();
-//         std::string someString(charString);
+//            object.insert("Type","funciono jeje");
+//            QJsonDocument doc(object);
+//            QByteArray bytes = doc.toJson();
+//            const char* charString = bytes.data();
+//             std::string someString(charString);
 
-//      std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<bytes.data()<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-//      std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<object.find("Type").value().toString().toStdString()<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-//      object.find("Type").value().toString();
+//          std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<bytes.data()<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
+//          std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<object.find("Type").value().toString().toStdString()<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
+//          object.find("Type").value().toString();
+//          NodoVar *primero = parser.lista_valores.primero;
+//            NodoVar *corredor = primero->siguiente;
 
-//
-//        NodoVar *corredor = primero->siguiente;
-
-//        QVariant tipo(QString::fromStdString(primero->tipo));
-//        QVariant valor(QString::fromStdString(primero->valor));
-//        QVariant variable(QString::fromStdString(primero->variable));
-//        primero->setPos(1);
-
-
-//        object.insert("Type",tipo.toJsonValue());
-//        object.insert("Value",valor.toJsonValue());
-//        object.insert("Variable",variable.toJsonValue());
+//            QVariant tipo(QString::fromStdString(primero->tipo));
+//            QVariant valor(QString::fromStdString(primero->valor));
+//            QVariant variable(QString::fromStdString(primero->variable));
+//            primero->setPos(1);
 
 
-            Client* client = new Client(0,"127.0.0.1",6666);
-            cliente = client;
-//            string line = "mi primer mensaje";
-//            int contador = 0;
-//            while(contador != 5){
+//            object.insert("Type",tipo.toJsonValue());
+//            object.insert("Value",valor.toJsonValue());
+//            object.insert("Variable",variable.toJsonValue());
 
-//                client->SendData(QString(line.c_str()));
-//                contador = contador +1;
-//            }
+
+//                Client* client = new Client(0,"127.0.0.1",6666);
+//                cliente = client;
+//                string line = "mi primer mensaje";
+//                int contador = 0;
+//                while(contador != 5){
+
+//                    client->SendData(QString(line.c_str()));
+//                    contador = contador +1;
+//                }
 }
-void IDE_Window::getParserData(){
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -27,7 +27,7 @@ private slots:
      void addEtiqueta(int fila);
      void addReferencia(int fila);
      void createClient();
-     void getParserData();
+
 
 private:
     Ui::IDE_Window *ui;

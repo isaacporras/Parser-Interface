@@ -5,7 +5,8 @@
 using std::string;
 #include "blocklist.h"
 #include "client.h"
-
+#include "QJsonObject"
+#include "QJsonDocument"
 
 
 
@@ -18,17 +19,18 @@ struct block{
 class Parser
 {
 public:
-
+    int *i = (int*)malloc(sizeof (int));
+    QJsonObject makeJson(string tip, string val, string var);
     VarList lista_valores;
     string tiposDeVariables[6] = {"int","long","char","float", "double", "struct"};
     string codigoCompleto;
     Parser();
-    void parse(string codigo);
-    void writeFile(string codigo);
+    QJsonObject parse(string codigo);
+    QJsonObject writeFile(string codigo);
     void readFile();
     int getBlocks(string codigo, VarList *lista);
     int getBlocksAnidados(string codigo);
-    VarList getType(string codigo, VarList &lista);
+    QJsonObject getType(string codigo, VarList &lista);
     string getVariable(string codigo);
     bool checkEqualSing(string codigo);
     bool checkDotSing(string codigo);
