@@ -16,7 +16,7 @@ using namespace std;
 #include <ctype.h>
 #include <stdio.h>
 #include "nodovar.h"
-#include "ide_window.h"
+
 
 using std::string;
 
@@ -25,6 +25,7 @@ Parser::Parser()
 
 }
 void Parser::parse(string codigo){
+
     codigoCompleto = codigo;
     std::cout<<"----------------------------SE EMPIEZA A PARSERA -----------------------------"<<std::endl;
     writeFile(codigo);
@@ -189,6 +190,7 @@ VarList Parser::getType(string codigo, VarList &lista_var){
 
                     if (valor == "NO SE ENCONTRO"){
                         std::cout<<"NO SE ENCONTRO LA VARIABLE 2.0"<<std::endl;
+
                         lista_var.ingresarDatoFinalVar(variable,valor, "int",-10,-10,"variable","Tipo Variable",lista2);
                         i = i + 1;
 
@@ -731,7 +733,7 @@ bool Parser::verificarTipo(string tipo ,string valor){
 
     if(tipo == "long"){
 
-        if(typeid (atol(valor.c_str())).name() == typeid (4294967296).name()){
+        if(typeid (atol(valor.c_str())).name() == typeid(4294967296).name()){
             return true;
         }
         else{

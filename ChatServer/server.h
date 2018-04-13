@@ -6,8 +6,7 @@
     #include <QtNetwork/QTcpServer>
     #include <QtNetwork/QTcpSocket>
 
-    /*namespace NetworkArdic
-    {*/
+
 
         class Server: public QTcpServer
         {
@@ -15,7 +14,7 @@
             Q_OBJECT
             public:
 
-              Server(QObject * parent = 0 , quint16 port = 4000);
+              Server(QObject * parent = 0 , quint16 port = 6666);
               virtual  ~Server();
 
             private slots:
@@ -24,12 +23,12 @@
               void startRead();
               void disconnected();
 
-            private:
+            public:
 
               QTcpSocket * client;
+              Server *servidor;
 
         };
 
-    //}
 
     #endif // SERVER_H

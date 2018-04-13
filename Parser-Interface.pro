@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -28,7 +29,8 @@ SOURCES += \
         ide_window.cpp \
     parser.cpp \
     varlist.cpp \
-    nodovar.cpp
+    nodovar.cpp \
+    client.cpp
 
 HEADERS += \
         ide_window.h \
@@ -36,7 +38,8 @@ HEADERS += \
     blocklist.h \
     blocknode.h \
     varlist.h \
-    nodovar.h
+    nodovar.h \
+    client.h
 
 FORMS += \
         ide_window.ui

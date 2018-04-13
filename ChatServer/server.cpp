@@ -2,14 +2,17 @@
     #include <iostream>
     using namespace std;
 
-    //namespace NetworkArdic{
+
 
     Server::Server(QObject* parent , quint16 port): QTcpServer(parent)
     {
+        if(!servidor){
+            servidor = this;
+        }
       connect(this, SIGNAL(newConnection()),this, SLOT(acceptConnection()));
 
       if (!this->listen(QHostAddress::Any, port)) {
-              qDebug() << "erser";
+              qDebug() << "ERROR";
           }
     }
 
@@ -51,4 +54,3 @@
         client->waitForBytesWritten(3000);
     }
 
-    //}

@@ -4,6 +4,9 @@
 #include "varlist.h"
 using std::string;
 #include "blocklist.h"
+#include "client.h"
+
+
 
 
 struct block{
@@ -15,7 +18,8 @@ struct block{
 class Parser
 {
 public:
-   VarList lista_valores;
+
+    VarList lista_valores;
     string tiposDeVariables[6] = {"int","long","char","float", "double", "struct"};
     string codigoCompleto;
     Parser();

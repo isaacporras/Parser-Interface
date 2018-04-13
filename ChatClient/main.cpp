@@ -9,10 +9,10 @@ int main(int argc, char *argv[])
     {
         QCoreApplication a(argc, argv);
 
-        Client* client = new Client(0,"127.0.0.1",4000);
+        Client* client = new Client(0,"127.0.0.1",3000);
 
         string line;
-        while(line!="exit"){
+        while(line!= "exit"){
             cout << "Message : ";
             cin >> line;
             client->SendData(QString(line.c_str()));

@@ -4,6 +4,7 @@
 
 #include <QMainWindow>
 #include "parser.h"
+#include "client.h"
 namespace Ui {
 class IDE_Window;
 }
@@ -16,6 +17,7 @@ public:
     explicit IDE_Window(QWidget *parent = 0);
     ~IDE_Window();
     Parser parser;
+    Client *cliente;
 
 private slots:
      void on_RunButton_clicked();
@@ -24,6 +26,8 @@ private slots:
      void addValor(int fila);
      void addEtiqueta(int fila);
      void addReferencia(int fila);
+     void createClient();
+     void getParserData();
 
 private:
     Ui::IDE_Window *ui;

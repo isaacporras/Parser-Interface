@@ -3,7 +3,7 @@
     #include <iostream>
     using namespace std;
 
-    //namespace NetworkArdic{
+
 
     Client::Client(QObject * obj, QString add, quint16 port) : QObject(obj)
     {
@@ -28,7 +28,6 @@
     {
         if(!data.isEmpty())
         {
-
             socket->write(QString(data + "\n").toUtf8());
             socket->waitForBytesWritten(3000);
         }
@@ -50,4 +49,4 @@
         socket->waitForBytesWritten(3000);
     }
 
-    //}
+
