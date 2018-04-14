@@ -5,6 +5,9 @@
 #include <QMainWindow>
 #include "parser.h"
 #include "client.h"
+#include <string>
+
+using std::string;
 namespace Ui {
 class IDE_Window;
 }
@@ -27,6 +30,7 @@ private slots:
      void addEtiqueta(int fila);
      void addReferencia(int fila);
      void createClient();
+     void sendData(string data);
 
 
 private:

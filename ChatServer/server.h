@@ -14,7 +14,7 @@
             Q_OBJECT
             public:
 
-              Server(QObject * parent = 0 , quint16 port = 6666);
+              Server(QObject * parent = 0 , quint16 port = 8888);
               virtual  ~Server();
 
             private slots:
