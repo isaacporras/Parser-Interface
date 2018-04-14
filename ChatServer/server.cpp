@@ -36,8 +36,9 @@
     {
         while(client->canReadLine())
         {
-            QString line = QString::fromUtf8(client->readLine()).trimmed();
-            qDebug() << "Client :" << line;
+            QString line = QString::fromUtf8(client->readAll().trimmed());
+            cout << "Client :\n" << line.toUtf8().constData() << endl;
+            //qDebug() << "Client :" << line;
 
             client->write(QString("Server : I've taken your message (:\n").toUtf8());
             client->waitForBytesWritten(3000);
