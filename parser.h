@@ -43,7 +43,7 @@ public:
     string getNumbers(string numbers);
     BlockList copyList(VarList *listaVar);
     void imprimirVariables();
-    int analizarStruct(string codigo, VarList *list, string variable);
+    struct block analizarStruct(string codigo, VarList *list, string variable);
     int *getReubicador(string codigo);
     string isStructDef(string codigo);
     BlockList copyStructList(BlockList lista1, BlockList lista2);

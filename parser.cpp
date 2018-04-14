@@ -394,20 +394,23 @@ QJsonObject Parser::getType(string codigo, VarList &lista_var){
             }
 
         }
-//        else if(codigo[i] == 's' ){
+        else if(codigo[*i] == 's' ){
 
-//            if(codigo.substr(i,7) == "struct "){
+            if(codigo.substr(*i,7) == "struct "){
 
-//                string variable  = getVariable(codigo.substr(i + 6,codigo.size()));
-//                string *variable3  = (string *)malloc(sizeof(string));
-//                *variable3 = variable;
-//                std::cout<<"LA VARIABLE DE DE MI STRUCT  ES :" << variable <<"555555555555555555555555555555555555555555555555555555555555555555555555555555555"<<std::endl;
-//                if(isStructDef(codigo.substr(i + 7 + variable.size(), codigo.size())) == "Se crea tipo struct"){
-//                    std::cout<< codigo.substr(i+ 7, codigo.size()) <<std::endl;
-//                    i = i + analizarStruct(codigo.substr(i + 7 + variable.size(), codigo.size()),&lista_var, variable);
-//                }
+                string variable  = getVariable(codigo.substr(*i + 6,codigo.size()));
+                string *variable3  = (string *)malloc(sizeof(string));
+                *variable3 = variable;
 
-//                if(isStructDef(codigo.substr(i + 7 + variable.size(), codigo.size())) == "Se inicializa struct"){
+                if(isStructDef(codigo.substr(*i + 7 + variable.size(), codigo.size())) == "Se crea tipo struct"){
+
+                    struct block bk = analizarStruct(codigo.substr(*i + 7 + variable.size(), codigo.size()),&lista_var, variable);
+
+                    QJsonObject  objeto = makeJson("struct",std::to_string(*bk.inicio),std::to_string(*bk.final));
+                    return objeto;
+                }
+
+//                else if(isStructDef(codigo.substr(i + 7 + variable.size(), codigo.size())) == "Se inicializa struct"){
 //                    string variable  = getVariable(codigo.substr(i + 7,codigo.size()));
 
 //                    if(lista_var.buscarNodo(variable)->variable != "NO SE ENCONTRO"){
@@ -422,9 +425,9 @@ QJsonObject Parser::getType(string codigo, VarList &lista_var){
 //                    }
 
 //                }
-//            }
-//             i = i +1;
-//        }
+            }
+             i = i +1;
+        }
 
 //        else if(codigo[i]=='{' ){
 
@@ -504,55 +507,38 @@ BlockList Parser::copyStructList(BlockList lista1, BlockList lista2){
 }
 
 
-int Parser::analizarStruct(string codigo, VarList *list, string variable){
-
-//    std::cout<<"ENCONTRO EL SIGUIENTE STRUCT"<<std::endl;
-//    std::cout<<codigo<<std::endl;
-
-//    struct block b1;
-//    string status = "block cerrado";
-//    int i = 0;
-//    while (i != codigo.size()){
-
-//        if (codigo[i] == '{' && status == "block cerrado"){
-
-//            *b1.inicio = i;
-//            status = "block abierto";
-//             i = i + 1;
-//             continue ;
-//        }
-//        else if (codigo[i] == '{' && status == "block abierto"){
-
-//            i =  i + getBlocksAnidados(codigo.substr( i, codigo.size()));
-//            std::cout<< "Se reubico mi contador en: " << i << ", el cual contiene: " <<codigo[i]<<std::endl;
-//            i = i + 1;
-//            continue ;
-
-//        }
-//        else if(codigo[i]=='}' && status == "block abierto"){
-//            std::cout << "Cerro un block en la posicion :" << i << std::endl;
-//            std::cout << "Mi bloque final es:"<< std::endl;
-//            std::cout << codigo.substr(1,i) << std::endl;
-//            *b1.final = i;
-//            status = "block cerrado";
-//            i = i + 1;
-//            break;
-//        }
-//        else{
-//            i =  i + 1;
-//            continue ;
-//        }
-//    }
-
-//    VarList provicional;
+struct block Parser::analizarStruct(string codigo, VarList *list, string variable){
 
 
-//    listaBlock1.imprimirListaAlDerecho();
+    struct block b1;
+    string status = "block cerrado";
+    int j = 0;
+    while (j != codigo.size()){
 
-//    BlockList listaBlock2 = copyList(&listaBlock1);
-//    list->ingresarDatoFinalVar(variable, "Tipo Struct Definition","Tipo Struct Definition",*b1.inicio,*b1.final,"Tipo Struct Definition",codigo.substr(*b1.inicio, *b1.final + 1),listaBlock2);
+        if (codigo[j] == '{' && status == "block cerrado"){
 
-//    return *b1.final;
+            *b1.inicio = *i + j;
+            status = "block abierto";
+             j = j + 1;
+             continue ;
+        }
+
+        else if(codigo[j]=='}' && status == "block abierto"){
+            std::cout << "Cerro un block en la posicion :" << i << std::endl;
+            std::cout << "Mi bloque final es:"<< std::endl;
+            std::cout << codigo.substr(1,j) << std::endl;
+            *b1.final = *i + j;
+            status = "block cerrado";
+            j = j + 1;
+            break;
+        }
+        else{
+            j =  j + 1;
+            continue ;
+        }
+    }
+
+    return b1;
 }
 
 

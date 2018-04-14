@@ -401,36 +401,39 @@ QJsonObject Parser::getType(string codigo, VarList &lista_var){
                 string variable  = getVariable(codigo.substr(*i + 6,codigo.size()));
                 string *variable3  = (string *)malloc(sizeof(string));
                 *variable3 = variable;
-l;
+
                 if(isStructDef(codigo.substr(*i + 7 + variable.size(), codigo.size())) == "Se crea tipo struct"){
-                    
-                    *i = *i + analizarStruct(codigo.substr(i + 7 + variable.size(), codigo.size()),&lista_var, variable);
+
+                    struct block bk = analizarStruct(codigo.substr(*i + 7 + variable.size(), codigo.size()),&lista_var, variable);
+
+                    QJsonObject  objeto = makeJson("struct",std::to_string(*bk.inicio),std::to_string(*bk.final));
+                    return objeto;
                 }
 
-                if(isStructDef(codigo.substr(i + 7 + variable.size(), codigo.size())) == "Se inicializa struct"){
-                    string variable  = getVariable(codigo.substr(i + 7,codigo.size()));
+//                else if(isStructDef(codigo.substr(i + 7 + variable.size(), codigo.size())) == "Se inicializa struct"){
+//                    string variable  = getVariable(codigo.substr(i + 7,codigo.size()));
 
-                    if(lista_var.buscarNodo(variable)->variable != "NO SE ENCONTRO"){
-                        BlockList listaBlock;
-                        BlockList listaBlock2  = lista_var.buscarNodo(variable)->lista;
-                        BlockList listaBlockFinal = copyStructList(listaBlock2,listaBlock);
+//                    if(lista_var.buscarNodo(variable)->variable != "NO SE ENCONTRO"){
+//                        BlockList listaBlock;
+//                        BlockList listaBlock2  = lista_var.buscarNodo(variable)->lista;
+//                        BlockList listaBlockFinal = copyStructList(listaBlock2,listaBlock);
 
-                        string variable2 = getValor(codigo.substr(i + 7 + variable.size(),codigo.size()),"Struct", lista_var);
-                        std::cout<<"SE ENCONTRO QUE SE QUIERE INICIALIZAR LA SIGUIENTE ESTRUCTURA :"<<variable2<<std::endl;
-                        lista_var.ingresarDatoFinalVar(variable2, *variable3,"Variable Struct",-10,-10,"Variable Struct","Variable Struct",listaBlockFinal);
-                        i = i + 8 + variable2.size();
-                    }
+//                        string variable2 = getValor(codigo.substr(i + 7 + variable.size(),codigo.size()),"Struct", lista_var);
+//                        std::cout<<"SE ENCONTRO QUE SE QUIERE INICIALIZAR LA SIGUIENTE ESTRUCTURA :"<<variable2<<std::endl;
+//                        lista_var.ingresarDatoFinalVar(variable2, *variable3,"Variable Struct",-10,-10,"Variable Struct","Variable Struct",listaBlockFinal);
+//                        i = i + 8 + variable2.size();
+//                    }
 
-                }
+//                }
             }
              i = i +1;
         }
 
-        else if(codigo[i]=='{' ){
+//        else if(codigo[i]=='{' ){
 
-            i  =  i + getBlocks(codigo.substr(i, codigo.size()),&lista_var);
+//            i  =  i + getBlocks(codigo.substr(i, codigo.size()),&lista_var);
 
-        }
+//        }
 
 
 
@@ -509,33 +512,33 @@ struct block Parser::analizarStruct(string codigo, VarList *list, string variabl
 
     struct block b1;
     string status = "block cerrado";
-    int i = 0;
-    while (i != codigo.size()){
+    int j = 0;
+    while (j != codigo.size()){
 
-        if (codigo[i] == '{' && status == "block cerrado"){
+        if (codigo[j] == '{' && status == "block cerrado"){
 
-            *b1.inicio = i;
+            *b1.inicio = *i + j;
             status = "block abierto";
-             i = i + 1;
+             j = j + 1;
              continue ;
         }
-        
-        else if(codigo[i]=='}' && status == "block abierto"){
-            std::cout << "Cerro un block en la posicion :" << i << std::endl;
+
+        else if(codigo[j]=='}' && status == "block abierto"){
+            std::cout << "Cerro un block en la posicion :" << j << std::endl;
             std::cout << "Mi bloque final es:"<< std::endl;
-            std::cout << codigo.substr(1,i) << std::endl;
-            *b1.final = i;
+            std::cout << codigo.substr(1,j) << std::endl;
+            *b1.final = *i + j;
             status = "block cerrado";
-            i = i + 1;
+            j = j + 1;
             break;
         }
         else{
-            i =  i + 1;
+            j =  j + 1;
             continue ;
         }
     }
-    
-    return *b1.final;
+
+    return b1;
 }
 
 
