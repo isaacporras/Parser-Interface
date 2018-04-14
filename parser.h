@@ -1,13 +1,13 @@
 #ifndef PARSER_H
 #define PARSER_H
 #include <string>
-#include "varlist.h"
-using std::string;
-#include "blocklist.h"
+
+
+
 #include "client.h"
 #include "QJsonObject"
 #include "QJsonDocument"
-
+using std::string;
 
 
 struct block{
@@ -20,15 +20,16 @@ class Parser
 {
 public:
     int *i = (int*)malloc(sizeof (int));
+    string entero = "int";
     QJsonObject makeJson(string tip, string val, string var);
-    VarList lista_valores;
+
     string tiposDeVariables[6] = {"int","long","char","float", "double", "struct"};
     string codigoCompleto;
     Parser();
     QJsonObject parse(string codigo);
     QJsonObject writeFile(string codigo);
     void readFile();
-    int getBlocks(string codigo, VarList *lista);
+    bool esPointer(string codigo);
     int getBlocksAnidados(string codigo);
     QJsonObject getType(string codigo);
     string getVariable(string codigo);
@@ -37,16 +38,14 @@ public:
     int *getVariableSize(string codigo);
     string getValor(string codigo, string tipo);
     bool verificarTipo(string tipo,string valor);
-    int obtenerNumero(NodoVar *nodo);
-    string analizarValor(string valor, VarList lista_Var);
-    NodoVar *buscarNum(string nombre_de_variable, VarList lista);
+
     string getNumbers(string numbers);
-    BlockList copyList(VarList *listaVar);
+
     void imprimirVariables();
     struct block analizarStruct(string codigo);
     int *getReubicador(string codigo);
     string isStructDef(string codigo);
-    BlockList copyStructList(BlockList lista1, BlockList lista2);
+
 
 
 

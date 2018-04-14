@@ -140,7 +140,7 @@ QJsonObject Parser::getType(string codigo){
                         catch(int e){
                             std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
                         }
-                    QJsonObject  objeto = makeJson("int pointer",valor,variable.erase(variable.begin(),1));
+                    QJsonObject  objeto = makeJson("int pointer",valor,variable);
                     return objeto;
 
                 }
@@ -204,7 +204,7 @@ QJsonObject Parser::getType(string codigo){
                         catch(int e){
                             std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
                         }
-                    QJsonObject  objeto = makeJson("float pointer",valor,variable.erase(variable.begin(),1));
+                    QJsonObject  objeto = makeJson("float pointer",valor,variable);
                     return objeto;
                 }
                 else if(tieneIgual == true){
@@ -263,7 +263,7 @@ QJsonObject Parser::getType(string codigo){
                         catch(int e){
                             std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
                         }
-                    QJsonObject  objeto = makeJson("long pointer",valor,variable.erase(variable.begin(),1));
+                    QJsonObject  objeto = makeJson("long pointer",valor,variable);
                     return objeto;
 
             }
@@ -322,7 +322,7 @@ QJsonObject Parser::getType(string codigo){
                         catch(int e){
                             std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
                         }
-                    QJsonObject  objeto = makeJson("double pointer",valor,variable.erase(variable.begin(),1);
+                    QJsonObject  objeto = makeJson("double pointer",valor,variable);
                     return objeto;
 
             }
@@ -366,7 +366,7 @@ QJsonObject Parser::getType(string codigo){
                         catch(int e){
                             std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
                         }
-                    QJsonObject  objeto = makeJson("double pointer",valor,variable.erase(variable.begin(),1));
+                    QJsonObject  objeto = makeJson("double pointer",valor,variable);
                     return objeto;
 
             }
@@ -381,9 +381,6 @@ QJsonObject Parser::getType(string codigo){
                 bool tieneDot = checkDotSing(codigo.substr(*i + 6 + variable.size(),codigo.size()));
                 string valor = getValor(codigo.substr(*i+7+variable.size(),codigo.size()),"char");
                 bool isPointer = esPointer(codigo.substr(*i + 4,codigo.size()));
-
-
-
                 if(isPointer == true){
 
                     string valor = getValor(codigo.substr(*i + 8 +variable.size(),codigo.size()), "char");
@@ -397,7 +394,7 @@ QJsonObject Parser::getType(string codigo){
                         catch(int e){
                             std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
                         }
-                    QJsonObject  objeto = makeJson("char pointer",valor,variable.erase(variable.begin(),1));
+                    QJsonObject  objeto = makeJson("char pointer",valor,variable);
                     return objeto;
 
             }
@@ -573,7 +570,7 @@ bool Parser:: esPointer(string codigo){
         j = j + 1;
     }
     if(codigo[j] == '*'){
-
+        
         return true;
     }
     if(codigo[j]!= '*'){

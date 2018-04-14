@@ -5,8 +5,7 @@
 #include <string>
 #include <fstream>
 #include "client.h"
-#include "nodovar.h"
-#include "varlist.h"
+
 #include "QJsonObject"
 #include "QJsonDocument"
 using namespace std;
@@ -19,14 +18,14 @@ IDE_Window::IDE_Window(QWidget *parent) :
     ui->setupUi(this);
     setWindowTitle("C! - IDE");
     QStringList Ram_view_columns;
-    Ram_view_columns<<"DirecciÃ³n"<< "Valor"<<"Etiqueta"<<"Referencias";
+    Ram_view_columns<<"Dirección"<< "Valor"<<"Etiqueta"<<"Referencias";
     ui->RAM_view->setColumnCount(4);
     ui->RAM_view->setColumnWidth(3, 130);
     ui->RAM_view->setHorizontalHeaderLabels(Ram_view_columns);
     ui->OutputArea->setDocumentTitle("Output");
     ui->OutputArea->setReadOnly(true);
     ui->OutputArea->insertPlainText(">");
-//    createClient();
+    createClient();
 }
 
 IDE_Window::~IDE_Window()
@@ -46,7 +45,7 @@ void IDE_Window::on_RunButton_clicked()
     const char* charString = bytes.data();
     string someString(charString);
     std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<bytes.data()<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-//    sendData(someString);
+    sendData(someString);
     if (objeto.find("Type").value().toString() == "}" || objeto.find("Type").value().toString() == "{"){
         ui->RunButton->click();
     }

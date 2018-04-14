@@ -28,17 +28,11 @@ SOURCES += \
         main.cpp \
         ide_window.cpp \
     parser.cpp \
-    varlist.cpp \
-    nodovar.cpp \
     client.cpp
 
 HEADERS += \
         ide_window.h \
     parser.h \
-    blocklist.h \
-    blocknode.h \
-    varlist.h \
-    nodovar.h \
     client.h
 
 FORMS += \
