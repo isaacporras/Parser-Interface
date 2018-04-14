@@ -184,7 +184,7 @@ QJsonObject Parser::makeJson(string tip, string val, string var){
 
 QJsonObject Parser::getType(string codigo, VarList &lista_var){
     do{
-
+        std::cout << "EL I MIO ES:"<< *i << std::endl;
         if(codigo[*i] == 'i'){
             if(codigo.substr(*i,4) == "int "){
 
@@ -194,20 +194,15 @@ QJsonObject Parser::getType(string codigo, VarList &lista_var){
 
                 bool tieneIgual = checkEqualSing(codigo.substr(*i + 4 + variable.size(),codigo.size()));
 
-
-
-
-
                 if(tieneIgual == true){
 
                     string valor = getValor(codigo.substr(*i+6+variable.size(),codigo.size()), "int", lista_var);
 
-
-
                     try{
 
                         int *x = getReubicador(codigo.substr(*i,codigo.size()));
-                        *i = *i + *x;
+                        std::cout << "SE REUBICA EN:"<< codigo[*x] << std::endl;
+                        *i = *i + *x + 1;
                     }
                         catch(int e){
                             std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
@@ -482,10 +477,10 @@ QJsonObject Parser::getType(string codigo, VarList &lista_var){
 //            }
 
 
-//        }
-//        else{
-//            i = i +1;
-//        }
+
+        else{
+            *i = *i +1;
+        }
 
     }while(*i!= codigo.size());
 
