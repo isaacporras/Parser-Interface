@@ -22,7 +22,7 @@ using std::string;
 
 Parser::Parser()
 {
-
+    *i = 0;
 }
 QJsonObject Parser::parse(string codigo){
 
