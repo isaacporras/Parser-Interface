@@ -30,12 +30,12 @@ QJsonObject Parser::parse(string codigo){
     std::cout<<"----------------------------SE EMPIEZA A PARSERA -----------------------------"<<std::endl;
     QJsonObject objeto = writeFile(codigo);
     return objeto;
-//    imprimirVariables();
+
  }
 
 QJsonObject Parser::writeFile(string codigo){
 
-    QJsonObject objeto = getType(codigo, lista_valores);
+    QJsonObject objeto = getType(codigo);
     return objeto;
 
     }
@@ -182,7 +182,7 @@ QJsonObject Parser::makeJson(string tip, string val, string var){
         return object;
 }
 
-QJsonObject Parser::getType(string codigo, VarList &lista_var){
+QJsonObject Parser::getType(string codigo){
     do{
         std::cout << "EL I MIO ES:"<< *i << std::endl;
         if(codigo[*i] == 'i'){
@@ -196,7 +196,7 @@ QJsonObject Parser::getType(string codigo, VarList &lista_var){
 
                 if(tieneIgual == true){
 
-                    string valor = getValor(codigo.substr(*i+6+variable.size(),codigo.size()), "int", lista_var);
+                    string valor = getValor(codigo.substr(*i+6+variable.size(),codigo.size()), "int");
 
                     try{
 
@@ -238,7 +238,7 @@ QJsonObject Parser::getType(string codigo, VarList &lista_var){
                 string variable  = getVariable(codigo.substr(*i + 5,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(*i + 6 + variable.size(),codigo.size()));
                 bool tieneDot = checkDotSing(codigo.substr(*i + 6 + variable.size(),codigo.size()));
-                string valor = getValor(codigo.substr(*i+8+variable.size(),codigo.size()),"float", lista_var);
+                string valor = getValor(codigo.substr(*i+8+variable.size(),codigo.size()),"float");
 
 
 
@@ -282,7 +282,7 @@ QJsonObject Parser::getType(string codigo, VarList &lista_var){
                 string variable  = getVariable(codigo.substr(*i + 5,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(*i + 5 + variable.size(),codigo.size()));
                 bool tieneDot = checkDotSing(codigo.substr(*i + 6 + variable.size(),codigo.size()));
-                string valor = getValor(codigo.substr(*i+7+variable.size(),codigo.size()),"long", lista_var);
+                string valor = getValor(codigo.substr(*i+7+variable.size(),codigo.size()),"long");
 
                 if(tieneIgual == true){
 
@@ -321,7 +321,7 @@ QJsonObject Parser::getType(string codigo, VarList &lista_var){
                 string variable  = getVariable(codigo.substr(*i + 7,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(*i + 7 + variable.size(),codigo.size()));
                 bool tieneDot = checkDotSing(codigo.substr(*i + 6 + variable.size(),codigo.size()));
-                string valor = getValor(codigo.substr(*i+9+variable.size(),codigo.size()),"double",lista_var);
+                string valor = getValor(codigo.substr(*i+9+variable.size(),codigo.size()),"double");
 
 
 
@@ -355,17 +355,16 @@ QJsonObject Parser::getType(string codigo, VarList &lista_var){
             }
 
         }
-        else if(codigo[*i]=='c'){
+        else if(codigo[*i]=='c' ){
             if(codigo.substr(*i,5) == "char "){
 
                 string variable  = getVariable(codigo.substr(*i + 4,codigo.size()));
                 bool tieneIgual = checkEqualSing(codigo.substr(*i + 5 + variable.size(),codigo.size()));
                 bool tieneDot = checkDotSing(codigo.substr(*i + 6 + variable.size(),codigo.size()));
-                string valor = getValor(codigo.substr(*i+7+variable.size(),codigo.size()),"char", lista_var);
+                string valor = getValor(codigo.substr(*i+7+variable.size(),codigo.size()),"char");
 
 
                 if(tieneIgual == true){
-
 
                     try{
                         int *x = getReubicador(codigo.substr(*i,codigo.size()));
@@ -396,6 +395,8 @@ QJsonObject Parser::getType(string codigo, VarList &lista_var){
         }
         else if(codigo[*i] == 's' ){
 
+            std::cout <<"Se encontro struct"<<std::endl;
+
             if(codigo.substr(*i,7) == "struct "){
 
                 string variable  = getVariable(codigo.substr(*i + 6,codigo.size()));
@@ -403,89 +404,75 @@ QJsonObject Parser::getType(string codigo, VarList &lista_var){
                 *variable3 = variable;
 
                 if(isStructDef(codigo.substr(*i + 7 + variable.size(), codigo.size())) == "Se crea tipo struct"){
+                    *i = *i + 7 + variable.size() ;
+                    struct block bk = analizarStruct(codigo.substr(*i, codigo.size()));
 
-                    struct block bk = analizarStruct(codigo.substr(*i + 7 + variable.size(), codigo.size()),&lista_var, variable);
-
-                    QJsonObject  objeto = makeJson("struct",std::to_string(*bk.inicio),std::to_string(*bk.final));
+                    QJsonObject  objeto = makeJson("struct definition",std::to_string(*bk.inicio),std::to_string(*bk.final));
+                    QVariant var(QString::fromStdString(variable));
+                    objeto.insert("Struct name",var.toJsonValue());
                     return objeto;
                 }
 
-//                else if(isStructDef(codigo.substr(i + 7 + variable.size(), codigo.size())) == "Se inicializa struct"){
-//                    string variable  = getVariable(codigo.substr(i + 7,codigo.size()));
+                else if(isStructDef(codigo.substr(*i + 7 + variable.size(), codigo.size())) == "Se inicializa struct"){
+                    string variable  = getVariable(codigo.substr(*i + 7,codigo.size()));
+                    string variable2 = getValor(codigo.substr(*i + 7 + variable.size(),codigo.size()),"Struct");
+                    std::cout<<"SE ENCONTRO QUE SE QUIERE INICIALIZAR LA SIGUIENTE ESTRUCTURA :"<<variable2<<std::endl;
+                    QJsonObject  objeto = makeJson("struct instantiation",variable, variable2);
+                    *i = *i + 8 + variable2.size();
+                    return objeto;
 
-//                    if(lista_var.buscarNodo(variable)->variable != "NO SE ENCONTRO"){
-//                        BlockList listaBlock;
-//                        BlockList listaBlock2  = lista_var.buscarNodo(variable)->lista;
-//                        BlockList listaBlockFinal = copyStructList(listaBlock2,listaBlock);
+                }
 
-//                        string variable2 = getValor(codigo.substr(i + 7 + variable.size(),codigo.size()),"Struct", lista_var);
-//                        std::cout<<"SE ENCONTRO QUE SE QUIERE INICIALIZAR LA SIGUIENTE ESTRUCTURA :"<<variable2<<std::endl;
-//                        lista_var.ingresarDatoFinalVar(variable2, *variable3,"Variable Struct",-10,-10,"Variable Struct","Variable Struct",listaBlockFinal);
-//                        i = i + 8 + variable2.size();
-//                    }
-
-//                }
             }
+
+
              i = i +1;
         }
+        else if (codigo[*i] == '}'){
+            QJsonObject  objeto = makeJson("}","}","}");
+           *i = *i + 1 ;
+            return objeto;
+        }
 
-//        else if(codigo[i]=='{' ){
+        else if(codigo[*i]=='{' ){
+            QJsonObject  objeto = makeJson("{","{","{");
+           *i = *i + 1 ;
+            return objeto;
 
-//            i  =  i + getBlocks(codigo.substr(i, codigo.size()),&lista_var);
+        }
+
+
+
+
+//        else if (getVariable(codigo.substr(*i ,codigo.size()))!= " "){
+
+
+//              string variable = getVariable(codigo.substr(*i ,codigo.size()));
+//              string valor = getValor(codigo.substr(*i  + variable.size(),codigo.size()),"IDK");
+//              bool tieneIgual = checkEqualSing(codigo.substr(*i + variable.size(),codigo.size()));
+//              if (tieneIgual == true){
+//                  try{
+//                      int *x = getReubicador(codigo.substr(*i,codigo.size()));
+
+//                      *i = *i + *x;
+//                  }
+//                      catch(int e){
+//                          std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
+//                      }
+//                  QJsonObject  objeto = makeJson("Asignacion",valor,variable);
+//                  return objeto;
+//              }
 
 //        }
-
-
-
-
-//        else if (buscarNum(getVariable(codigo.substr(i ,codigo.size())),lista_var)->variable != "NO SE ENCONTRO"){
-//            std::cout<< "ENCONTRO UNA ASIGNACION DE VARIABLE"<<std::endl;
-
-//            string variable = getVariable(codigo.substr(i ,codigo.size())); //Da el nombre de la variable
-//            NodoVar *nodox = buscarNum(getVariable(codigo.substr(i ,codigo.size())),lista_var);
-//            string variable_dentro_lista = getVariable(codigo.substr(i + nodox->variable.size() + 1   ,codigo.size()));
-
-//            string valor = getValor(codigo.substr(i  + variable.size() + variable_dentro_lista.size() + 3,codigo.size()),nodox->tipo, lista_var);
-
-
-//            if(nodox->tipo == "Variable Struct" && codigo[i + variable.size()] == '.'){
-//                std::cout<<"FUNCIONOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"<<std::endl;
-//                nodox->lista.imprimirListaAlDerechoBlock();
-//                BlockNode *nodo_dentro_lista = nodox->lista.buscarNodo(variable_dentro_lista);
-//                std::cout<<"NODO_DENTRO_LISTA: "<<nodo_dentro_lista->valor<<std::endl;
-//                nodo_dentro_lista->valor = valor;
-//                try{
-//                    int x = *getReubicador(codigo.substr(i,codigo.size()));
-//                    std::cout<< "Se reubico mi contador en: "<<codigo[i + x ]<<std::endl;
-//                    i = i + x;
-//                }
-//                    catch(int e){
-//                        std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
-//                    }
-//            }
-
-//            else if (nodox->tipo != "Variable Struct"){
-//                NodoVar *nodox = buscarNum(getVariable(codigo.substr(i ,codigo.size())),lista_var);
-//                valor = getValor(codigo.substr(i + nodox->variable.size() + 2,codigo.size()),nodox->tipo, lista_var);
-//                nodox->valor = valor;
-
-//                try{
-//                    int x = *getReubicador(codigo.substr(i,codigo.size()));
-//                    std::cout<< "Se reubico mi contador en: "<<codigo[i + x ]<<std::endl;
-//                    i = i + x;
-//                }
-//                catch(int e){
-//                    std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
-//                }
-//            }
-
-
 
         else{
             *i = *i +1;
         }
 
-    }while(*i!= codigo.size());
+    }while(*i <= codigo.size());
+    QJsonObject  objetof = makeJson("Finish","Finish","Finish");
+
+    return objetof;
 
 }
 
@@ -507,33 +494,35 @@ BlockList Parser::copyStructList(BlockList lista1, BlockList lista2){
 }
 
 
-struct block Parser::analizarStruct(string codigo, VarList *list, string variable){
+struct block Parser::analizarStruct(string codigo){
 
 
     struct block b1;
     string status = "block cerrado";
-    int j = 0;
-    while (j != codigo.size()){
+    int *j = (int*)malloc(sizeof (int));
+    *j = 0;
+    while (*j != codigo.size()){
 
-        if (codigo[j] == '{' && status == "block cerrado"){
+        if (codigo[*j] == '{' && status == "block cerrado"){
 
-            *b1.inicio = *i + j;
+            *b1.inicio = *i + *j;
+
             status = "block abierto";
-             j = j + 1;
+             *j = *j + 1;
              continue ;
         }
 
-        else if(codigo[j]=='}' && status == "block abierto"){
-            std::cout << "Cerro un block en la posicion :" << i << std::endl;
+        else if(codigo[*j]=='}' && status == "block abierto"){
+            std::cout << "Cerro un block en la posicion :" << *j << std::endl;
             std::cout << "Mi bloque final es:"<< std::endl;
-            std::cout << codigo.substr(1,j) << std::endl;
-            *b1.final = *i + j;
+            std::cout << codigo.substr(1,*j) << std::endl;
+            *b1.final = *i + *j;
             status = "block cerrado";
-            j = j + 1;
+            *j = *j + 1;
             break;
         }
         else{
-            j =  j + 1;
+            *j =  *j + 1;
             continue ;
         }
     }
@@ -557,11 +546,6 @@ string Parser::getVariable(string codigo){
     }
     return variable;
 }
-
-
-
-
-
 
 
 bool Parser::checkEqualSing(string codigo){
@@ -599,10 +583,6 @@ bool Parser::checkDotSing(string codigo){
 }
 
 
-
-
-
-
 int *Parser::getVariableSize(string codigo){
 
     string variable = "";
@@ -619,7 +599,7 @@ int *Parser::getVariableSize(string codigo){
     return i;
 }
 
-string Parser::getValor(string codigo, string tipo, VarList lista_Var){
+string Parser::getValor(string codigo, string tipo){
 
     string valor = "";
     int i = 0;
@@ -642,418 +622,6 @@ int *Parser::getReubicador(string codigo){
     return i;
 }
 
-
-
-
-
-
-bool Parser::verificarTipo(string tipo ,string valor){
-
-    if(tipo == "int"){
-
-        if(typeid (atoi( valor.c_str() )).name() == typeid(9).name()){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
-    if(tipo == "long"){
-
-        if(typeid (atol(valor.c_str())).name() == typeid(4294967296).name()){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-    if(tipo == "float"){
-
-        if(typeid (strtof((valor).c_str(),0)).name() == typeid(3.5F).name()){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-    if(tipo == "double"){
-
-        if(typeid (atof(valor.c_str())).name() == typeid(8.99999999999996).name()){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-    if(tipo == "char"){
-
-        if(valor[0] == '"' && valor[valor.size()-1] == '"'){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-}
-
-
-
-
-
-string Parser::analizarValor(string valor, VarList listaVar){
-
-    std::cout<<"++++++++++++++++++++++++++++++++++   se metio a analizar con :" <<valor<<" ++++++++++++++++++++++++++++++++++++"<<std::endl;
-    listaVar.imprimirListaAlDerecho();
-    valor= valor + ";";
-
-    if (valor.find('+')!= std::string::npos){
-
-        std::cout<<"SE METIO A SUMAR :" <<valor<<std::endl;
-        string num1 = getNumbers(valor.substr(0,valor.find('+') + 1));
-
-        string num2 = getNumbers(valor.substr(valor.find('+') + 1, valor.size()));
-        std::cout<<"num1 = "<<num1<<", num2 = "<<num2 <<std::endl;
-        int p = 0;
-        string estado_num1 ="es numero";
-        string estado_num2 ="es numero";
-
-        while(p!= num1.size()){
-            char x  = num1[p];
-            std::cout<<"EL CARACTER A EVALUAR ES: "<<x<<std::endl;
-            if (!isdigit(x) ){
-
-                estado_num1 = "no es numero";
-                break;
-            }
-            p = p +1;
-        }
-        int j = 0;
-        while(j != num2.size()){
-            char y  = num2[j];
-            if (!isdigit(y)){
-
-                estado_num2= "no es numero";
-                break;
-            }
-            j = j + 1;
-        }
-        std::cout<<"LOS ESTADOS DE MI NUMERO SON: "<<estado_num1 <<", " << estado_num2<<std::endl;
-
-
-        if(estado_num1 == "es numero" && estado_num2 == "es numero"){
-            NodoVar *nodo = buscarNum(num1,  listaVar);
-            int numeroBuscado = obtenerNumero(nodo);
-            std::cout<<numeroBuscado << std::endl;
-            int suma = (atoi( num1.c_str()) + atoi( num2.c_str() ));
-            return to_string(suma);
-        }
-        else if(estado_num1 == "es numero" && estado_num2 == "no es numero"){
-            NodoVar *nodo = buscarNum(num2,  listaVar);
-            int numeroBuscado = obtenerNumero(nodo);
-            if(nodo->valor == "NO SE ENCONTRO"){
-                return "NO SE ENCONTRO";
-            }
-            int suma  = (atoi( num1.c_str()) + numeroBuscado);
-            return to_string(suma);
-        }
-        else if(estado_num1 == "no es numero" && estado_num2 == "es numero"){
-            NodoVar *nodo = buscarNum(num1,  listaVar);
-            int numeroBuscado = obtenerNumero(nodo);
-            if(nodo->valor == "NO SE ENCONTRO"){
-                return "NO SE ENCONTRO";
-            }
-            int suma = (atoi( num2.c_str()) + numeroBuscado);
-            return to_string(suma);
-        }
-        else if(estado_num1 == "no es numero" && estado_num2 == "no es numero"){
-
-            NodoVar *nodo1 = buscarNum(num1,  listaVar);
-            int numeroBuscado1 = obtenerNumero(nodo1);
-            NodoVar *nodo2 = buscarNum(num2,  listaVar);
-            int numeroBuscado2 = obtenerNumero(nodo2);
-            std::cout <<"NINGUNO DE LOS DOS SON NUMEROS, Y TIENEN: " <<nodo1->valor<<" , "<<nodo2->valor<<std::endl;
-            if(nodo1->valor == "NO SE ENCONTRO" || nodo2->valor == "NO SE ENCONTRO"){
-                return "NO SE ENCONTRO";
-            }
-            int suma = (numeroBuscado1 + numeroBuscado2);
-            return to_string(suma);
-
-        }
-
-    }
-    else if (valor.find('-')!= std::string::npos){
-        std::cout<<"VA A RESTAR"<<std::endl;
-        string num1 = getNumbers(valor.substr(0,valor.find('-') + 1));
-
-        string num2 = getNumbers(valor.substr(valor.find('-') + 1, valor.size()));
-        std::cout<<"NUM1: |" << num1 <<"|"<<std::endl;
-        std::cout<<"NUM2: |" << num2 <<"|"<<std::endl;
-        int p = 0;
-        string estado_num1 ="es numero";
-        string estado_num2 ="es numero";
-
-        while(p!= num1.size()){
-            char x  = num1[p];
-            std::cout<<"EL CARACTER A EVALUAR ES: "<<x<<std::endl;
-            if (!isdigit(x) ){
-
-                estado_num1 = "no es numero";
-                break;
-            }
-            p = p +1;
-        }
-        int j = 0;
-        while(j != num2.size()){
-            char y  = num2[j];
-            if (!isdigit(y)){
-
-                estado_num2= "no es numero";
-                break;
-            }
-            j = j + 1;
-        }
-
-        std::cout<<"LOS ESTADOS DE MI NUMERO SON: "<<estado_num1 <<", " << estado_num2<<std::endl;
-
-        if(estado_num1 == "es numero" && estado_num2 == "es numero"){
-
-            int suma = (atoi( num1.c_str()) - atoi( num2.c_str() ));
-            return to_string(suma);
-        }
-        else if(estado_num1 == "es numero" && estado_num2 == "no es numero"){
-            NodoVar *nodo = buscarNum(num2,  listaVar);
-            int numeroBuscado = obtenerNumero(nodo);
-            if(nodo->valor == "NO SE ENCONTRO"){
-                return "NO SE ENCONTRO";
-            }
-            int suma  = (atoi( num1.c_str()) - numeroBuscado);
-            return to_string(suma);
-        }
-        else if(estado_num1 == "no es numero" && estado_num2 == "es numero"){
-            NodoVar *nodo = buscarNum(num1,  listaVar);
-            std::cout <<"AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH: "<<nodo->variable <<std::endl;
-            int numeroBuscado = obtenerNumero(nodo);
-            if(nodo->valor == "NO SE ENCONTRO"){
-                return "NO SE ENCONTRO";
-            }
-            int suma = (atoi( num2.c_str()) - numeroBuscado);
-            return to_string(suma);
-        }
-        else if(estado_num1 == "no es numero" && estado_num2 == "no es numero"){
-            NodoVar *nodo1 = buscarNum(num1,  listaVar);
-            int numeroBuscado1 = obtenerNumero(nodo1);
-            NodoVar *nodo2 = buscarNum(num2,  listaVar);
-            int numeroBuscado2 = obtenerNumero(nodo2);
-            if(nodo1->valor == "NO SE ENCONTRO" || nodo2->valor == "NO SE ENCONTRO"){
-                return "NO SE ENCONTRO";
-            }
-            int suma = (numeroBuscado1 - numeroBuscado2);
-            return to_string(suma);
-
-        }
-    }
-    else if (valor.find('/')!= std::string::npos){
-        std::cout<<"VA A DIVIDIR"<<std::endl;
-        string num1 = getNumbers(valor.substr(0,valor.find('/') + 1));
-
-        string num2 = getNumbers(valor.substr(valor.find('/') + 1, valor.size()));
-        std::cout<<"NUM1: |" << num1 <<"|"<<std::endl;
-        std::cout<<"NUM2: |" << num2 <<"|"<<std::endl;
-        int p = 0;
-        string estado_num1 ="es numero";
-        string estado_num2 ="es numero";
-
-        while(p!= num1.size()){
-            char x  = num1[p];
-            std::cout<<"EL CARACTER A EVALUAR ES: "<<x<<std::endl;
-            if (!isdigit(x) ){
-
-                estado_num1 = "no es numero";
-                break;
-            }
-            p = p +1;
-        }
-        int j = 0;
-        while(j != num2.size()){
-            char y  = num2[j];
-            if (!isdigit(y)){
-
-                estado_num2= "no es numero";
-                break;
-            }
-            j = j + 1;
-        }
-        std::cout<<"LOS ESTADOS DE MI NUMERO SON: "<<estado_num1 <<", " << estado_num2<<std::endl;
-        if(estado_num1 == "es numero" && estado_num2 == "es numero"){
-
-            int suma = (atoi( num1.c_str()) / atoi( num2.c_str() ));
-            return to_string(suma);
-        }
-        else if(estado_num1 == "es numero" && estado_num2 == "no es numero"){
-            NodoVar *nodo = buscarNum(num2,  listaVar);
-            int numeroBuscado = obtenerNumero(nodo);
-            if(nodo->valor == "NO SE ENCONTRO"){
-                return "NO SE ENCONTRO";
-            }
-            int suma  = (atoi( num1.c_str()) / numeroBuscado);
-            return to_string(suma);
-        }
-        else if(estado_num1 == "no es numero" && estado_num2 == "es numero"){
-            NodoVar *nodo = buscarNum(num1,  listaVar);
-            int numeroBuscado = obtenerNumero(nodo);
-            if(nodo->valor == "NO SE ENCONTRO"){
-                return "NO SE ENCONTRO";
-            }
-            int suma = (atoi( num2.c_str())  / numeroBuscado);
-            return to_string(suma);
-        }
-        else if(estado_num1 == "no es numero" && estado_num2 == "no es numero"){
-            NodoVar *nodo1 = buscarNum(num1,  listaVar);
-            int numeroBuscado1 = obtenerNumero(nodo1);
-            NodoVar *nodo2 = buscarNum(num2,  listaVar);
-            int numeroBuscado2 = obtenerNumero(nodo2);
-            if(nodo1->valor == "NO SE ENCONTRO" || nodo2->valor == "NO SE ENCONTRO"){
-                return "NO SE ENCONTRO";
-            }
-            int suma = (numeroBuscado1 / numeroBuscado2);
-            return to_string(suma);
-
-        }
-
-
-    }
-    else if (valor.find('%')!= std::string::npos){
-
-        string num1 = getNumbers(valor.substr(0,valor.find('%') + 1));
-
-
-
-        string num2 = getNumbers(valor.substr(valor.find('%') + 1, valor.size()));
-        int p = 0;
-        string estado_num1 ="es numero";
-        string estado_num2 ="es numero";
-        while(p!= num1.size()){
-            char x  = num1[p];
-            std::cout<<"EL CARACTER A EVALUAR ES: "<<x<<std::endl;
-            if (!isdigit(x) ){
-
-                estado_num1 = "no es numero";
-                break;
-            }
-            p = p +1;
-        }
-        int j = 0;
-        while(j != num2.size()){
-            char y  = num2[j];
-            if (!isdigit(y)){
-
-                estado_num2= "no es numero";
-                break;
-            }
-            j = j + 1;
-        }
-        std::cout<<"LOS ESTADOS DE MI NUMERO SON: "<<estado_num1 <<", " << estado_num2<<std::endl;
-        if(estado_num1 == "es numero" && estado_num2 == "es numero"){
-
-            int suma = (atoi( num1.c_str()) % atoi( num2.c_str() ));
-            return to_string(suma);
-        }
-        else if(estado_num1 == "es numero" && estado_num2 == "no es numero"){
-            NodoVar *nodo = buscarNum(num2,  listaVar);
-            int numeroBuscado = obtenerNumero(nodo);
-            if(nodo->variable == "NO SE ENCONTRO"){
-                return "NO SE ENCONTRO";
-            }
-            int suma  = (atoi( num1.c_str()) % numeroBuscado);
-            return to_string(suma);
-        }
-        else if(estado_num1 == "no es numero" && estado_num2 == "es numero"){
-            NodoVar *nodo = buscarNum(num1,  listaVar);
-            int numeroBuscado = obtenerNumero(nodo);
-            if(nodo->variable == "NO SE ENCONTRO"){
-                return "NO SE ENCONTRO";
-            }
-            int suma = (atoi( num2.c_str()) % numeroBuscado);
-            return to_string(suma);
-        }
-        else if(estado_num1 == "no es numero" && estado_num2 == "no es numero"){
-            NodoVar *nodo1 = buscarNum(num1,  listaVar);
-            int numeroBuscado1 = obtenerNumero(nodo1);
-            NodoVar *nodo2 = buscarNum(num2,  listaVar);
-            int numeroBuscado2 = obtenerNumero(nodo2);
-            if(nodo1->valor == "NO SE ENCONTRO" || nodo2->valor == "NO SE ENCONTRO"){
-                return "NO SE ENCONTRO";
-            }
-            int suma = (numeroBuscado1 % numeroBuscado2);
-            return to_string(suma);
-
-        }
-    }
-    else{
-
-    }
-}
-
-int Parser::obtenerNumero(NodoVar *nodo){
-
-    if(nodo->tipo == "int"){
-        return atoi(nodo->valor.c_str());
-    }
-    if(nodo->tipo == "float"){
-        return strtof((nodo->valor).c_str(),0);
-    }
-    if(nodo->tipo == "long"){
-        return atol(nodo->valor.c_str());
-    }
-    if(nodo->tipo == "double"){
-        return atof(nodo->valor.c_str());
-    }
-}
-
-
-NodoVar *Parser::buscarNum(string nombre_de_variable, VarList listaVar){
-
-  std::cout<<"SE METIO A BUSCAR LA VARIABLE:" << nombre_de_variable << std::endl;
-
-
-  NodoVar *nodo = lista_valores.buscarNodo(nombre_de_variable);
-  string valor_en_scope = listaVar.buscarNodo(nombre_de_variable)->variable;
-  std::cout<<"EN SCOPE:" << valor_en_scope << std::endl;
-  std::cout<<"NODO:" << nodo->variable<< std::endl;
-
-  if(nodo->variable == "NO SE ENCONTRO" && valor_en_scope == "NO SE ENCONTRO"){
-      std::cout<<"NO SE ENCONTRO EL DATO BUSCADO" << std::endl;
-      BlockList listaprov;
-      NodoVar* nodox = new NodoVar(" "," "," ",-10,-10," "," ",listaprov);
-      nodox->valor = "NO SE ENCONTRO";
-      nodox->variable = "NO SE ENCONTRO";
-      return nodox;
-  }
-  else if(nodo->variable == "NO SE ENCONTRO" && valor_en_scope != "NO SE ENCONTRO"){
-      nodo = listaVar.buscarNodo(nombre_de_variable);
-      return nodo;
-  }
-  else{
-      return nodo;
-  }
-}
-
-string Parser::getNumbers(string number){
-    string valor = "";
-    int i = 0;
-    while(number[i] == ' '){
-        i = i + 1;
-    }
-
-    while(number[i]!= '+' && number[i]!= ' ' && number[i]!= ';' && number[i]!= '-' && number[i]!= '/'&& number[i]!= '%'){
-
-        valor = valor + number[i];
-        i = i + 1;
-    }
-
-    return valor;
-}
 
 
 

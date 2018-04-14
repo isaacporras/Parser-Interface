@@ -21,6 +21,7 @@ public:
     ~IDE_Window();
     Parser parser;
     Client *cliente;
+    string statusStruct = "struct cerrado";
 
 private slots:
      void on_RunButton_clicked();

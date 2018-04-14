@@ -19,16 +19,14 @@ IDE_Window::IDE_Window(QWidget *parent) :
     ui->setupUi(this);
     setWindowTitle("C! - IDE");
     QStringList Ram_view_columns;
-    Ram_view_columns<<"Dirección"<< "Valor"<<"Etiqueta"<<"Referencias";
+    Ram_view_columns<<"DirecciÃ³n"<< "Valor"<<"Etiqueta"<<"Referencias";
     ui->RAM_view->setColumnCount(4);
     ui->RAM_view->setColumnWidth(3, 130);
     ui->RAM_view->setHorizontalHeaderLabels(Ram_view_columns);
     ui->OutputArea->setDocumentTitle("Output");
     ui->OutputArea->setReadOnly(true);
     ui->OutputArea->insertPlainText(">");
-    createClient();
-
-
+//    createClient();
 }
 
 IDE_Window::~IDE_Window()
@@ -38,13 +36,20 @@ IDE_Window::~IDE_Window()
 
 void IDE_Window::on_RunButton_clicked()
 {
-    QJsonObject objeto = parser.parse(ui->CodeTextArea->toPlainText().toStdString());
+    string codigo = ui->CodeTextArea->toPlainText().toStdString();
+    QJsonObject objeto = parser.parse(codigo);
+    if(objeto.find("Type").value().toString() == "struct definition"){
+        statusStruct = "struct abierto";
+    }
     QJsonDocument doc(objeto);
     QByteArray bytes = doc.toJson();
     const char* charString = bytes.data();
     string someString(charString);
     std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<bytes.data()<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-    sendData(someString);
+//    sendData(someString);
+    if (objeto.find("Type").value().toString() == "}" || objeto.find("Type").value().toString() == "{"){
+        ui->RunButton->click();
+    }
     ui->RAM_view->insertRow(ui->RAM_view->rowCount());
     int fila = ui->RAM_view->rowCount() -1;
     addMemoryDirection(fila);
@@ -85,4 +90,6 @@ void IDE_Window::createClient(){
 void IDE_Window::sendData(string data){
     cliente->SendData(QString(data.c_str()));
 }
+
+
 
