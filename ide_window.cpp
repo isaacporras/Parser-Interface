@@ -58,6 +58,7 @@ void IDE_Window::on_RunButton_clicked()
     addOutputArea();
 
 }
+
 void IDE_Window::addOutputArea(){
     QTextCursor curs = ui->OutputArea->textCursor();
     char * error = new char[strlen("ERROR") + strlen("\n") + 1];
@@ -90,5 +91,10 @@ void IDE_Window::sendData(string data){
     cliente->SendData(QString(data.c_str()));
 }
 
-
-
+void IDE_Window::on_pushButton_clicked()
+{
+    reiniciarParseo();
+}
+void IDE_Window::reiniciarParseo(){
+    *parser.i = 0;
+}

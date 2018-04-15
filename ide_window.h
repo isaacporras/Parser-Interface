@@ -32,7 +32,10 @@ private slots:
      void addReferencia(int fila);
      void createClient();
      void sendData(string data);
+     void reiniciarParseo();
 
+
+     void on_pushButton_clicked();
 
 private:
     Ui::IDE_Window *ui;
