@@ -1,8 +1,9 @@
 #include "server.h"
-    #include <iostream>
-    using namespace std;
+#include "variablelist.h"
+#include <iostream>
+using namespace std;
 
-
+variablelist *vl = new variablelist();
 
     Server::Server(QObject* parent , quint16 port): QTcpServer(parent)
     {
@@ -39,6 +40,14 @@
             QString line = QString::fromUtf8(client->readAll().trimmed());
             cout << "Client :\n" << line.toUtf8().constData() << endl;
             //qDebug() << "Client :" << line;
+
+            QJsonObject obj;
+            QJsonDocument doc = QJsonDocument::fromJson(line.toUtf8());
+            obj = doc.object();
+
+            vl->preparation(obj);
+
+            break;
 
             client->write(QString("Server : I've taken your message (:\n").toUtf8());
             client->waitForBytesWritten(3000);
