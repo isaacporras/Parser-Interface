@@ -16,7 +16,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += main.cpp \
-    server.cpp
+    server.cpp \
+    variablelist.cpp \
+    malloc.cpp
 
 HEADERS += \
-    server.h
+    server.h \
+    variablelist.h \
+    malloc.h
+
+SUBDIRS += \
+    ChatServer.pro
