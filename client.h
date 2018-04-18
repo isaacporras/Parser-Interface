@@ -14,6 +14,7 @@
         public:
 
             Client(QObject * obj = 0,QString add="localhost", quint16 port = 4000);
+            QJsonObject jsonActual;
 
 
             void SendData(QString data);

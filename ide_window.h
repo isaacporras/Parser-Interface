@@ -26,9 +26,9 @@ public:
 private slots:
      void on_RunButton_clicked();
      void addOutputArea();
-     void addMemoryDirection(int fila);
-     void addValor(int fila);
-     void addEtiqueta(int fila);
+     void addMemoryDirection(int fila, QString address);
+     void addValor(int fila, QString value);
+     void addEtiqueta(int fila, QString label);
      void addReferencia(int fila);
      void createClient();
      void sendData(string data);

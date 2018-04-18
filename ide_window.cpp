@@ -46,14 +46,16 @@ void IDE_Window::on_RunButton_clicked()
     string someString(charString);
     std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<bytes.data()<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
     sendData(someString);
+
     if (objeto.find("Type").value().toString() == "}" || objeto.find("Type").value().toString() == "{"){
         ui->RunButton->click();
     }
     ui->RAM_view->insertRow(ui->RAM_view->rowCount());
     int fila = ui->RAM_view->rowCount() -1;
-    addMemoryDirection(fila);
-    addValor(fila);
-    addEtiqueta(fila);
+
+    addMemoryDirection(fila,cliente->jsonActual.value("Address").toString());
+    addValor(fila,cliente->jsonActual.value("Value").toString());
+    addEtiqueta(fila,cliente->jsonActual.value("Label").toString());
     addReferencia(fila);
     addOutputArea();
 
@@ -68,14 +70,14 @@ void IDE_Window::addOutputArea(){
     ui->OutputArea->insertPlainText(">");
 
 }
-void IDE_Window::addMemoryDirection(int fila){
-    ui->RAM_view->setItem(fila,DIRECCION,new QTableWidgetItem("0x00F12"));
+void IDE_Window::addMemoryDirection(int fila, QString address){
+    ui->RAM_view->setItem(fila,DIRECCION,new QTableWidgetItem(address));
 }
-void IDE_Window::addValor(int fila){
-    ui->RAM_view->setItem(fila,VALOR,new QTableWidgetItem("9"));
+void IDE_Window::addValor(int fila,QString value){
+    ui->RAM_view->setItem(fila,VALOR,new QTableWidgetItem(value));
 }
-void IDE_Window::addEtiqueta(int fila){
-    ui->RAM_view->setItem(fila, ETIQUETA,new QTableWidgetItem("x"));
+void IDE_Window::addEtiqueta(int fila,QString label){
+    ui->RAM_view->setItem(fila, ETIQUETA,new QTableWidgetItem(label));
 }
 void IDE_Window::addReferencia(int fila){
     ui->RAM_view->setItem(fila,REFERENCIAS,new QTableWidgetItem("2"));

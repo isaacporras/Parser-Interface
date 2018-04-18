@@ -38,8 +38,11 @@
         while(socket->canReadLine())
         {
 
-            QString line = QString::fromUtf8(socket->readLine()).trimmed();
-            qDebug() << line;
+            QString line = QString::fromUtf8(socket->readAll()).trimmed();
+            cout << line.toUtf8().constData() << endl;
+
+            QJsonDocument doc = QJsonDocument::fromJson(line.toUtf8());
+            jsonActual = doc.object();
         }
     }
 
