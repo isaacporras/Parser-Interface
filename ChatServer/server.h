@@ -5,6 +5,7 @@
     #include <QObject>
     #include <QtNetwork/QTcpServer>
     #include <QtNetwork/QTcpSocket>
+#include "variablelist.h"
 
 
 
@@ -16,6 +17,7 @@
 
               Server(QObject * parent = 0 , quint16 port = 8888);
               virtual  ~Server();
+              void sendMessage(QString data);
 
             private slots:
 
@@ -24,9 +26,11 @@
               void disconnected();
 
             public:
-
+              bool firstTime;
               QTcpSocket * client;
               Server *servidor;
+              variablelist *vl;
+
 
         };
 

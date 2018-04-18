@@ -1,9 +1,11 @@
 #include "variablelist.h"
 #include <QDebug>
 #include <QJsonDocument>
+#include <iostream>
 
 variablelist::variablelist()
 {
+    mallocPtr = new Malloc(1024);
 /*
     QString line = "{\"label\":\"racso\",\"type\":\"int\",\"value\":\"888\"}" ;
 
@@ -26,35 +28,72 @@ variablelist::variablelist()
 void variablelist::preparation(QJsonObject object){
         //qDebug()<<"Va funcionando...."<<endl;
         QString type = QString(object.value("Type").toString());
-        qDebug()<<type<<endl;
+        //qDebug()<<type<<endl;
         QString label = QString(object.value("Variable").toString());
         if (type == QString("int")){
             int value = object.value("Value").toString().toInt();
-            insertNodeInt(type,label,value);
+            int* intPtr = mallocPtr->agregar_int(value);
+            insertNodeInt(type,label,value,intPtr);
             qDebug()<<"Nodo insertado...";
         }else if (type == QString("float")){
             float value = object.value("Value").toString().toFloat();
-            insertNodeFloat(type,label,value);
+            float* floatPtr = mallocPtr->agregar_float(value);
+            insertNodeFloat(type,label,value,floatPtr);
             qDebug()<<"Nodo insertado...";
         }else if (type == QString("double")){
             double value = object.value("Value").toString().toDouble();
-            insertNodeDouble(type,label,value);
+            double* doublePtr = mallocPtr->agregar_double(value);
+            insertNodeDouble(type,label,value,doublePtr);
             qDebug()<<"Nodo insertado...";
         }else if (type == "long"){
             long value = object.value("Value").toString().toLong();
-            insertNodeLong(type,label,value);
+            long* longPtr = mallocPtr->agregar_long(value);
+            insertNodeLong(type,label,value,longPtr);
+            qDebug()<<"Nodo insertado...";
 
-        }else{
+        }else if (type == "char"){
+            char value = object.value("Value").toString().toStdString()[0];
+            char* charPtr = mallocPtr->agregar_char(value);
+            insertNodeChar(type,label,value,charPtr);
+            qDebug()<<"Nodo insertado...";
+        }
+
+        else{
             qDebug()<<"No se encuentra el tipo"<<endl;
         }
 }
 
-void variablelist::insertNodeInt(QString type, QString label, int value ){
+void variablelist::insertNodeInt(QString type, QString label, int value , int* ptr){
 
     Node *newnode = new Node();
     newnode->label = label;
     newnode->type = type;
     newnode->value = value;
+    newnode->ptr = (void*)ptr;
+    char strAddress[] = "0x00000000";
+    sprintf(strAddress, "0x%x", ptr);
+    newnode->address = strAddress;
+
+    if(head == NULL){
+        head = newnode;
+        head->next = NULL;
+        tail = newnode;
+    }else{
+        tail->next = newnode;
+        tail = newnode;
+        tail->next = NULL;
+    }
+}
+void variablelist::insertNodeChar(QString type, QString label, char value , char* ptr){
+
+    Node *newnode = new Node();
+    newnode->label = label;
+    newnode->type = type;
+    newnode->valuechar = value;
+    newnode->ptr = (void*)ptr;
+    char strAddress[] = "0x00000000";
+    sprintf(strAddress, "0x%x", ptr);
+    newnode->address = strAddress;
 
     if(head == NULL){
         head = newnode;
@@ -67,30 +106,17 @@ void variablelist::insertNodeInt(QString type, QString label, int value ){
     }
 }
 
-void variablelist::insertNodeFloat(QString type, QString label, float value ){
+void variablelist::insertNodeFloat(QString type, QString label, float value , float* ptr){
 
     Node *newnode = new Node();
     newnode->label = label;
     newnode->type = type;
     newnode->valuefloat = value;
 
-    if(head == NULL){
-        head = newnode;
-        head->next = NULL;
-        tail = newnode;
-    }else{
-        tail->next = newnode;
-        tail = newnode;
-        tail->next = NULL;
-    }
-}
-
-void variablelist::insertNodeLong(QString type, QString label, long value ){
-
-    Node *newnode = new Node();
-    newnode->label = label;
-    newnode->type = type;
-    newnode->value = value;
+    newnode->ptr = (void*)ptr;
+    char strAddress[] = "0x00000000";
+    sprintf(strAddress, "0x%x", ptr);
+    newnode->address = strAddress;
 
     if(head == NULL){
         head = newnode;
@@ -103,12 +129,40 @@ void variablelist::insertNodeLong(QString type, QString label, long value ){
     }
 }
 
-void variablelist::insertNodeDouble(QString type, QString label, double value ){
+void variablelist::insertNodeLong(QString type, QString label, long value, long* ptr ){
 
     Node *newnode = new Node();
     newnode->label = label;
     newnode->type = type;
     newnode->value = value;
+
+    newnode->ptr = (void*)ptr;
+    char strAddress[] = "0x00000000";
+    sprintf(strAddress, "0x%x", ptr);
+    newnode->address = strAddress;
+
+    if(head == NULL){
+        head = newnode;
+        head->next = NULL;
+        tail = newnode;
+    }else{
+        tail->next = newnode;
+        tail = newnode;
+        tail->next = NULL;
+    }
+}
+
+void variablelist::insertNodeDouble(QString type, QString label, double value, double* ptr ){
+
+    Node *newnode = new Node();
+    newnode->label = label;
+    newnode->type = type;
+    newnode->value = value;
+
+    newnode->ptr = (void*)ptr;
+    char strAddress[] = "0x00000000";
+    sprintf(strAddress, "0x%x", ptr);
+    newnode->address = strAddress;
 
     if(head == NULL){
         head = newnode;
@@ -145,7 +199,18 @@ void variablelist::showList(){
         }
     }
 }
+QString variablelist::getAddress(QString label){
+    Node *temp = new Node();
+    temp = head;
 
+    for(int i = 0; i<totalNodes(); i++){
+        if (label == temp->label){
+            break;
+        }
+        temp = temp->next;
+    }
+    return temp->address;
+}
 void variablelist::getValue(int index){
     Node *temp = new Node();
     temp = head;
@@ -179,11 +244,11 @@ void variablelist::getType(int index){
 int variablelist::totalNodes(){
     Node *temp = new Node();
     temp = head;
-    int cont;
+    int cont = 0;
 
     while(temp != NULL){
-        temp = temp->next;
         cont++;
+        temp = temp->next;
     }
     return cont;
 }

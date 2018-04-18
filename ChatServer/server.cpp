@@ -1,12 +1,13 @@
 #include "server.h"
 #include "variablelist.h"
 #include <iostream>
+#include "malloc.h"
 using namespace std;
-
-variablelist *vl = new variablelist();
 
     Server::Server(QObject* parent , quint16 port): QTcpServer(parent)
     {
+        vl = new variablelist();
+        firstTime = true;
         if(!servidor){
             servidor = this;
         }
@@ -39,20 +40,44 @@ variablelist *vl = new variablelist();
         {
             QString line = QString::fromUtf8(client->readAll().trimmed());
             cout << "Client :\n" << line.toUtf8().constData() << endl;
-            //qDebug() << "Client :" << line;
 
-            QJsonObject obj;
-            QJsonDocument doc = QJsonDocument::fromJson(line.toUtf8());
-            obj = doc.object();
+            if (firstTime == true){
+                //sendMessage(QString("Hello!"));
+                firstTime = false;
+            }
+            else{
+                QJsonObject obj;
+                QJsonDocument doc = QJsonDocument::fromJson(line.toUtf8());
+                obj = doc.object();
 
-            vl->preparation(obj);
+                vl->preparation(obj);
 
+            QString qstr = vl->getAddress(obj.value("Variable").toString());
+
+            QJsonObject* jobj = new QJsonObject();
+            QJsonValue* jstring1 = new QJsonValue(obj.value("Variable").toString());
+            QJsonValue* jstring2 = new QJsonValue(obj.value("Value").toString());
+            QJsonValue* jstring3 = new QJsonValue(qstr);
+            jobj->insert("Label",jstring1->toString());
+            jobj->insert("Value",jstring2->toString());
+            jobj->insert("Address",jstring3->toString());
+            QJsonDocument doc2(*jobj);
+            QByteArray bytes = doc2.toJson();
+            const char* charString = bytes.data();
+            string json(charString);
+            QString message = json.c_str();
+
+            //client->write(QString(message + "\n").toUtf8());
+            sendMessage(message);
+            }
             break;
-
-            client->write(QString("Server : I've taken your message (:\n").toUtf8());
-            client->waitForBytesWritten(3000);
         }
 
+    }
+
+    void Server::sendMessage(QString data){
+        client->write(QString(data+"\n").toUtf8());
+        client->waitForBytesWritten(3000);
     }
 
     void Server::disconnected()
