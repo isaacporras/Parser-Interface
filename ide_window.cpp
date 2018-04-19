@@ -2,6 +2,7 @@
 #include "ui_ide_window.h"
 #include "iostream"
 #include "parser.h"
+#include "logger.h"
 #include <string>
 #include <fstream>
 #include "client.h"
@@ -9,6 +10,8 @@
 #include "QJsonObject"
 #include "QJsonDocument"
 using namespace std;
+
+logger *l1 = new logger();
 
 IDE_Window::IDE_Window(QWidget *parent) :
     QMainWindow(parent),
@@ -24,7 +27,6 @@ IDE_Window::IDE_Window(QWidget *parent) :
     ui->RAM_view->setHorizontalHeaderLabels(Ram_view_columns);
     ui->OutputArea->setDocumentTitle("Output");
     ui->OutputArea->setReadOnly(true);
-    ui->OutputArea->insertPlainText(">");
     createClient();
 }
 
@@ -57,17 +59,16 @@ void IDE_Window::on_RunButton_clicked()
     addValor(fila,cliente->jsonActual.value("Value").toString());
     addEtiqueta(fila,cliente->jsonActual.value("Label").toString());
     addReferencia(fila);
-    addOutputArea();
+    QString linea = QString::fromStdString(someString);
+    QString cod = QString::fromStdString(codigo);
+    addOutputArea(linea);
 
 }
 
-void IDE_Window::addOutputArea(){
-    QTextCursor curs = ui->OutputArea->textCursor();
-    char * error = new char[strlen("ERROR") + strlen("\n") + 1];
-    strcpy(error, "ERROR");
-    strcat(error, "\n");
-    ui->OutputArea->insertPlainText(error);
-    ui->OutputArea->insertPlainText(">");
+void IDE_Window::addOutputArea(QString linea){
+    ui->OutputArea->appendPlainText(l1->logMessage(0,"Llamando al servidor..."));
+    ui->OutputArea->appendPlainText(l1->logMessage(0,"Enviando la siguiente informacion..."));
+    ui->OutputArea->appendPlainText(linea);
 
 }
 void IDE_Window::addMemoryDirection(int fila, QString address){
@@ -86,6 +87,7 @@ void IDE_Window::addReferencia(int fila){
 void IDE_Window::createClient(){
     Client* client = new Client(0,"127.0.0.1",8888);
     cliente = client;
+     ui->OutputArea->appendPlainText(l1->logMessage(0,"Estableciendo conexion con el servidor..."));
 
 
 }
@@ -96,6 +98,7 @@ void IDE_Window::sendData(string data){
 void IDE_Window::on_pushButton_clicked()
 {
     reiniciarParseo();
+    ui->OutputArea->appendPlainText(l1->logMessage(1,"Se reinicio el sistema..."));
 }
 void IDE_Window::reiniciarParseo(){
     *parser.i = 0;

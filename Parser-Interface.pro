@@ -28,12 +28,14 @@ SOURCES += \
         main.cpp \
         ide_window.cpp \
     parser.cpp \
-    client.cpp
+    client.cpp \
+    logger.cpp
 
 HEADERS += \
         ide_window.h \
     parser.h \
-    client.h
+    client.h \
+    logger.h
 
 FORMS += \
         ide_window.ui
