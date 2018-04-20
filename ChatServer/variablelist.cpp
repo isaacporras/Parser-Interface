@@ -47,39 +47,41 @@ QString variablelist::preparation(QJsonObject object){
             qDebug()<<"Nodo insertado...";
             valor = QString::fromStdString(to_string(value).c_str());
         }else if (type == QString("float")){
-            float value = object.value("Value").toString().toFloat();
+            string analisis = analizarValor(object.value("Value").toString().toUtf8().constData(), type.toUtf8().constData());
+            float value;
+            string S = analisis;
+            istringstream(S) >> value;
             float* floatPtr = mallocPtr->agregar_float(value);
             insertNodeFloat(type,label,value,floatPtr);
             qDebug()<<"Nodo insertado...";
+            valor = QString::fromStdString(to_string(value).c_str());
         }else if (type == QString("double")){
             string analisis = analizarValor(object.value("Value").toString().toUtf8().constData(), type.toUtf8().constData());
-
             double value;
             string S = analisis;
             istringstream(S) >> value;
-
-            /*stringstream ss;
-            double value;
-            ss << analisis.c_str();
-            ss >> value;*/
-
-            cout << value <<endl;
-
             double* doublePtr = mallocPtr->agregar_double(value);
             insertNodeDouble(type,label,value,doublePtr);
             qDebug()<<"Nodo insertado...";
             valor = QString::fromStdString(to_string(value).c_str());
         }else if (type == "long"){
-            long value = object.value("Value").toString().toLong();
+            string analisis = analizarValor(object.value("Value").toString().toUtf8().constData(), type.toUtf8().constData());
+            long value;
+            string S = analisis;
+            istringstream(S) >> value;
             long* longPtr = mallocPtr->agregar_long(value);
             insertNodeLong(type,label,value,longPtr);
             qDebug()<<"Nodo insertado...";
-
+            valor = QString::fromStdString(to_string(value).c_str());
         }else if (type == "char"){
-            char value = object.value("Value").toString().toStdString()[0];
+            string analisis = analizarValor(object.value("Value").toString().toUtf8().constData(), type.toUtf8().constData());
+            char value = analisis[1];
+            cout << analisis << endl;
+            cout << value << endl;
             char* charPtr = mallocPtr->agregar_char(value);
             insertNodeChar(type,label,value,charPtr);
             qDebug()<<"Nodo insertado...";
+            valor = QString::fromStdString(analisis.c_str());
         }
 
         else{
@@ -990,6 +992,1122 @@ string variablelist::analizarValor(string valor, string tipo){
             return valor;
         }
     }
+
+    ///
+    ///Operaciones con long
+    ///
+
+    if (tipo == "long"){
+
+        ///
+        ///Suma
+        ///
+        if (valor.find('+') != string::npos){
+            string strNum1 = valor.substr(0,valor.find('+'));
+            string strNum2 = valor.substr(valor.find('+') + 1);
+            int p = 0;
+            bool estado_num1 = true;
+            bool estado_num2 = true;
+            while(p!= strNum1.size()){
+                char x  = strNum1[p];
+                if (!isdigit(x) ){
+                    estado_num1 = false;
+                    break;
+                }
+                p++;
+            }
+            p = 0;
+            while(p != strNum2.size()){
+                char y = strNum2[p];
+                if (!isdigit(y)){
+                    estado_num2= false;
+                    break;
+                }
+                p++;
+            }
+            if(estado_num1 == true && estado_num2 == true){
+                long value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                long value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                long suma = value1 + value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << suma;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == true && estado_num2 == false){
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                long value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                long value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                long suma = value1 + value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << suma;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == true){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                long value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                long value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                long suma = value1 + value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << suma;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == false){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                long value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                long value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                long suma = value1 + value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << suma;
+                S = Q.str();
+                return S;
+            }
+        }
+
+        ///
+        ///Resta
+        ///
+
+        if (valor.find('-') != string::npos){
+            string strNum1 = valor.substr(0,valor.find('-'));
+            string strNum2 = valor.substr(valor.find('-') + 1);
+            int p = 0;
+            bool estado_num1 = true;
+            bool estado_num2 = true;
+            while(p!= strNum1.size()){
+                char x  = strNum1[p];
+                if (!isdigit(x) ){
+                    estado_num1 = false;
+                    break;
+                }
+                p++;
+            }
+            p = 0;
+            while(p != strNum2.size()){
+                char y = strNum2[p];
+                if (!isdigit(y)){
+                    estado_num2= false;
+                    break;
+                }
+                p++;
+            }
+            if(estado_num1 == true && estado_num2 == true){
+                long value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                long value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                long resta = value1 - value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << resta;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == true && estado_num2 == false){
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                long value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                long value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                long resta = value1 - value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << resta;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == true){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                long value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                long value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                long resta = value1 - value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << resta;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == false){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                long value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                long value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                long resta = value1 - value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << resta;
+                S = Q.str();
+                return S;
+            }
+        }
+
+        ///
+        ///Multiplicación
+        ///
+
+        if (valor.find('*') != string::npos){
+            string strNum1 = valor.substr(0,valor.find('*'));
+            string strNum2 = valor.substr(valor.find('*') + 1);
+            int p = 0;
+            bool estado_num1 = true;
+            bool estado_num2 = true;
+            while(p!= strNum1.size()){
+                char x  = strNum1[p];
+                if (!isdigit(x) ){
+                    estado_num1 = false;
+                    break;
+                }
+                p++;
+            }
+            p = 0;
+            while(p != strNum2.size()){
+                char y = strNum2[p];
+                if (!isdigit(y)){
+                    estado_num2= false;
+                    break;
+                }
+                p++;
+            }
+            if(estado_num1 == true && estado_num2 == true){
+                long value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                long value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                long producto = value1 * value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << producto;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == true && estado_num2 == false){
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                long value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                long value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                long producto = value1 * value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << producto;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == true){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                long value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                long value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                long producto = value1 * value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << producto;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == false){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                long value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                long value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                long producto = value1 * value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << producto;
+                S = Q.str();
+                return S;
+            }
+        }
+
+        ///
+        ///División
+        ///
+
+        if (valor.find('/') != string::npos){
+            string strNum1 = valor.substr(0,valor.find('/'));
+            string strNum2 = valor.substr(valor.find('/') + 1);
+            int p = 0;
+            bool estado_num1 = true;
+            bool estado_num2 = true;
+            while(p!= strNum1.size()){
+                char x  = strNum1[p];
+                if (!isdigit(x) ){
+                    estado_num1 = false;
+                    break;
+                }
+                p++;
+            }
+            p = 0;
+            while(p != strNum2.size()){
+                char y = strNum2[p];
+                if (!isdigit(y)){
+                    estado_num2= false;
+                    break;
+                }
+                p++;
+            }
+            if(estado_num1 == true && estado_num2 == true){
+                long value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                long value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                long division = value1 / value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << division;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == true && estado_num2 == false){
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                long value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                long value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                long division = value1 / value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << division;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == true){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                long value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                long value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                long division = value1 / value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << division;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == false){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                long value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                long value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                long division = value1 / value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << division;
+                S = Q.str();
+                return S;
+            }
+        }
+
+        ///
+        ///Módulo
+        ///
+
+        if (valor.find('%') != string::npos){
+            string strNum1 = valor.substr(0,valor.find('%'));
+            string strNum2 = valor.substr(valor.find('%') + 1);
+            int p = 0;
+            bool estado_num1 = true;
+            bool estado_num2 = true;
+            while(p!= strNum1.size()){
+                char x  = strNum1[p];
+                if (!isdigit(x) ){
+                    estado_num1 = false;
+                    break;
+                }
+                p++;
+            }
+            p = 0;
+            while(p != strNum2.size()){
+                char y = strNum2[p];
+                if (!isdigit(y)){
+                    estado_num2= false;
+                    break;
+                }
+                p++;
+            }
+            if(estado_num1 == true && estado_num2 == true){
+                long value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                long value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                long modulo = fmod(value1,value2);
+                ostringstream Q;
+                Q.fill('#');
+                Q << modulo;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == true && estado_num2 == false){
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                long value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                long value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                long modulo = fmod(value1,value2);
+                ostringstream Q;
+                Q.fill('#');
+                Q << modulo;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == true){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                long value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                long value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                long modulo = fmod(value1,value2);
+                ostringstream Q;
+                Q.fill('#');
+                Q << modulo;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == false){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                long value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                long value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                long modulo = fmod(value1,value2);
+                ostringstream Q;
+                Q.fill('#');
+                Q << modulo;
+                S = Q.str();
+                return S;
+            }
+        }
+        else{
+            return valor;
+        }
+    }
+
+    ///
+    ///Operaciones con float
+    ///
+
+    if (tipo == "float"){
+
+        ///
+        ///Suma
+        ///
+        if (valor.find('+') != string::npos){
+            string strNum1 = valor.substr(0,valor.find('+'));
+            string strNum2 = valor.substr(valor.find('+') + 1);
+            int p = 0;
+            bool estado_num1 = true;
+            bool estado_num2 = true;
+            bool isPoint = false;
+            while(p!= strNum1.size()){
+                char x  = strNum1[p];
+                if (!isdigit(x) && x != '.'){
+                    estado_num1 = false;
+                    break;
+                }
+                if (x == '.' && isPoint == true){
+                    estado_num1 = false;
+                    break;
+                }
+                if (x == '.' && isPoint == false)
+                    isPoint = true;
+                p = p+1;
+            }
+            p = 0;
+            isPoint = false;
+            while(p != strNum2.size()){
+                char y  = strNum2[p];
+                if (!isdigit(y) && y != '.'){
+                    estado_num2 = false;
+                    break;
+                }
+                if (y == '.' && isPoint == true){
+                    estado_num2 = false;
+                    break;
+                }
+                if (y == '.' && isPoint == false)
+                    isPoint = true;
+                p = p+1;
+            }
+            if(estado_num1 == true && estado_num2 == true){
+                float value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                float value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                float suma = value1 + value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << suma;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == true && estado_num2 == false){
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                float value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                float value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                float suma = value1 + value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << suma;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == true){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                float value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                float value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                float suma = value1 + value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << suma;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == false){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                float value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                float value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                float suma = value1 + value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << suma;
+                S = Q.str();
+                return S;
+            }
+        }
+
+        ///
+        ///Resta
+        ///
+
+        if (valor.find('-') != string::npos){
+            string strNum1 = valor.substr(0,valor.find('-'));
+            string strNum2 = valor.substr(valor.find('-') + 1);
+            int p = 0;
+            bool estado_num1 = true;
+            bool estado_num2 = true;
+            bool isPoint = false;
+            while(p!= strNum1.size()){
+                char x  = strNum1[p];
+                if (!isdigit(x) && x != '.'){
+                    estado_num1 = false;
+                    break;
+                }
+                if (x == '.' && isPoint == true){
+                    estado_num1 = false;
+                    break;
+                }
+                if (x == '.' && isPoint == false)
+                    isPoint = true;
+                p = p+1;
+            }
+            p = 0;
+            isPoint = false;
+            while(p != strNum2.size()){
+                char y  = strNum2[p];
+                if (!isdigit(y) && y != '.'){
+                    estado_num2 = false;
+                    break;
+                }
+                if (y == '.' && isPoint == true){
+                    estado_num2 = false;
+                    break;
+                }
+                if (y == '.' && isPoint == false)
+                    isPoint = true;
+                p = p+1;
+            }
+            if(estado_num1 == true && estado_num2 == true){
+                float value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                float value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                float resta = value1 - value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << resta;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == true && estado_num2 == false){
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                float value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                float value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                float resta = value1 - value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << resta;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == true){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                float value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                float value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                float resta = value1 - value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << resta;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == false){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                float value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                float value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                float resta = value1 - value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << resta;
+                S = Q.str();
+                return S;
+            }
+        }
+
+        ///
+        ///Multiplicación
+        ///
+
+        if (valor.find('*') != string::npos){
+            string strNum1 = valor.substr(0,valor.find('*'));
+            string strNum2 = valor.substr(valor.find('*') + 1);
+            int p = 0;
+            bool estado_num1 = true;
+            bool estado_num2 = true;
+            bool isPoint = false;
+            while(p!= strNum1.size()){
+                char x  = strNum1[p];
+                if (!isdigit(x) && x != '.'){
+                    estado_num1 = false;
+                    break;
+                }
+                if (x == '.' && isPoint == true){
+                    estado_num1 = false;
+                    break;
+                }
+                if (x == '.' && isPoint == false)
+                    isPoint = true;
+                p = p+1;
+            }
+            p = 0;
+            isPoint = false;
+            while(p != strNum2.size()){
+                char y  = strNum2[p];
+                if (!isdigit(y) && y != '.'){
+                    estado_num2 = false;
+                    break;
+                }
+                if (y == '.' && isPoint == true){
+                    estado_num2 = false;
+                    break;
+                }
+                if (y == '.' && isPoint == false)
+                    isPoint = true;
+                p = p+1;
+            }
+            if(estado_num1 == true && estado_num2 == true){
+                float value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                float value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                float producto = value1 * value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << producto;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == true && estado_num2 == false){
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                float value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                float value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                float producto = value1 * value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << producto;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == true){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                float value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                float value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                float producto = value1 * value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << producto;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == false){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                float value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                float value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                float producto = value1 * value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << producto;
+                S = Q.str();
+                return S;
+            }
+        }
+
+        ///
+        ///División
+        ///
+
+        if (valor.find('/') != string::npos){
+            string strNum1 = valor.substr(0,valor.find('/'));
+            string strNum2 = valor.substr(valor.find('/') + 1);
+            int p = 0;
+            bool estado_num1 = true;
+            bool estado_num2 = true;
+            bool isPoint = false;
+            while(p!= strNum1.size()){
+                char x  = strNum1[p];
+                if (!isdigit(x) && x != '.'){
+                    estado_num1 = false;
+                    break;
+                }
+                if (x == '.' && isPoint == true){
+                    estado_num1 = false;
+                    break;
+                }
+                if (x == '.' && isPoint == false)
+                    isPoint = true;
+                p = p+1;
+            }
+            p = 0;
+            isPoint = false;
+            while(p != strNum2.size()){
+                char y  = strNum2[p];
+                if (!isdigit(y) && y != '.'){
+                    estado_num2 = false;
+                    break;
+                }
+                if (y == '.' && isPoint == true){
+                    estado_num2 = false;
+                    break;
+                }
+                if (y == '.' && isPoint == false)
+                    isPoint = true;
+                p = p+1;
+            }
+            if(estado_num1 == true && estado_num2 == true){
+                float value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                float value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                float division = value1 / value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << division;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == true && estado_num2 == false){
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                float value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                float value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                float division = value1 / value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << division;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == true){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                float value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                float value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                float division = value1 / value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << division;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == false){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                float value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                float value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                float division = value1 / value2;
+                ostringstream Q;
+                Q.fill('#');
+                Q << division;
+                S = Q.str();
+                return S;
+            }
+        }
+
+        ///
+        ///Módulo
+        ///
+
+        if (valor.find('%') != string::npos){
+            string strNum1 = valor.substr(0,valor.find('%'));
+            string strNum2 = valor.substr(valor.find('%') + 1);
+            int p = 0;
+            bool estado_num1 = true;
+            bool estado_num2 = true;
+            bool isPoint = false;
+            while(p!= strNum1.size()){
+                char x  = strNum1[p];
+                if (!isdigit(x) && x != '.'){
+                    estado_num1 = false;
+                    break;
+                }
+                if (x == '.' && isPoint == true){
+                    estado_num1 = false;
+                    break;
+                }
+                if (x == '.' && isPoint == false)
+                    isPoint = true;
+                p = p+1;
+            }
+            p = 0;
+            isPoint = false;
+            while(p != strNum2.size()){
+                char y  = strNum2[p];
+                if (!isdigit(y) && y != '.'){
+                    estado_num2 = false;
+                    break;
+                }
+                if (y == '.' && isPoint == true){
+                    estado_num2 = false;
+                    break;
+                }
+                if (y == '.' && isPoint == false)
+                    isPoint = true;
+                p = p+1;
+            }
+            if(estado_num1 == true && estado_num2 == true){
+                float value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                float value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                float modulo = fmod(value1,value2);
+                ostringstream Q;
+                Q.fill('#');
+                Q << modulo;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == true && estado_num2 == false){
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                float value1;
+                string S = strNum1;
+                istringstream(S) >> value1;
+                float value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                float modulo = fmod(value1,value2);
+                ostringstream Q;
+                Q.fill('#');
+                Q << modulo;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == true){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                float value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                float value2;
+                S = strNum2;
+                istringstream(S) >> value2;
+                float modulo = fmod(value1,value2);
+                ostringstream Q;
+                Q.fill('#');
+                Q << modulo;
+                S = Q.str();
+                return S;
+            }
+            else if(estado_num1 == false && estado_num2 == false){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                float value1;
+                string S = valor_num1;
+                istringstream(S) >> value1;
+                float value2;
+                S = valor_num2;
+                istringstream(S) >> value2;
+                float modulo = fmod(value1,value2);
+                ostringstream Q;
+                Q.fill('#');
+                Q << modulo;
+                S = Q.str();
+                return S;
+            }
+        }
+        else{
+            return valor;
+        }
+    }
+
+    ///
+    ///Verificación de char
+    ///
+
+    if (tipo == "char"){
+        if (valor[0]!='\'' || valor[valor.size()-1]!='\''){
+            string valor_var = getValue(QString::fromStdString(valor.c_str()),tipo);
+            if(valor_var == "ERROR"){
+                return "SE DEBE PONER ' ' PARA INICIALIZAR UN CHAR";
+            }
+            valor_var = "'"+valor_var+"'";
+            return valor_var;
+        }
+        else{
+            return valor;
+        }
+    }
 }
 
 void variablelist::insertNodeInt(QString type, QString label, int value , int* ptr){
@@ -1152,11 +2270,35 @@ string variablelist::getValue(QString label, string type){
     }
     if (type == "int")
         return to_string(temp->value);
-    if (type == "double"){
+    else if (type == "double"){
         string S;
         ostringstream Q;
         Q.fill('#');
         Q << temp->valuedouble;
+        S = Q.str();
+        return S;
+    }
+    else if (type == "long"){
+        string S;
+        ostringstream Q;
+        Q.fill('#');
+        Q << temp->valuelong;
+        S = Q.str();
+        return S;
+    }
+    else if (type == "float"){
+        string S;
+        ostringstream Q;
+        Q.fill('#');
+        Q << temp->valuefloat;
+        S = Q.str();
+        return S;
+    }
+    else if (type == "char"){
+        string S;
+        ostringstream Q;
+        Q.fill('#');
+        Q << temp->valuechar;
         S = Q.str();
         return S;
     }

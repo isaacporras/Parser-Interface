@@ -24,7 +24,7 @@ char* Malloc::agregar_char(char x){
     charptr = (char*)mallocPtr;
     *(charptr+finalByte) = x;
     finalByte += 1;
-    return charptr+finalByte;
+    return charptr+finalByte-1;
 }
 long* Malloc::agregar_long(long x){
     charptr = (char*)mallocPtr;
