@@ -3,6 +3,8 @@
 #include <QJsonDocument>
 #include <iostream>
 
+using namespace std;
+
 variablelist::variablelist()
 {
     mallocPtr = new Malloc(1024);
@@ -25,16 +27,19 @@ variablelist::variablelist()
 */
 }
 
-void variablelist::preparation(QJsonObject object){
+QString variablelist::preparation(QJsonObject object){
         //qDebug()<<"Va funcionando...."<<endl;
         QString type = QString(object.value("Type").toString());
         //qDebug()<<type<<endl;
         QString label = QString(object.value("Variable").toString());
+        QString valor;
         if (type == QString("int")){
-            int value = object.value("Value").toString().toInt();
+            string analisis = analizarValor(object.value("Value").toString().toUtf8().constData(), type.toUtf8().constData());
+            int value = atoi(analisis.c_str());
             int* intPtr = mallocPtr->agregar_int(value);
             insertNodeInt(type,label,value,intPtr);
             qDebug()<<"Nodo insertado...";
+            valor = QString::fromStdString(to_string(value).c_str());
         }else if (type == QString("float")){
             float value = object.value("Value").toString().toFloat();
             float* floatPtr = mallocPtr->agregar_float(value);
@@ -61,6 +66,327 @@ void variablelist::preparation(QJsonObject object){
         else{
             qDebug()<<"No se encuentra el tipo"<<endl;
         }
+        return valor;
+}
+
+string variablelist::analizarValor(string valor, string tipo){
+
+    ///
+    ///Operaciones con enteros
+    ///
+
+    if (tipo == "int"){
+
+        ///
+        ///Suma
+        ///
+
+        if (valor.find('+') != string::npos){
+            string strNum1 = valor.substr(0,valor.find('+'));
+            string strNum2 = valor.substr(valor.find('+') + 1);
+            int p = 0;
+            bool estado_num1 = true;
+            bool estado_num2 = true;
+            while(p!= strNum1.size()){
+                char x  = strNum1[p];
+                if (!isdigit(x) ){
+                    estado_num1 = false;
+                    break;
+                }
+                p++;
+            }
+            p = 0;
+            while(p != strNum2.size()){
+                char y = strNum2[p];
+                if (!isdigit(y)){
+                    estado_num2= false;
+                    break;
+                }
+                p++;
+            }
+            if(estado_num1 == true && estado_num2 == true){
+                int suma = (atoi(strNum1.c_str()) + atoi(strNum2.c_str()));
+                return to_string(suma);
+            }
+            else if(estado_num1 == true && estado_num2 == false){
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                int suma  = (atoi(strNum1.c_str()) + atoi(valor_num2.c_str()));
+                return to_string(suma);
+            }
+            else if(estado_num1 == false && estado_num2 == true){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                int suma  = (atoi(valor_num1.c_str()) + atoi(strNum2.c_str()));
+                return to_string(suma);
+            }
+            else if(estado_num1 == false && estado_num2 == false){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                int suma = (atoi(valor_num1.c_str()) + atoi(valor_num2.c_str()));
+                return to_string(suma);
+            }
+        }
+
+        ///
+        ///Resta
+        ///
+
+        else if (valor.find('-') != string::npos){
+            string strNum1 = valor.substr(0,valor.find('-'));
+            string strNum2 = valor.substr(valor.find('-') + 1);
+            cout << valor << endl << tipo << endl << strNum1 << endl << strNum2 << endl;
+            int p = 0;
+            bool estado_num1 = true;
+            bool estado_num2 = true;
+            while(p!= strNum1.size()){
+                char x  = strNum1[p];
+                if (!isdigit(x) ){
+                    estado_num1 = false;
+                    break;
+                }
+                p++;
+            }
+            p = 0;
+            while(p != strNum2.size()){
+                char y = strNum2[p];
+                if (!isdigit(y)){
+                    estado_num2= false;
+                    break;
+                }
+                p++;
+            }
+            if(estado_num1 == true && estado_num2 == true){
+                int suma = (atoi(strNum1.c_str()) - atoi(strNum2.c_str()));
+                return to_string(suma);
+            }
+            else if(estado_num1 == true && estado_num2 == false){
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                int suma  = (atoi(strNum1.c_str()) - atoi(valor_num2.c_str()));
+                return to_string(suma);
+            }
+            else if(estado_num1 == false && estado_num2 == true){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                int suma  = (atoi(valor_num1.c_str()) - atoi(strNum2.c_str()));
+                return to_string(suma);
+            }
+            else if(estado_num1 == false && estado_num2 == false){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                int suma = (atoi(valor_num1.c_str()) - atoi(valor_num2.c_str()));
+                return to_string(suma);
+            }
+        }
+
+        ///
+        ///Multiplicación
+        ///
+
+        if (valor.find('*') != string::npos){
+            string strNum1 = valor.substr(0,valor.find('*'));
+            string strNum2 = valor.substr(valor.find('*') + 1);
+            int p = 0;
+            bool estado_num1 = true;
+            bool estado_num2 = true;
+            while(p!= strNum1.size()){
+                char x  = strNum1[p];
+                if (!isdigit(x) ){
+                    estado_num1 = false;
+                    break;
+                }
+                p++;
+            }
+            p = 0;
+            while(p != strNum2.size()){
+                char y = strNum2[p];
+                if (!isdigit(y)){
+                    estado_num2= false;
+                    break;
+                }
+                p++;
+            }
+            if(estado_num1 == true && estado_num2 == true){
+                int suma = (atoi(strNum1.c_str()) * atoi(strNum2.c_str()));
+                return to_string(suma);
+            }
+            else if(estado_num1 == true && estado_num2 == false){
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                int suma  = (atoi(strNum1.c_str()) * atoi(valor_num2.c_str()));
+                return to_string(suma);
+            }
+            else if(estado_num1 == false && estado_num2 == true){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                int suma  = (atoi(valor_num1.c_str()) * atoi(strNum2.c_str()));
+                return to_string(suma);
+            }
+            else if(estado_num1 == false && estado_num2 == false){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                int suma = (atoi(valor_num1.c_str()) * atoi(valor_num2.c_str()));
+                return to_string(suma);
+            }
+        }
+
+        ///
+        ///División
+        ///
+
+        if (valor.find('/') != string::npos){
+            string strNum1 = valor.substr(0,valor.find('/'));
+            string strNum2 = valor.substr(valor.find('/') + 1);
+            int p = 0;
+            bool estado_num1 = true;
+            bool estado_num2 = true;
+            while(p!= strNum1.size()){
+                char x  = strNum1[p];
+                if (!isdigit(x) ){
+                    estado_num1 = false;
+                    break;
+                }
+                p++;
+            }
+            p = 0;
+            while(p != strNum2.size()){
+                char y = strNum2[p];
+                if (!isdigit(y)){
+                    estado_num2= false;
+                    break;
+                }
+                p++;
+            }
+            if(estado_num1 == true && estado_num2 == true){
+                int suma = (atoi(strNum1.c_str()) / atoi(strNum2.c_str()));
+                return to_string(suma);
+            }
+            else if(estado_num1 == true && estado_num2 == false){
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                int suma  = (atoi(strNum1.c_str()) / atoi(valor_num2.c_str()));
+                return to_string(suma);
+            }
+            else if(estado_num1 == false && estado_num2 == true){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                int suma  = (atoi(valor_num1.c_str()) / atoi(strNum2.c_str()));
+                return to_string(suma);
+            }
+            else if(estado_num1 == false && estado_num2 == false){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                int suma = (atoi(valor_num1.c_str()) / atoi(valor_num2.c_str()));
+                return to_string(suma);
+            }
+        }
+
+        ///
+        ///Módulo
+        ///
+
+        if (valor.find('%') != string::npos){
+            string strNum1 = valor.substr(0,valor.find('%'));
+            string strNum2 = valor.substr(valor.find('%') + 1);
+            int p = 0;
+            bool estado_num1 = true;
+            bool estado_num2 = true;
+            while(p!= strNum1.size()){
+                char x  = strNum1[p];
+                if (!isdigit(x) ){
+                    estado_num1 = false;
+                    break;
+                }
+                p++;
+            }
+            p = 0;
+            while(p != strNum2.size()){
+                char y = strNum2[p];
+                if (!isdigit(y)){
+                    estado_num2= false;
+                    break;
+                }
+                p++;
+            }
+            if(estado_num1 == true && estado_num2 == true){
+                int suma = (atoi(strNum1.c_str()) % atoi(strNum2.c_str()));
+                return to_string(suma);
+            }
+            else if(estado_num1 == true && estado_num2 == false){
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                int suma  = (atoi(strNum1.c_str()) % atoi(valor_num2.c_str()));
+                return to_string(suma);
+            }
+            else if(estado_num1 == false && estado_num2 == true){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                int suma  = (atoi(valor_num1.c_str()) % atoi(strNum2.c_str()));
+                return to_string(suma);
+            }
+            else if(estado_num1 == false && estado_num2 == false){
+                string valor_num1 = getValue(QString::fromStdString(strNum1.c_str()),tipo);
+                if(valor_num1 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                string valor_num2 = getValue(QString::fromStdString(strNum2.c_str()),tipo);
+                if(valor_num2 == "ERROR"){
+                    return "NO SE ENCONTRO";
+                }
+                int suma = (atoi(valor_num1.c_str()) % atoi(valor_num2.c_str()));
+                return to_string(suma);
+            }
+        }
+
+        else{
+            return valor;
+        }
+    }
 }
 
 void variablelist::insertNodeInt(QString type, QString label, int value , int* ptr){
@@ -134,7 +460,7 @@ void variablelist::insertNodeLong(QString type, QString label, long value, long*
     Node *newnode = new Node();
     newnode->label = label;
     newnode->type = type;
-    newnode->value = value;
+    newnode->valuelong = value;
 
     newnode->ptr = (void*)ptr;
     char strAddress[] = "0x00000000";
@@ -157,7 +483,7 @@ void variablelist::insertNodeDouble(QString type, QString label, double value, d
     Node *newnode = new Node();
     newnode->label = label;
     newnode->type = type;
-    newnode->value = value;
+    newnode->valuedouble = value;
 
     newnode->ptr = (void*)ptr;
     char strAddress[] = "0x00000000";
@@ -210,6 +536,20 @@ QString variablelist::getAddress(QString label){
         temp = temp->next;
     }
     return temp->address;
+}
+string variablelist::getValue(QString label, string type){
+    Node *temp = new Node();
+    temp = head;
+
+    for(int i = 0; i<totalNodes(); i++){
+        if (label == temp->label){
+            break;
+        }
+        temp = temp->next;
+    }
+    if (type == "int")
+        return to_string(temp->value);
+    return "ERROR";
 }
 void variablelist::getValue(int index){
     Node *temp = new Node();

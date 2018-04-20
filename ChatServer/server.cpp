@@ -24,6 +24,7 @@ using namespace std;
       close();
     }
 
+
     void Server::acceptConnection()
     {
       client = nextPendingConnection();
@@ -50,13 +51,13 @@ using namespace std;
                 QJsonDocument doc = QJsonDocument::fromJson(line.toUtf8());
                 obj = doc.object();
 
-                vl->preparation(obj);
+                QString finalValue = vl->preparation(obj);
 
             QString qstr = vl->getAddress(obj.value("Variable").toString());
 
             QJsonObject* jobj = new QJsonObject();
             QJsonValue* jstring1 = new QJsonValue(obj.value("Variable").toString());
-            QJsonValue* jstring2 = new QJsonValue(obj.value("Value").toString());
+            QJsonValue* jstring2 = new QJsonValue(finalValue);
             QJsonValue* jstring3 = new QJsonValue(qstr);
             jobj->insert("Label",jstring1->toString());
             jobj->insert("Value",jstring2->toString());
@@ -77,7 +78,7 @@ using namespace std;
 
     void Server::sendMessage(QString data){
         client->write(QString(data+"\n").toUtf8());
-        client->waitForBytesWritten(3000);
+        client->waitForBytesWritten(1000);
     }
 
     void Server::disconnected()
@@ -86,6 +87,6 @@ using namespace std;
         qDebug() << "Client disconnected:" << client->peerAddress().toString();
 
         client->write(QString("Server : I wish you didn't leave ):\n").toUtf8());
-        client->waitForBytesWritten(3000);
+        client->waitForBytesWritten(1000);
     }
 

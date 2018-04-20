@@ -28,8 +28,9 @@
     {
         if(!data.isEmpty())
         {
+            mensajeRecibido = false;
             socket->write(QString(data + "\n").toUtf8());
-            socket->waitForBytesWritten(3000);
+            socket->waitForBytesWritten(1000);
         }
     }
 
@@ -43,13 +44,14 @@
 
             QJsonDocument doc = QJsonDocument::fromJson(line.toUtf8());
             jsonActual = doc.object();
+            mensajeRecibido = true;
         }
     }
 
     void Client::connected()
     {
         socket->write(QString("Client : Server connection has been made (: \n").toUtf8());
-        socket->waitForBytesWritten(3000);
+        socket->waitForBytesWritten(1000);
     }
 
 

@@ -6,6 +6,9 @@
 #include <QString>
 #include <QJsonObject>
 #include "malloc.h"
+#include <iostream>
+using namespace std;
+
 struct Node{
     int value;
     float valuefloat;
@@ -29,7 +32,7 @@ private:
 
 public:
     variablelist();
-    void preparation(QJsonObject object);
+    QString preparation(QJsonObject object);
     void insertNodeInt(QString type, QString label, int value, int* ptr);
     void insertNodeFloat(QString type, QString label, float value, float* ptr );
     void insertNodeLong(QString type, QString label, long value, long* ptr );
@@ -42,6 +45,8 @@ public:
     void getType(int index);
     QString getAddress(QString label);
     Malloc* mallocPtr;
+    string analizarValor(string valor , string tipo);
+    string getValue(QString label, string type);
 };
 
 #endif // VARIABLELIST_H
