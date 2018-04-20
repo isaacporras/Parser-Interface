@@ -72,6 +72,7 @@ using namespace std;
             QString message = json.c_str();
 
             //client->write(QString(message + "\n").toUtf8());
+            qDebug() << message;
             sendMessage(message);
             }
             break;
