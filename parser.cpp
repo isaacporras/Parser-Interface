@@ -1,5 +1,6 @@
 #include "parser.h"
-
+#include <stdio.h>
+#include <string.h>
 #include <string>
 #include <fstream>
 using namespace std;
@@ -25,7 +26,10 @@ Parser::Parser()
     *i = 0;
 }
 QJsonObject Parser::parse(string codigo){
-
+    if(*i>= codigo.size()){
+        QJsonObject termino = makeJson("Finish", "Finish", "Finish");
+        return termino;
+    }
     codigoCompleto = codigo;
     std::cout<<"----------------------------SE EMPIEZA A PARSERA -----------------------------"<<std::endl;
     QJsonObject objeto = writeFile(codigo);
@@ -109,13 +113,65 @@ QJsonObject Parser::makeJson(string tip, string val, string var){
         return object;
 }
 
-
+string Parser::getPrint_Addr_Value(string codigo){
+    string value = "";
+    int i = 0;
+    while(codigo[i] == ' '){
+        i = i + 1;
+    }
+    while(codigo[i]!= ' ' && codigo[i] != ')'){
+        value =  value + codigo[i];
+        i = i + 1;
+    }
+    return value;
+}
 QJsonObject Parser::getType(string codigo){
     do{
-        while(codigo[*i] == ' '){
-            *i = *i +1;
+        if(*i>= codigo.size()){
+            continue;
         }
-        std::cout << "EL I MIO ES:"<< *i << std::endl;
+
+        while(codigo[*i] == ' '){
+            *i = *i + 1;
+            continue;
+        }
+
+        std::cout << "EL I MIO ES:"<< *i << codigo.substr(*i, 6) << std::endl;
+
+        if(codigo.substr(*i, 6) == "print("){
+            std::cout << "Entro en el print" << std::endl;
+            string value = getPrint_Addr_Value(codigo.substr(*i + 6, codigo.size()));
+            std::cout << "VALUE:"<<value<< std::endl;
+            QJsonObject obj = makeJson("Print Request",value,"NULL");
+            try{
+
+                int *x = getReubicador(codigo.substr(*i,codigo.size()));
+
+                *i = *i + *x;
+            }
+                catch(int e){
+                    std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
+                }
+            return obj;
+        }
+
+        if(codigo.substr(*i, 8) == "getAddr("){
+            std::cout << "Entro en el getAddr" << std::endl;
+            string value = getPrint_Addr_Value(codigo.substr(*i + 8, codigo.size()));
+            std::cout << "VALUE:"<<value<< std::endl;
+            QJsonObject obj = makeJson("Addr Request",value,"NULL");
+            try{
+
+                int *x = getReubicador(codigo.substr(*i,codigo.size()));
+
+                *i = *i + *x;
+            }
+                catch(int e){
+                    std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
+                }
+            return obj;
+        }
+
         if(codigo[*i] == 'i'){
             if(codigo.substr(*i,4) == "int "){
 
@@ -142,6 +198,7 @@ QJsonObject Parser::getType(string codigo){
                         }
                     QJsonObject  objeto = makeJson("int pointer",valor,variable);
                     return objeto;
+                    continue;
 
                 }
                 else if(tieneIgual == true){
@@ -159,6 +216,7 @@ QJsonObject Parser::getType(string codigo){
                         }
                     QJsonObject  objeto = makeJson("int",valor,variable);
                     return objeto;
+                    continue;
 
                 }
 
@@ -176,6 +234,7 @@ QJsonObject Parser::getType(string codigo){
                         }
                     QJsonObject  objeto = makeJson("int","NI",variable);
                     return objeto;
+                    continue;
                 }
 
 
@@ -206,6 +265,7 @@ QJsonObject Parser::getType(string codigo){
                         }
                     QJsonObject  objeto = makeJson("float pointer",valor,variable);
                     return objeto;
+                    continue;
                 }
                 else if(tieneIgual == true){
 
@@ -220,6 +280,7 @@ QJsonObject Parser::getType(string codigo){
                         }
                     QJsonObject  objeto = makeJson("float",valor,variable);
                     return objeto;
+                    continue;
                 }
 
                 else if(tieneDot == true){
@@ -234,6 +295,7 @@ QJsonObject Parser::getType(string codigo){
                     }
                     QJsonObject  objeto = makeJson("float","NI",variable);
                     return objeto;
+                    continue;
                 }
 
 
@@ -265,6 +327,7 @@ QJsonObject Parser::getType(string codigo){
                         }
                     QJsonObject  objeto = makeJson("long pointer",valor,variable);
                     return objeto;
+                    continue;
 
             }
                 else if(tieneIgual == true){
@@ -279,6 +342,7 @@ QJsonObject Parser::getType(string codigo){
                         }
                     QJsonObject  objeto = makeJson("long",valor,variable);
                     return objeto;
+                    continue;
                 }
                 else if(tieneDot == true){
 
@@ -292,6 +356,7 @@ QJsonObject Parser::getType(string codigo){
                         }
                     QJsonObject  objeto = makeJson("long","NI",variable);
                     return objeto;
+                    continue;
                 }
 
 
@@ -324,7 +389,7 @@ QJsonObject Parser::getType(string codigo){
                         }
                     QJsonObject  objeto = makeJson("double pointer",valor,variable);
                     return objeto;
-
+                    continue;
             }
                 else if(tieneIgual == true){
 
@@ -339,6 +404,7 @@ QJsonObject Parser::getType(string codigo){
                         }
                     QJsonObject  objeto = makeJson("double",valor,variable);
                     return objeto;
+                    continue;
                 }
                 else if(tieneDot == true){
 
@@ -352,6 +418,7 @@ QJsonObject Parser::getType(string codigo){
                         }
                     QJsonObject  objeto = makeJson("double","NI",variable);
                     return objeto;
+                    continue;
                 }
                 else if(isPointer == true){
 
@@ -368,8 +435,7 @@ QJsonObject Parser::getType(string codigo){
                         }
                     QJsonObject  objeto = makeJson("double pointer",valor,variable);
                     return objeto;
-
-            }
+                    }
             }
 
         }
@@ -396,8 +462,9 @@ QJsonObject Parser::getType(string codigo){
                         }
                     QJsonObject  objeto = makeJson("char pointer",valor,variable);
                     return objeto;
+                    continue;
+                }
 
-            }
                 else if(tieneIgual == true){
 
                     try{
@@ -410,6 +477,7 @@ QJsonObject Parser::getType(string codigo){
                         }
                     QJsonObject  objeto = makeJson("char",valor,variable);
                     return objeto;
+                    continue;
                 }
                 else if(tieneDot == true){
 
@@ -423,14 +491,15 @@ QJsonObject Parser::getType(string codigo){
                         }
                     QJsonObject  objeto = makeJson("char","NI",variable);
                     return objeto;
+                    continue;
                 }
 
             }
 
         }
+
         else if(codigo[*i] == 's' ){
 
-            std::cout <<"Se encontro struct"<<std::endl;
 
             if(codigo.substr(*i,7) == "struct "){
 
@@ -446,6 +515,7 @@ QJsonObject Parser::getType(string codigo){
                     QVariant var(QString::fromStdString(variable));
                     objeto.insert("Struct name",var.toJsonValue());
                     return objeto;
+                    continue;
                 }
 
                 else if(isStructDef(codigo.substr(*i + 7 + variable.size(), codigo.size())) == "Se inicializa struct"){
@@ -455,12 +525,11 @@ QJsonObject Parser::getType(string codigo){
                     QJsonObject  objeto = makeJson("struct instantiation",variable, variable2);
                     *i = *i + 8 + variable2.size();
                     return objeto;
+                    continue;
 
                 }
 
             }
-
-
              i = i +1;
         }
         else if (codigo[*i] == '}'){
@@ -469,47 +538,83 @@ QJsonObject Parser::getType(string codigo){
             return objeto;
         }
 
-        else if(codigo[*i]=='{' ){
+        else if(codigo[*i] == '{' ){
             QJsonObject  objeto = makeJson("{","{","{");
            *i = *i + 1 ;
             return objeto;
 
+
         }
 
 
+        else if (getVariable(codigo.substr(*i + 1,codigo.size())) != " "&& getVariable(codigo.substr(*i ,codigo.size())).size()!= 0 && (cutWhiteSpaces(getVariable(codigo.substr(*i + 1 ,codigo.size())))== "int") == false &&
+                  (cutWhiteSpaces(getVariable(codigo.substr(*i + 1 ,codigo.size())))== "long") == false && (cutWhiteSpaces(getVariable(codigo.substr(*i + 1 ,codigo.size())))== "double") == false &&
+                  (cutWhiteSpaces(getVariable(codigo.substr(*i + 1 ,codigo.size())))== "char") == false && (cutWhiteSpaces(getVariable(codigo.substr(*i + 1 ,codigo.size())))== "struct") == false
+                  && (cutWhiteSpaces(getVariable(codigo.substr(*i + 1 ,codigo.size())))== "float") == false && (cutWhiteSpaces(getVariable(codigo.substr(*i + 1 ,codigo.size())))== "int") == false &&
+                  (cutWhiteSpaces(getVariable(codigo.substr(*i + 1 ,codigo.size()))) == "{") == false && (cutWhiteSpaces(getVariable(codigo.substr(*i + 1 ,codigo.size())))== "}") == false&&
+                 (cutWhiteSpaces(codigo.substr(*i + 1 ,5))== "print") == false && (cutWhiteSpaces(codigo.substr(*i + 1 ,7))== "getAddr") == false){
 
-//        else if (getVariable(codigo.substr(*i ,codigo.size()))!= " " && getVariable(codigo.substr(*i ,codigo.size())) != " int"){
-//            std::cout << "LA VARIABLE:::: -"<<getVariable(codigo.substr(*i ,codigo.size()))<<"-"<< getVariable(codigo.substr(*i ,codigo.size())).size()<<std::endl;
-////              string variable = getVariable(codigo.substr(*i ,codigo.size()));
-////              string valor = getValor(codigo.substr(*i  + variable.size(),codigo.size()),"IDK");
-////              bool tieneIgual = checkEqualSing(codigo.substr(*i + variable.size(),codigo.size()));
-////              if (tieneIgual == true){
-////                  try{
-////                      int *x = getReubicador(codigo.substr(*i,codigo.size()));
+              string variable = getVariable(codigo.substr(*i,codigo.size())) ;
+              printf("%s",variable.c_str());
+              std::cout << "LA VARIABLE:---------------------------+"<< variable[0] <<"+--------------------------"<<variable.size() <<std::endl;
+              bool tieneIgual = checkEqualSing(codigo.substr(*i + variable.size(),codigo.size()));
+              std::cout<<(getVariable(codigo.substr(*i ,codigo.size())) == "int")  <<std::endl;
+              if (tieneIgual == true){
+                  string valor = getValor(codigo.substr(*i  + variable.size(),codigo.size()),"Post Asignation");
+                  try{
+                      int *x = getReubicador(codigo.substr(*i,codigo.size()));
 
-////                      *i = *i + *x;
-////                  }
-////                      catch(int e){
-////                          std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
-////                      }
-////                  QJsonObject  objeto = makeJson("Asignacion",valor,variable);
-////                  return objeto;
-//        }
+                      *i = *i + *x;
+                  }
+                      catch(int e){
+                          std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
+                      }
+
+                  QJsonObject  objeto = makeJson("Post Primitive Asignation",valor,variable);
+
+                  return objeto;
+
+              }
+              else if(codigo[*i + variable.size()] == '.'){
+
+                  string atributo = getVariable(codigo.substr(*i + variable.size() + 1   ,codigo.size()));
+                  string variable = getVariable(codigo.substr(*i ,codigo.size()));
+                  string valor_str = getValor(codigo.substr(*i  + variable.size() + atributo.size() + 1,codigo.size()),"Post Asignation");
+                  try{
+                      int *x = getReubicador(codigo.substr(*i,codigo.size()));
+
+                      *i = *i + *x;
+                  }
+                      catch(int e){
+                          std::cout<< "NO SE PUDO REUBICAR"<<std::endl;
+                      }
+                  QVariant atr(QString::fromStdString(atributo));
+                  QJsonObject  objeto = makeJson("Post Struct Asignation",valor_str,variable);
+                  objeto.insert("Atributo",atr.toJsonValue());
+                  return objeto;
+                  continue;
+              }
+              else{
+                  *i = *i + 1;
+              }
+        }
 
         else{
             *i = *i +1;
         }
 
-    }while(*i <= codigo.size());
+    }
+        while(*i <= codigo.size());
     QJsonObject  objetof = makeJson("Finish","Finish","Finish");
 
     return objetof;
 
 }
+string Parser::cutWhiteSpaces(string codigo){
 
-
-
-
+    std::remove(codigo.begin(), codigo.end(), ' ');
+    return codigo;
+}
 struct block Parser::analizarStruct(string codigo){
 
 
@@ -545,8 +650,6 @@ struct block Parser::analizarStruct(string codigo){
 
     return b1;
 }
-
-
 
 
 string Parser::getVariable(string codigo){
@@ -637,6 +740,12 @@ string Parser::getValor(string codigo, string tipo){
     while(codigo[i] == ' '){
         i = i + 1;
     }
+    if(codigo[i] == '='){
+        i = i +1;
+        while(codigo[i] == ' '){
+            i = i + 1;
+        }
+    }
     while(codigo[i]!= ';'){
         valor = valor + codigo[i];
         i = i + 1;
@@ -652,6 +761,17 @@ int *Parser::getReubicador(string codigo){
     }
     return i;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

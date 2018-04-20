@@ -19,10 +19,11 @@ struct block{
 class Parser
 {
 public:
+    void reubicarStruct(string codigo);
     int *i = (int*)malloc(sizeof (int));
     string entero = "int";
     QJsonObject makeJson(string tip, string val, string var);
-
+    string cutWhiteSpaces(string codigo);
     string tiposDeVariables[6] = {"int","long","char","float", "double", "struct"};
     string codigoCompleto;
     Parser();
@@ -40,7 +41,7 @@ public:
     bool verificarTipo(string tipo,string valor);
 
     string getNumbers(string numbers);
-
+    string getPrint_Addr_Value(string codigo);
     void imprimirVariables();
     struct block analizarStruct(string codigo);
     int *getReubicador(string codigo);
@@ -53,5 +54,3 @@ public:
 };
 
 #endif // PARSER_H
-
-

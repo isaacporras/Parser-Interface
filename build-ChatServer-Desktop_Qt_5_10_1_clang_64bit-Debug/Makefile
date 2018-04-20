@@ -51,9 +51,13 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../ChatServer/main.cpp \
-		../ChatServer/server.cpp moc_server.cpp
+		../ChatServer/server.cpp \
+		../ChatServer/variablelist.cpp \
+		../ChatServer/malloc.cpp moc_server.cpp
 OBJECTS       = main.o \
 		server.o \
+		variablelist.o \
+		malloc.o \
 		moc_server.o
 DIST          = ../../Qt/5.10.1/clang_64/mkspecs/features/spec_pre.prf \
 		../../Qt/5.10.1/clang_64/mkspecs/qdevice.pri \
@@ -216,8 +220,12 @@ DIST          = ../../Qt/5.10.1/clang_64/mkspecs/features/spec_pre.prf \
 		../../Qt/5.10.1/clang_64/mkspecs/features/exceptions.prf \
 		../../Qt/5.10.1/clang_64/mkspecs/features/yacc.prf \
 		../../Qt/5.10.1/clang_64/mkspecs/features/lex.prf \
-		../ChatServer/ChatServer.pro ../ChatServer/server.h ../ChatServer/main.cpp \
-		../ChatServer/server.cpp
+		../ChatServer/ChatServer.pro ../ChatServer/server.h \
+		../ChatServer/variablelist.h \
+		../ChatServer/malloc.h ../ChatServer/main.cpp \
+		../ChatServer/server.cpp \
+		../ChatServer/variablelist.cpp \
+		../ChatServer/malloc.cpp
 QMAKE_TARGET  = ChatServer
 DESTDIR       = 
 TARGET        = ChatServer
@@ -578,8 +586,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../../Qt/5.10.1/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../ChatServer/server.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../ChatServer/main.cpp ../ChatServer/server.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../ChatServer/server.h ../ChatServer/variablelist.h ../ChatServer/malloc.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../ChatServer/main.cpp ../ChatServer/server.cpp ../ChatServer/variablelist.cpp ../ChatServer/malloc.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -657,6 +665,12 @@ moc_server.cpp: ../../Qt/5.10.1/clang_64/lib/QtNetwork.framework/Headers/QtNetwo
 		../../Qt/5.10.1/clang_64/lib/QtNetwork.framework/Headers/qtnetworkversion.h \
 		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/QObject \
 		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		../ChatServer/variablelist.h \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/QString \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/QJsonObject \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/qjsonobject.h \
+		../ChatServer/malloc.h \
 		../ChatServer/server.h \
 		moc_predefs.h \
 		../../Qt/5.10.1/clang_64/bin/moc
@@ -723,7 +737,13 @@ main.o: ../ChatServer/main.cpp ../../Qt/5.10.1/clang_64/lib/QtCore.framework/Hea
 		../../Qt/5.10.1/clang_64/lib/QtNetwork.framework/Headers/qudpsocket.h \
 		../../Qt/5.10.1/clang_64/lib/QtNetwork.framework/Headers/qtnetworkversion.h \
 		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/QObject \
-		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/qobject.h
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		../ChatServer/variablelist.h \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/QString \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/QJsonObject \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/qjsonobject.h \
+		../ChatServer/malloc.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../ChatServer/main.cpp
 
 server.o: ../ChatServer/server.cpp ../ChatServer/server.h \
@@ -769,8 +789,29 @@ server.o: ../ChatServer/server.cpp ../ChatServer/server.h \
 		../../Qt/5.10.1/clang_64/lib/QtNetwork.framework/Headers/qudpsocket.h \
 		../../Qt/5.10.1/clang_64/lib/QtNetwork.framework/Headers/qtnetworkversion.h \
 		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/QObject \
-		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/qobject.h
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/qobject.h \
+		../ChatServer/variablelist.h \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/QString \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/QJsonObject \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/qjsonobject.h \
+		../ChatServer/malloc.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o server.o ../ChatServer/server.cpp
+
+variablelist.o: ../ChatServer/variablelist.cpp ../ChatServer/variablelist.h \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/QString \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/QJsonObject \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/qjsonobject.h \
+		../ChatServer/malloc.h \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/QDebug \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/qdebug.h \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/QJsonDocument \
+		../../Qt/5.10.1/clang_64/lib/QtCore.framework/Headers/qjsondocument.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o variablelist.o ../ChatServer/variablelist.cpp
+
+malloc.o: ../ChatServer/malloc.cpp ../ChatServer/malloc.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o malloc.o ../ChatServer/malloc.cpp
 
 moc_server.o: moc_server.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_server.o moc_server.cpp

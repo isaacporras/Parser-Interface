@@ -45,3 +45,4 @@ private:
 };
 
 #endif // IDE_WINDOW_H
+

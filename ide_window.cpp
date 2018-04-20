@@ -6,7 +6,6 @@
 #include <string>
 #include <fstream>
 #include "client.h"
-
 #include "QJsonObject"
 #include "QJsonDocument"
 using namespace std;
@@ -47,7 +46,7 @@ void IDE_Window::on_RunButton_clicked()
     const char* charString = bytes.data();
     string someString(charString);
     std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<bytes.data()<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
-    sendData(someString);
+//    sendData(someString);
 
     if (objeto.find("Type").value().toString() == "}" || objeto.find("Type").value().toString() == "{"){
         ui->RunButton->click();
