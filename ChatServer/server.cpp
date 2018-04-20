@@ -46,6 +46,9 @@ using namespace std;
                 //sendMessage(QString("Hello!"));
                 firstTime = false;
             }
+            else if(line.toUtf8().constData() == "0"){
+
+            }
             else{
                 QJsonObject obj;
                 QJsonDocument doc = QJsonDocument::fromJson(line.toUtf8());
