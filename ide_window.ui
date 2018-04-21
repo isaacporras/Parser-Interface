@@ -64,9 +64,9 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>510</y>
+      <y>590</y>
       <width>511</width>
-      <height>161</height>
+      <height>71</height>
      </rect>
     </property>
    </widget>
@@ -83,6 +83,16 @@
      <string>Reset</string>
     </property>
    </widget>
+   <widget class="QPlainTextEdit" name="STDOut">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>510</y>
+      <width>511</width>
+      <height>71</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -90,7 +100,7 @@
      <x>0</x>
      <y>0</y>
      <width>1053</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

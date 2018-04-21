@@ -30,7 +30,7 @@ public:
 
 private slots:
      void on_RunButton_clicked();
-     void addOutputArea(QString linea);
+     void addOutputArea();
      void addMemoryDirection(int fila, QString address);
      void addValor(int fila, QString value);
      void addEtiqueta(int fila, QString label);
@@ -38,6 +38,7 @@ private slots:
      void createClient();
      void sendData(string data);
      void reiniciarParseo();
+     void addStdOutArea(QString linea);
 
 
      void on_pushButton_clicked();

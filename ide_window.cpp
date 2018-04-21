@@ -59,7 +59,10 @@ void IDE_Window::on_RunButton_clicked()
     string someString(charString);
     std::cout<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<bytes.data()<<"&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"<<std::endl;
     sendData(someString);
-
+    if(cliente->jsonActual.isEmpty()){
+        ui->RAM_view->rowCount();
+    }
+    else {
     if (objeto.find("Type").value().toString() == "}" || objeto.find("Type").value().toString() == "{"){
         ui->RunButton->click();
     }
@@ -68,7 +71,7 @@ void IDE_Window::on_RunButton_clicked()
         string linea = cliente->jsonActual.value("Print Request").toString().toUtf8().constData();
         linea = ">>> " + linea;
         QString qsLinea = QString(linea.c_str());
-        addOutputArea(qsLinea);
+        addStdOutArea(qsLinea);
     }
     else{
         ui->RAM_view->insertRow(ui->RAM_view->rowCount());
@@ -80,7 +83,8 @@ void IDE_Window::on_RunButton_clicked()
         addReferencia(fila);
         //QString linea = QString::fromStdString(someString);
         QString linea = QString("");
-        addOutputArea(linea);
+        addOutputArea();
+    }
     }
 }
 
@@ -90,10 +94,14 @@ void IDE_Window::on_RunButton_clicked()
 ///  Mete la informacion recibida y enviada a un area de texto
 ///
 
-void IDE_Window::addOutputArea(QString linea){
+void IDE_Window::addStdOutArea(QString linea){
+    ui->STDOut->appendPlainText(linea);
+
+}
+
+void IDE_Window::addOutputArea(){
     ui->OutputArea->appendPlainText(l1->logMessage(0,"Llamando al servidor..."));
     ui->OutputArea->appendPlainText(l1->logMessage(0,"Enviando la siguiente informacion..."));
-    ui->OutputArea->appendPlainText(linea);
 
 }
 
