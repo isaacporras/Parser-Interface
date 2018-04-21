@@ -56,6 +56,19 @@ using namespace std;
                 obj = doc.object();
 
                 QString finalValue = vl->preparation(obj);
+                if (obj.value("Type").toString() == "Print Request"){
+                    QJsonObject* jobj = new QJsonObject();
+                    QJsonValue* jstring1 = new QJsonValue(finalValue);
+                    jobj->insert("Print Request",jstring1->toString());
+                    QJsonDocument doc2(*jobj);
+                    QByteArray bytes = doc2.toJson();
+                    const char* charString = bytes.data();
+                    string json(charString);
+                    QString message = json.c_str();
+                    qDebug() << message;
+                    sendMessage(message);
+                    }
+                else{
                 QString qstr;
             if (obj.value("Type").toString() == "Post Primitive Asignation"){
                 string var = obj.value("Variable").toString().toUtf8().constData();
@@ -83,6 +96,7 @@ using namespace std;
             sendMessage(message);
             }
             break;
+        }
         }
 
     }

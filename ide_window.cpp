@@ -53,16 +53,25 @@ void IDE_Window::on_RunButton_clicked()
     if (objeto.find("Type").value().toString() == "}" || objeto.find("Type").value().toString() == "{"){
         ui->RunButton->click();
     }
-    ui->RAM_view->insertRow(ui->RAM_view->rowCount());
-    int fila = ui->RAM_view->rowCount() -1;
 
-    addMemoryDirection(fila,cliente->jsonActual.value("Address").toString());
-    addValor(fila,cliente->jsonActual.value("Value").toString());
-    addEtiqueta(fila,cliente->jsonActual.value("Label").toString());
-    addReferencia(fila);
-    QString linea = QString::fromStdString(someString);
-    addOutputArea(linea);
+    if (cliente->jsonActual.value("Print Request").toString()!=NULL){
+        string linea = cliente->jsonActual.value("Print Request").toString().toUtf8().constData();
+        linea = ">>> " + linea;
+        QString qsLinea = QString(linea.c_str());
+        addOutputArea(qsLinea);
+    }
+    else{
+        ui->RAM_view->insertRow(ui->RAM_view->rowCount());
+        int fila = ui->RAM_view->rowCount() -1;
 
+        addMemoryDirection(fila,cliente->jsonActual.value("Address").toString());
+        addValor(fila,cliente->jsonActual.value("Value").toString());
+        addEtiqueta(fila,cliente->jsonActual.value("Label").toString());
+        addReferencia(fila);
+        //QString linea = QString::fromStdString(someString);
+        QString linea = QString("");
+        addOutputArea(linea);
+    }
 }
 
 void IDE_Window::addOutputArea(QString linea){
@@ -81,7 +90,7 @@ void IDE_Window::addEtiqueta(int fila,QString label){
     ui->RAM_view->setItem(fila, ETIQUETA,new QTableWidgetItem(label));
 }
 void IDE_Window::addReferencia(int fila){
-    ui->RAM_view->setItem(fila,REFERENCIAS,new QTableWidgetItem("2"));
+    ui->RAM_view->setItem(fila,REFERENCIAS,new QTableWidgetItem("1"));
 }
 
 void IDE_Window::createClient(){

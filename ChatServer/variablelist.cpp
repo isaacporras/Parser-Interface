@@ -182,6 +182,29 @@ QString variablelist::preparation(QJsonObject object){
                 qDebug()<<"No se encuentra el tipo"<<endl;
             }
         }
+        else if (type == "Print Request"){
+            Node* node = getNode(object.value("Value").toString());
+            if (node != NULL){
+                QString tipo = node->type;
+                if (tipo == "int")
+                    valor = QString::fromStdString(to_string(node->value).c_str());
+                else if (tipo == "double")
+                    valor = QString::fromStdString(to_string(node->valuedouble).c_str());
+                else if (tipo == "float")
+                    valor = QString::fromStdString(to_string(node->valuefloat).c_str());
+                else if (tipo == "long")
+                    valor = QString::fromStdString(to_string(node->valuelong).c_str());
+                else if (tipo == "char"){
+                    string charstr;
+                    ostringstream Q;
+                    Q.fill('#');
+                    Q << node->valuechar;
+                    charstr = Q.str();
+                    charstr = "\'"+charstr+"\'";
+                    valor = QString::fromStdString(charstr.c_str());
+                }
+            }
+        }
         else{
             qDebug()<<"No se encuentra el tipo"<<endl;
         }
