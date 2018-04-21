@@ -7,7 +7,13 @@
 #include <QJsonObject>
 #include "malloc.h"
 #include <iostream>
+
 using namespace std;
+
+///
+/// Node
+/// Estructura que maneja la información de cada variable
+///
 
 struct Node{
     int value;
@@ -21,6 +27,12 @@ struct Node{
     void* ptr;
     QString address;
 };
+
+///
+/// Clase variablelist
+///
+/// Clase encargada de la administración de la memoria y de procesar las solicitudes del cliente
+///
 
 class variablelist
 {
@@ -44,7 +56,14 @@ public:
     void getLabel(int index);
     void getType(int index);
     QString getAddress(QString label);
+
+    ///
+    /// mallocPtr
+    /// Se encarga de crear las variables en la memoria RAM
+    ///
+
     Malloc* mallocPtr;
+
     string analizarValor(string valor , string tipo);
     string getValue(QString label, string type);
     Node* getNode(QString label);

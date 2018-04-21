@@ -2,36 +2,31 @@
 #include <QDebug>
 #include <QJsonDocument>
 #include <iostream>
-//#include <stdlib.h>
-//#include <stdio.h>
 #include <sstream>
 #include <iomanip>
 #include <string>
 #include <cmath>
+
+///
+/// Clase variablelist
+///
+/// Clase encargada de la administración de la memoria y de procesar las solicitudes del cliente
+///
 
 using namespace std;
 
 variablelist::variablelist()
 {
     mallocPtr = new Malloc(1024);
-/*
-    QString line = "{\"label\":\"racso\",\"type\":\"int\",\"value\":\"888\"}" ;
-
-    QString line2 = "{\"label\":\"batman\",\"type\":\"float\",\"value\":\"9.99\"}" ;
-
-    QJsonObject obj2;
-    QJsonDocument doc2 = QJsonDocument::fromJson(line2.toUtf8());
-    obj2 = doc2.object();
-
-    QJsonObject obj;
-    QJsonDocument doc = QJsonDocument::fromJson(line.toUtf8());
-    obj = doc.object();
-
-    preparation(obj2);
-    preparation(obj);
-    showList();
-*/
 }
+
+///
+///  Método -> preparation
+///  Parámetro -> object
+///  Analiza los parámetros del objeto JSON object y procesa los cálculos necesarios.
+///  Además de indicar si se solicita la creación o modificación de una variable; tambien detecta si se pide
+///  la impresión de un valor.
+///
 
 QString variablelist::preparation(QJsonObject object){
         //qDebug()<<"Va funcionando...."<<endl;
@@ -210,6 +205,12 @@ QString variablelist::preparation(QJsonObject object){
         }
         return valor;
 }
+
+///
+///  Método -> analizarValor
+///  Parámetro -> valor, tipo
+///  Analiza si valor cumple con la definición de tipo, y realiza los cálculos si valor tiene operaciones incluídas
+///
 
 string variablelist::analizarValor(string valor, string tipo){
 
@@ -2231,6 +2232,13 @@ string variablelist::analizarValor(string valor, string tipo){
     }
 }
 
+///
+///  Método -> insertNodeInt
+///  Parámetro -> type, label, value, ptr
+///  Crea un Int en la memoria RAM, tomando en cuenta como su etiqueta label; su valor value y
+///  su dirección de memoria ptr
+///
+
 void variablelist::insertNodeInt(QString type, QString label, int value , int* ptr){
 
     Node *newnode = new Node();
@@ -2252,6 +2260,14 @@ void variablelist::insertNodeInt(QString type, QString label, int value , int* p
         tail->next = NULL;
     }
 }
+
+///
+///  Método -> insertNodeInt
+///  Parámetro -> type, label, value, ptr
+///  Crea un Char en la memoria RAM, tomando en cuenta como su etiqueta label; su valor value y
+///  su dirección de memoria ptr
+///
+
 void variablelist::insertNodeChar(QString type, QString label, char value , char* ptr){
 
     Node *newnode = new Node();
@@ -2273,6 +2289,13 @@ void variablelist::insertNodeChar(QString type, QString label, char value , char
         tail->next = NULL;
     }
 }
+
+///
+///  Método -> insertNodeInt
+///  Parámetro -> type, label, value, ptr
+///  Crea un Float en la memoria RAM, tomando en cuenta como su etiqueta label; su valor value y
+///  su dirección de memoria ptr
+///
 
 void variablelist::insertNodeFloat(QString type, QString label, float value , float* ptr){
 
@@ -2297,6 +2320,13 @@ void variablelist::insertNodeFloat(QString type, QString label, float value , fl
     }
 }
 
+///
+///  Método -> insertNodeInt
+///  Parámetro -> type, label, value, ptr
+///  Crea un Long en la memoria RAM, tomando en cuenta como su etiqueta label; su valor value y
+///  su dirección de memoria ptr
+///
+
 void variablelist::insertNodeLong(QString type, QString label, long value, long* ptr ){
 
     Node *newnode = new Node();
@@ -2319,6 +2349,13 @@ void variablelist::insertNodeLong(QString type, QString label, long value, long*
         tail->next = NULL;
     }
 }
+
+///
+///  Método -> insertNodeInt
+///  Parámetro -> type, label, value, ptr
+///  Crea un Double en la memoria RAM, tomando en cuenta como su etiqueta label; su valor value y
+///  su dirección de memoria ptr
+///
 
 void variablelist::insertNodeDouble(QString type, QString label, double value, double* ptr ){
 
@@ -2367,6 +2404,13 @@ void variablelist::showList(){
         }
     }
 }
+
+///
+///  Método -> getAddress
+///  Parámetro -> label
+///  Retorna la dirección de memoria de la variable label
+///
+
 QString variablelist::getAddress(QString label){
     Node *temp = new Node();
     temp = head;
@@ -2379,6 +2423,13 @@ QString variablelist::getAddress(QString label){
     }
     return temp->address;
 }
+
+///
+///  Método -> getValue
+///  Parámetro -> label, type
+///  Retorna el dato type que guarda la variable label
+///
+
 string variablelist::getValue(QString label, string type){
     Node *temp = new Node();
     temp = head;
@@ -2425,6 +2476,13 @@ string variablelist::getValue(QString label, string type){
     }
     return "ERROR";
 }
+
+///
+///  Método -> getNode
+///  Parámetro -> label
+///  Retorna un objeto con toda la información de label
+///
+
 Node* variablelist::getNode(QString label){
     Node *temp = new Node();
     temp = head;
@@ -2447,6 +2505,7 @@ Node* variablelist::getNode(QString label){
         return temp;
     return NULL;
 }
+
 void variablelist::getValue(int index){
     Node *temp = new Node();
     temp = head;
