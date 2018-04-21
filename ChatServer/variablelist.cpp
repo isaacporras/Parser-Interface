@@ -41,7 +41,16 @@ QString variablelist::preparation(QJsonObject object){
         QString valor;
         if (type == QString("int")){
             string analisis = analizarValor(object.value("Value").toString().toUtf8().constData(), type.toUtf8().constData());
-            int value = atoi(analisis.c_str());
+            int value;
+            if (analisis == "NI"){
+                value = 0;
+                int* intPtr = mallocPtr->agregar_int(value);
+                insertNodeInt(type,label,value,intPtr);
+                qDebug()<<"Nodo insertado...";
+                valor = QString::fromStdString(to_string(value).c_str());
+                return valor;
+            }
+            value = atoi(analisis.c_str());
             int* intPtr = mallocPtr->agregar_int(value);
             insertNodeInt(type,label,value,intPtr);
             qDebug()<<"Nodo insertado...";
@@ -49,6 +58,14 @@ QString variablelist::preparation(QJsonObject object){
         }else if (type == QString("float")){
             string analisis = analizarValor(object.value("Value").toString().toUtf8().constData(), type.toUtf8().constData());
             float value;
+            if (analisis == "NI"){
+                value = 0;
+                float* floatPtr = mallocPtr->agregar_float(value);
+                insertNodeFloat(type,label,value,floatPtr);
+                qDebug()<<"Nodo insertado...";
+                valor = QString::fromStdString(to_string(value).c_str());
+                return valor;
+            }
             string S = analisis;
             istringstream(S) >> value;
             float* floatPtr = mallocPtr->agregar_float(value);
@@ -58,6 +75,14 @@ QString variablelist::preparation(QJsonObject object){
         }else if (type == QString("double")){
             string analisis = analizarValor(object.value("Value").toString().toUtf8().constData(), type.toUtf8().constData());
             double value;
+            if (analisis == "NI"){
+                value = 0;
+                double* doublePtr = mallocPtr->agregar_double(value);
+                insertNodeDouble(type,label,value,doublePtr);
+                qDebug()<<"Nodo insertado...";
+                valor = QString::fromStdString(to_string(value).c_str());
+                return valor;
+            }
             string S = analisis;
             istringstream(S) >> value;
             double* doublePtr = mallocPtr->agregar_double(value);
@@ -67,6 +92,14 @@ QString variablelist::preparation(QJsonObject object){
         }else if (type == "long"){
             string analisis = analizarValor(object.value("Value").toString().toUtf8().constData(), type.toUtf8().constData());
             long value;
+            if (analisis == "NI"){
+                value = 0;
+                long* longPtr = mallocPtr->agregar_long(value);
+                insertNodeLong(type,label,value,longPtr);
+                qDebug()<<"Nodo insertado...";
+                valor = QString::fromStdString(to_string(value).c_str());
+                return valor;
+            }
             string S = analisis;
             istringstream(S) >> value;
             long* longPtr = mallocPtr->agregar_long(value);
@@ -75,15 +108,80 @@ QString variablelist::preparation(QJsonObject object){
             valor = QString::fromStdString(to_string(value).c_str());
         }else if (type == "char"){
             string analisis = analizarValor(object.value("Value").toString().toUtf8().constData(), type.toUtf8().constData());
-            char value = analisis[1];
-            cout << analisis << endl;
-            cout << value << endl;
+            char value;
+            if (analisis == "NI"){
+                value = '0';
+                char* charPtr = mallocPtr->agregar_char(value);
+                insertNodeChar(type,label,value,charPtr);
+                qDebug()<<"Nodo insertado...";
+                valor = QString::fromStdString(to_string(value).c_str());
+                return valor;
+            }
+            value = analisis[1];
             char* charPtr = mallocPtr->agregar_char(value);
             insertNodeChar(type,label,value,charPtr);
             qDebug()<<"Nodo insertado...";
             valor = QString::fromStdString(analisis.c_str());
         }
-
+        else if (type == "Post Primitive Asignation"){
+            string label = object.value("Variable").toString().toUtf8().constData();
+            string sublabel = label.substr(1);
+            Node* var = getNode(QString(sublabel.c_str()));
+            if (var != NULL){
+                string type = var->type.toUtf8().constData();
+                if (type == "int"){
+                    string analisis = analizarValor(object.value("Value").toString().toUtf8().constData(), type);
+                    int value;
+                    if (analisis != "NO SE ENCONTRO"){
+                        value = atoi(analisis.c_str());
+                        qDebug()<<"Valor insertado...";
+                        valor = QString::fromStdString(to_string(value).c_str());
+                        var->value = value;
+                    }
+                }else if (type == "float"){
+                    string analisis = analizarValor(object.value("Value").toString().toUtf8().constData(), type);
+                    float value;
+                    if (analisis != "NO SE ENCONTRO"){
+                        string S = analisis;
+                        istringstream(S) >> value;
+                        qDebug()<<"Valor insertado...";
+                        valor = QString::fromStdString(to_string(value).c_str());
+                        var->valuefloat = value;
+                    }
+                }else if (type == "double"){
+                    string analisis = analizarValor(object.value("Value").toString().toUtf8().constData(), type);
+                    double value;
+                    if (analisis != "NO SE ENCONTRO"){
+                        string S = analisis;
+                        istringstream(S) >> value;
+                        qDebug()<<"Valor insertado...";
+                        valor = QString::fromStdString(to_string(value).c_str());
+                        var->valuedouble = value;
+                    }
+                }else if (type == "long"){
+                    string analisis = analizarValor(object.value("Value").toString().toUtf8().constData(), type);
+                    long value;
+                    if (analisis != "NO SE ENCONTRO"){
+                        string S = analisis;
+                        istringstream(S) >> value;
+                        qDebug()<<"Valor insertado...";
+                        valor = QString::fromStdString(to_string(value).c_str());
+                        var->valuelong = value;
+                    }
+                }else if (type == "char"){
+                    string analisis = analizarValor(object.value("Value").toString().toUtf8().constData(), type);
+                    char value;
+                    if (analisis != "NO SE ENCONTRO"){
+                        value = analisis[1];
+                        qDebug()<<"Valor insertado...";
+                        valor = QString::fromStdString(analisis.c_str());
+                        var->valuechar = value;
+                    }
+                }
+            } else {
+                qDebug()<<"No se encuentra el tipo"<<endl;
+            }
+        }
         else{
             qDebug()<<"No se encuentra el tipo"<<endl;
         }
@@ -2099,7 +2197,7 @@ string variablelist::analizarValor(string valor, string tipo){
         if (valor[0]!='\'' || valor[valor.size()-1]!='\''){
             string valor_var = getValue(QString::fromStdString(valor.c_str()),tipo);
             if(valor_var == "ERROR"){
-                return "SE DEBE PONER ' ' PARA INICIALIZAR UN CHAR";
+                return "NO SE ENCONTRO";
             }
             valor_var = "'"+valor_var+"'";
             return valor_var;
@@ -2303,6 +2401,28 @@ string variablelist::getValue(QString label, string type){
         return S;
     }
     return "ERROR";
+}
+Node* variablelist::getNode(QString label){
+    Node *temp = new Node();
+    temp = head;
+
+    for(int i = 0; i<totalNodes(); i++){
+        if (label == temp->label){
+            break;
+        }
+        temp = temp->next;
+    }
+    if (temp->type == QString("int"))
+        return temp;
+    else if (temp->type == QString("double"))
+        return temp;
+    else if (temp->type == QString("long"))
+        return temp;
+    else if (temp->type == QString("float"))
+        return temp;
+    else if (temp->type == QString("char"))
+        return temp;
+    return NULL;
 }
 void variablelist::getValue(int index){
     Node *temp = new Node();

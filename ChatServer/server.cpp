@@ -2,6 +2,7 @@
 #include "variablelist.h"
 #include <iostream>
 #include "malloc.h"
+#include <string>
 using namespace std;
 
     Server::Server(QObject* parent , quint16 port): QTcpServer(parent)
@@ -55,8 +56,14 @@ using namespace std;
                 obj = doc.object();
 
                 QString finalValue = vl->preparation(obj);
+                QString qstr;
+            if (obj.value("Type").toString() == "Post Primitive Asignation"){
+                string var = obj.value("Variable").toString().toUtf8().constData();
+                qstr = vl->getAddress(QString(var.substr(1).c_str()));
+            }
+            else {qstr = vl->getAddress(obj.value("Variable").toString());}
 
-            QString qstr = vl->getAddress(obj.value("Variable").toString());
+
 
             QJsonObject* jobj = new QJsonObject();
             QJsonValue* jstring1 = new QJsonValue(obj.value("Variable").toString());

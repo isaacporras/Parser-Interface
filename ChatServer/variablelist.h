@@ -47,6 +47,7 @@ public:
     Malloc* mallocPtr;
     string analizarValor(string valor , string tipo);
     string getValue(QString label, string type);
+    Node* getNode(QString label);
 };
 
 #endif // VARIABLELIST_H

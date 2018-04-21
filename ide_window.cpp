@@ -61,7 +61,6 @@ void IDE_Window::on_RunButton_clicked()
     addEtiqueta(fila,cliente->jsonActual.value("Label").toString());
     addReferencia(fila);
     QString linea = QString::fromStdString(someString);
-    QString cod = QString::fromStdString(codigo);
     addOutputArea(linea);
 
 }
