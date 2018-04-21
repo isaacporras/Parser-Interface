@@ -5,8 +5,10 @@
     #include <QObject>
     #include <QtNetwork/QTcpSocket>
 
-    //namespace NetworkArdic
-    //{
+///
+///  Clase Client
+///  Clase que se comunica con el Server, mantiene relación directa con el IDE y el parser
+///
 
     class Client : public QObject
     {

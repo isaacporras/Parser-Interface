@@ -10,6 +10,12 @@
 #define LOG_DEBUG 3
 #define LOG_TRACE 4
 
+
+
+///
+///  Clase -> logger
+///  Es la que se encarga del los mensajes tipo log que se imprimen en el applicaction log
+///
 class logger
 {
 public:

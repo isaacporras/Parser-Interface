@@ -2380,6 +2380,11 @@ void variablelist::insertNodeDouble(QString type, QString label, double value, d
     }
 }
 
+///
+///  Método -> showList
+///  Muestra todads las variables en memoria
+///
+
 void variablelist::showList(){
     Node *temp = new Node();
     temp = head;
@@ -2506,6 +2511,12 @@ Node* variablelist::getNode(QString label){
     return NULL;
 }
 
+///
+///  Método -> getValue, getLabel, getType
+///  Parámetro -> x
+///  Devuelve ciertos atributos del elemento en las posicion x
+///
+
 void variablelist::getValue(int index){
     Node *temp = new Node();
     temp = head;
@@ -2535,6 +2546,11 @@ void variablelist::getType(int index){
     }
     qDebug()<<temp->type;
 }
+
+///
+///  Método -> totalNodes
+///  Retorna el largo de la lista de variables
+///
 
 int variablelist::totalNodes(){
     Node *temp = new Node();

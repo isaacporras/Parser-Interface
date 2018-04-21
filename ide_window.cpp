@@ -12,6 +12,11 @@
 #include <unistd.h>
 using namespace std;
 
+///
+///  Clase IDE_Window
+///  Interfaz que permite escribir codigo
+///
+
 logger *l1 = new logger();
 
 IDE_Window::IDE_Window(QWidget *parent) :
@@ -35,6 +40,11 @@ IDE_Window::~IDE_Window()
 {
     delete ui;
 }
+
+///
+///  Método -> on_RunButton_clicked
+///  Ejecuta el codigo
+///
 
 void IDE_Window::on_RunButton_clicked()
 {
@@ -74,24 +84,63 @@ void IDE_Window::on_RunButton_clicked()
     }
 }
 
+///
+///  Método -> addOutputArea
+///  Parametro -> linea
+///  Mete la informacion recibida y enviada a un area de texto
+///
+
 void IDE_Window::addOutputArea(QString linea){
     ui->OutputArea->appendPlainText(l1->logMessage(0,"Llamando al servidor..."));
     ui->OutputArea->appendPlainText(l1->logMessage(0,"Enviando la siguiente informacion..."));
     ui->OutputArea->appendPlainText(linea);
 
 }
+
+///
+///  Método -> addMemoryDirection
+///  Parametro -> fila, address
+///  Añade una direccion de memoria address al RAM Live View
+///
+
 void IDE_Window::addMemoryDirection(int fila, QString address){
     ui->RAM_view->setItem(fila,DIRECCION,new QTableWidgetItem(address));
 }
+
+///
+///  Método -> addValor
+///  Parametro -> fila, value
+///  Añade un valor value al RAM Live View
+///
+
 void IDE_Window::addValor(int fila,QString value){
     ui->RAM_view->setItem(fila,VALOR,new QTableWidgetItem(value));
 }
+
+///
+///  Método -> addEtiqueta
+///  Parametro -> fila, label
+///  Añade una etiqueta label al RAM Live View
+///
+
 void IDE_Window::addEtiqueta(int fila,QString label){
     ui->RAM_view->setItem(fila, ETIQUETA,new QTableWidgetItem(label));
 }
+
+///
+///  Método -> addReferencia
+///  Parametro -> fila
+///  Añade una cantidad de referencias al RAM Live View
+///
+
 void IDE_Window::addReferencia(int fila){
     ui->RAM_view->setItem(fila,REFERENCIAS,new QTableWidgetItem("1"));
 }
+
+///
+///  Método -> createClient
+///  Instancia la clase Client
+///
 
 void IDE_Window::createClient(){
     Client* client = new Client(0,"127.0.0.1",8888);
@@ -100,6 +149,13 @@ void IDE_Window::createClient(){
 
 
 }
+
+///
+///  Método -> sendData
+///  Parametro -> data
+///  Envia una data en JSON al servidor
+///
+
 void IDE_Window::sendData(string data){
     cliente->SendData(QString(data.c_str()));
 }
@@ -109,6 +165,11 @@ void IDE_Window::on_pushButton_clicked()
     reiniciarParseo();
     ui->OutputArea->appendPlainText(l1->logMessage(1,"Se reinicio el sistema..."));
 }
+
+///
+///  Método -> reiniciarParseo
+///  Reinicia el puntero del parser
+
 void IDE_Window::reiniciarParseo(){
     *parser.i = 0;
 }

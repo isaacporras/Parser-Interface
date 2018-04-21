@@ -17,7 +17,10 @@ using namespace std;
 #include <ctype.h>
 #include <stdio.h>
 
-
+///
+///  Clase parser
+///  Parsea todo el codigo
+///
 
 using std::string;
 
@@ -25,6 +28,13 @@ Parser::Parser()
 {
     *i = 0;
 }
+
+///
+///  Método -> parse
+///  Parametro -> codigo
+///  Mete la informacion recibida y enviada a un area de texto
+///
+
 QJsonObject Parser::parse(string codigo){
     if(*i>= codigo.size()){
         QJsonObject termino = makeJson("Finish", "Finish", "Finish");

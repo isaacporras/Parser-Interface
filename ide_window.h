@@ -7,6 +7,11 @@
 #include "client.h"
 #include <string>
 
+///
+///  Clase IDE_Window
+///  Interfaz que permite escribir codigo
+///
+
 using std::string;
 namespace Ui {
 class IDE_Window;
